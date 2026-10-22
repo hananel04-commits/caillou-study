@@ -1,3 +1,7 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>까이유 베트남어 100번 (50회·완료·단어발음)</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -90,6 +94,52 @@ button:focus-visible,select:focus-visible,summary:focus-visible{outline:2px soli
 .vid .frame iframe,.vid .frame>div{position:absolute;inset:0;width:100%;height:100%;border:0}
 .vid .row{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.track i{transition:none}}
+
+/* --- added: phone layout (bigger text, >=44px tap targets, 16px form controls so Android doesn't zoom) --- */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-size:16px;overflow-x:hidden}
+.wrap{padding-block:14px 280px;min-width:0}
+.wrap>*{min-width:0}
+.brand h1{font-size:21px}
+.brand small{font-size:14px}
+.tabs{gap:8px}
+.tabs button{font-size:15px;min-height:44px;padding:8px 14px}
+.range{font-size:15px}
+.mini{font-size:14px;min-height:40px;padding:6px 12px}
+.meta{font-size:14px}
+.meta{flex-wrap:wrap}
+.toggles{flex:0 0 auto;margin-left:auto}
+.toggles button{font-size:14px;min-height:40px;padding:6px 11px;white-space:nowrap}
+.tok .w{font-size:30px}
+.tok .p{font-size:14px}
+.ko{font-size:19px}
+.enref{font-size:15px}
+.words span{font-size:15px}
+.gram div{font-size:15px}
+.gram .tag{font-size:13px}
+.notes h2{font-size:13px}
+details.list summary{font-size:16px;padding:12px 16px;min-height:48px}
+.rows button{min-height:48px;padding:12px 16px}
+.rows button .n{font-size:14px}
+.rows button .t{font-size:16px}
+.helpbox summary{cursor:pointer;color:var(--muted);font-size:14px;padding:10px 2px;min-height:44px}
+.help{font-size:13px}
+.viewtabs button{font-size:16px;min-height:46px}
+.pv-en{font-size:16px}
+.pv-ko{font-size:36px;gap:6px 14px}
+.pv-mean{font-size:19px}
+.barin{gap:10px}
+.prog{font-size:14px}
+.main{gap:6px}
+.main button{white-space:nowrap}
+.nav{width:48px;height:48px;font-size:24px;flex:0 0 auto}
+.play{height:48px;font-size:17px;min-width:0}
+.reset,.donebtn{height:48px;font-size:16px;padding:0 10px;flex:0 0 auto}
+.sets label{font-size:13px}
+.sets{grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr) minmax(0,.9fr)}
+.sets select{font-size:16px;min-height:44px;padding:6px 8px}
+.status{font-size:13px}
+@media (max-width:400px){.reset{padding:0 7px;font-size:15px}.donebtn{padding:0 9px}.tok .w{font-size:27px}.pv-ko{font-size:32px}}
 </style>
 
 <div class="wrap">
@@ -121,7 +171,7 @@ button:focus-visible,select:focus-visible,summary:focus-visible{outline:2px soli
     <summary id="listSum">문장 목록</summary>
     <div class="rows" id="rows"></div>
   </details>
-  <p class="help">반복 횟수만큼 베트남어 음성(기계 음성)을 되풀이해요. 문장 번호는 영어 앱과 같아요. 구간 링크로 열면 첫 문장을 정한 횟수(기본 50회)만큼 반복한 뒤 자동으로 다음 문장으로 넘어가요. ‘완료’를 누르면 횟수를 다 채우지 않아도 바로 다음 문장으로 넘어가요. 문장의 단어를 누르면 그 단어만 발음해 줘요. 매일 공부 링크는 마지막에 구간 전체를 이어서 50회 더 들어요. 한 문장 반복은 기본으로 어린이 목소리 0.85배·어른 목소리 0.7배로, 전체 이어 듣기는 항상 1배로 재생돼요. 목록의 ✓ 표시는 정한 횟수(기본 50회)를 다 들었거나 ‘완료’를 누른 문장이에요(이 기기에만 저장돼요).</p>
+  <details class="helpbox"><summary>사용법 보기</summary><p class="help">반복 횟수만큼 베트남어 음성(기계 음성)을 되풀이해요. 문장 번호는 영어 앱과 같아요. 구간 링크로 열면 첫 문장을 정한 횟수(기본 50회)만큼 반복한 뒤 자동으로 다음 문장으로 넘어가요. ‘완료’를 누르면 횟수를 다 채우지 않아도 바로 다음 문장으로 넘어가요. 문장의 단어를 누르면 그 단어만 발음해 줘요. 매일 공부 링크는 마지막에 구간 전체를 이어서 50회 더 들어요. 한 문장 반복은 기본으로 어린이 목소리 0.85배·어른 목소리 0.7배로, 전체 이어 듣기는 항상 1배로 재생돼요. 목록의 ✓ 표시는 정한 횟수(기본 50회)를 다 들었거나 ‘완료’를 누른 문장이에요(이 기기에만 저장돼요).</p></details>
 </div>
 
 <div class="bar">
@@ -208,7 +258,7 @@ function renderRows(){
   $("listSum").textContent=`문장 목록 · ${EPS[ep][1]} ${list.length}문장`;
   $("rows").innerHTML=list.map(([s,i])=>`<button type="button" data-i="${i}" class="${i===cur?"cur":""} ${inRange(i)?"inr":""}"><span class="n">${pad(s.n)}</span><span class="t">${esc(s.vi)}</span><span class="done">${done.has(s.n)?"✓":""}</span></button>`).join("");
 }
-$("rows").addEventListener("click",e=>{const b=e.target.closest("button[data-i]");if(!b)return;stop();cur=+b.dataset.i;count=0;if(range&&!inRange(cur))range=null;render();window.scrollTo({top:0,behavior:"smooth"})});
+$("rows").addEventListener("click",e=>{const b=e.target.closest("button[data-i]");if(!b)return;stop();cur=+b.dataset.i;count=0;if(range&&!inRange(cur))range=null;render();start();window.scrollTo({top:0,behavior:"smooth"})});
 function renderCount(){if(phase==="all"){$("cnt").textContent=`전체 ${allCount} / ${allTotal}`;$("fill").style.width=Math.min(100,allCount/allTotal*100)+"%";$("play").textContent=playing?"일시정지":"이어서 듣기";return}const t=+$("rep").value;$("cnt").textContent=`${count} / ${t}`;$("fill").style.width=Math.min(100,count/t*100)+"%";$("play").textContent=playing?"일시정지":(count>0&&count<t?"이어서 듣기":"반복 시작")}
 function rateFor(i){if(phase==="all")return 1;const v=$("spd").value;if(v==="auto")return S[i].sp==="c"?0.85:0.7;return +v}
 function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
@@ -242,8 +292,8 @@ function start(){
 function stop(){playing=false;clearTimeout(timer);audio.pause();renderCount();}
 $("play").onclick=()=>playing?stop():start();
 $("reset").onclick=()=>{stop();count=0;if(phase==="all"){phase="each";allCount=0;if(range)cur=range[0]-1;}render();$("status").textContent=""};
-$("prev").onclick=()=>{stop();if(cur>0){cur--;count=0;if(range&&!inRange(cur))range=null;render()}};
-$("next").onclick=()=>{stop();if(cur<S.length-1){cur++;count=0;if(range&&!inRange(cur))range=null;render()}};
+$("prev").onclick=()=>{stop();if(cur>0){cur--;count=0;if(range&&!inRange(cur))range=null;render();start()}};
+$("next").onclick=()=>{stop();if(cur<S.length-1){cur++;count=0;if(range&&!inRange(cur))range=null;render();start()}};
 $("rep").onchange=renderCount;
 $("spd").onchange=()=>{audio.playbackRate=rateFor(cur);render()};
 $("clearRange").onclick=()=>{stop();range=null;count=0;phase="each";allTotal=0;render()};
@@ -259,21 +309,21 @@ function sentenceFinished(total,g,manual){
     count=0; const nx=cur+1;
     $("status").textContent=`${pad(S[cur].n)} ${label} · 다음 문장으로`;
     if(playing){ timer=setTimeout(()=>{if(playing) playIdx(nx)},manual?300:Math.max(g,1500)); }
-    else { cur=nx; render(); }
+    else { cur=nx; render(); start(); }
     return;
   }
   if(range&&allTotal>0){
     phase="all"; allCount=0; count=0; renderCount();
     $("status").textContent=`이제 전체 ${pad(range[0])}–${pad(range[1])}을 이어서 ${allTotal}회 들어요.`;
     if(playing){ timer=setTimeout(()=>{if(playing) playIdx(range[0]-1)},manual?500:2000); }
-    else { cur=range[0]-1; render(); }
+    else { cur=range[0]-1; render(); start(); }
     return;
   }
   if(manual&&!range&&cur<S.length-1){
     // single-sentence mode: 완료 moves on to the next sentence
     $("status").textContent=`${pad(S[cur].n)} 완료 · 다음 문장으로`;
     count=0; cur++; ep=S[cur].ep;
-    if(playing){ timer=setTimeout(()=>{if(playing) playIdx(cur)},300); } else render();
+    if(playing){ timer=setTimeout(()=>{if(playing) playIdx(cur)},300); } else { render(); start(); }
     return;
   }
   playing=false; renderCount();
