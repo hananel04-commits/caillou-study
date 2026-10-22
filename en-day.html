@@ -170,6 +170,21 @@ header .brand small{font-size:12px}
 .daytitle{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px!important}
 .pronview.card{align-content:start}
 .pronview .pv{gap:18px}
+.card.tight{gap:8px;padding-top:12px;padding-bottom:12px}
+.card.tight .phasebig{font-size:15px}
+.card.tight .ko{padding:8px 12px;margin-top:0;line-height:1.3}
+.card.tight .pv{gap:10px}
+.card.tight .pv-il{row-gap:.32em}
+/* 기본 보기: big meaning on top; long sentence (measured): smaller English, no pronunciation line */
+.card:not(.pronview) .meta{order:-3}
+.card:not(.pronview) .phasebig{order:-2}
+.card:not(.pronview) .ko{order:-1}
+.card.longs:not(.pronview) #pr{display:none}
+body.squeeze header{gap:5px!important}
+body.squeeze .daytitle,body.squeeze header .brand small{display:none}
+body.squeeze #rangeInfo{display:none}
+body.squeeze .range{padding-block:6px}
+body.squeeze .viewtabs button{min-height:36px}
 /* 기본 보기: English / 발음 sizes unchanged; the Korean meaning is the star */
 .card:not(.pronview) .ko{font-size:clamp(28px,8.2vw,34px);font-weight:800;line-height:1.38;color:#14171a;background:#fff1b8;border:0;border-radius:12px;padding:12px 14px;margin-top:4px;word-break:keep-all;overflow-wrap:anywhere}
 .card.hideko:not(.pronview) .ko{color:transparent;background:var(--line)}
@@ -194,7 +209,7 @@ header .brand small{font-size:12px}
 .glossline{min-height:1.5em;font-size:16px;color:var(--fg);background:var(--mark-soft);border-radius:8px;padding:6px 10px}
 .glossline:empty{display:none}
 .glossline b{font-family:var(--f-en);margin-right:6px}
-#en .tok .w{font-size:26px}
+#en .tok .w{font-size:var(--enfs,26px)}
 .prline{margin:0;font-size:17px;color:var(--accent);display:flex;flex-wrap:wrap;gap:2px 10px}
 .hidep .prline{visibility:hidden}
 .pronview #en,.pronview #ko,.pronview #pr,.pronview .toggles{display:none}
@@ -481,7 +496,7 @@ $("rangeGo").onclick=()=>$("play").click();
 $("clearRange").onclick=()=>{stop();rev=null;range=null;count=0;phase="each";allTotal=0;history.replaceState(null,"","#d"+day.d);render()};
 $("dayAll").onclick=()=>{stop();rev=null;const h=`#d${day.d}-1-${S.length}`;if(location.hash===h){parseHash();render();start();}else location.hash=h;};
 $("once").onclick=()=>{const was=playing;stop();if(was)return;playSeg(cur,()=>{},1);};
-function tog(id,cls){const b=$(id);b.onclick=()=>{const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);$("card").classList.toggle(cls,!on);store.set(id,on)};const on=store.get(id,true);b.setAttribute("aria-pressed",on);$("card").classList.toggle(cls,!on)}
+function tog(id,cls){const b=$(id);b.onclick=()=>{const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);$("card").classList.toggle(cls,!on);store.set(id,on);fitPv()};const on=store.get(id,true);b.setAttribute("aria-pressed",on);$("card").classList.toggle(cls,!on)}
 tog("tEn","hideen");tog("tP","hidep");tog("tKo","hideko");
 $("ko").onclick=()=>{const c=$("card");if(c.classList.contains("hideko")){c.classList.remove("hideko");setTimeout(()=>{if($("tKo").getAttribute("aria-pressed")!=="true")c.classList.add("hideko")},2500)}};
 function sentenceFinished(manual){
@@ -545,25 +560,51 @@ function setView(v){
 }
 $("vidTog").onclick=()=>{const b=$("vidBox"),big=b.classList.toggle("small")===false;$("vidTog").setAttribute("aria-expanded",String(big));$("vidTog").textContent=big?"영상 작게 ▴":"영상 보기 ▾";};
 // big interlinear text: start at ~30px (390px phone) and shrink only if the sentence would not fit above the bottom bar
+let fitHdrH=-1;
 function fitPv(){
-  const box=$("pvKo"), card=$("card");
-  if(!card.classList.contains("pronview")){ // 기본 보기: big Korean meaning, shrink a little (min 26px) only if it would hide under the bottom bar
-    const k=$("ko"); k.style.fontSize=""; const bar=document.querySelector(".bar"); if(!bar) return;
-    let f=parseFloat(getComputedStyle(k).fontSize); const lim=()=>k.getBoundingClientRect().bottom+scrollY>innerHeight-bar.getBoundingClientRect().height-8;
-    while(f>26&&lim()){f-=1;k.style.fontSize=f+"px";} return; }
-  if(!box.offsetParent) return;
+  // Keep the whole Korean meaning above the fixed bottom bar (both views) and never scroll sideways.
+  const card=$("card"), bar=document.querySelector(".bar"); if(!bar||!card.offsetParent) return;
+  const barTop=()=>innerHeight-bar.getBoundingClientRect().height-8;
+  const below=el=>el.getBoundingClientRect().bottom>barTop();
+  const B=document.body;
+  card.classList.remove("tight"); B.classList.remove("squeeze"); card.style.removeProperty("--enfs"); $("pr").style.fontSize="";
+  const k=$("ko"); k.style.fontSize="";
+  const done=t=>{card.dataset.fit=t+(card.classList.contains("tight")?" tight":"")+(B.classList.contains("squeeze")?" squeeze":"");fitHdrH=document.querySelector("header").offsetHeight;};
+  card.classList.remove("longs");
+  if(!card.classList.contains("pronview")){
+    card.style.minHeight="";
+    if(!below(k)&&!below($("en"))&&!below($("pr"))) return done("normal"); // short sentence: normal sizes
+    // LONG sentence (measured: would not fit above the bar): smaller English, no pronunciation line
+    card.classList.add("longs");
+    const en=$("en"), last=()=>below(k)||below(en);
+    let kf=parseFloat(getComputedStyle(k).fontSize), ef=25, step=0;
+    const setE=()=>card.style.setProperty("--enfs",ef+"px"); setE();
+    while(last()){                                                      // keep the meaning big: shrink English first
+      if(ef>20){ef-=1;setE();continue;}
+      if(step===0){card.classList.add("tight");step=1;continue;}
+      if(step===1){B.classList.add("squeeze");step=2;continue;}
+      if(ef>15){ef-=1;setE();continue;}
+      if(kf>20){kf-=1;k.style.fontSize=kf+"px";continue;}               // last resort only
+      break;
+    }
+    return done(`long ko${kf} en${ef}`);
+  }
+  const box=$("pvKo"), mean=$("pvMean");
   const base=Math.round(Math.min(32,Math.max(26,innerWidth*0.078))); box.style.fontSize=base+"px";
-  const bar=document.querySelector(".bar"), barH=bar?bar.getBoundingClientRect().height:0;
   const cardTop=card.getBoundingClientRect().top+scrollY;
-  card.style.minHeight=Math.max(0,innerHeight-barH-cardTop-10)+"px";
-  const other=card.scrollHeight-box.scrollHeight;
-  const avail=Math.max(160,innerHeight-barH-cardTop-other-14);
+  card.style.minHeight=Math.max(0,innerHeight-bar.getBoundingClientRect().height-cardTop-10)+"px";
   const wide=()=>{const R=box.getBoundingClientRect();return [...box.children].some(c=>c.getBoundingClientRect().right>R.right+0.5)};
-  let f=base; while(f>21&&box.scrollHeight>avail){f-=1;box.style.fontSize=f+"px";} // long sentence: a bit smaller, never below 21px
-  while(f>16&&wide()){f-=1;box.style.fontSize=f+"px";} // never scroll sideways
-  box.dataset.fs=f;
+  let f=base; const set=()=>{box.style.fontSize=f+"px"};
+  while(f>16&&wide()){f-=1;set();}                                      // never scroll sideways
+  while(f>22&&below(mean)){f-=1;set();}                                 // long sentence: smaller words
+  if(below(mean)) card.classList.add("tight");
+  if(below(mean)) B.classList.add("squeeze");
+  while(f>16&&below(mean)){f-=1;set();}
+  if(B.classList.contains("squeeze")||card.classList.contains("tight")) card.style.minHeight=Math.max(0,innerHeight-bar.getBoundingClientRect().height-(card.getBoundingClientRect().top+scrollY)-10)+"px";
+  box.dataset.fs=f; done(`il${f}`);
 }
 addEventListener("resize",()=>fitPv());
+if(window.ResizeObserver) new ResizeObserver(()=>{if(document.querySelector("header").offsetHeight!==fitHdrH) fitPv();}).observe(document.querySelector("header"));
 $("vBase").onclick=()=>setView("base");
 $("vPron").onclick=()=>setView("pron");
 setView(store.get("view","pron"));
