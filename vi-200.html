@@ -178,7 +178,37 @@ details.list summary{font-size:16px;padding:12px 16px;min-height:48px}
 .allbtn{border:1px solid var(--accent);background:var(--surface);color:var(--accent);font:inherit;font-weight:600;font-size:14px;min-height:40px;padding:6px 12px;border-radius:9px;cursor:pointer;margin-top:6px}
 .allbtn[hidden]{display:none}
 #cnt{font-family:var(--f-ko)}
-@media (max-width:400px){.pv-ko{font-size:35px}}
+#pvVi{display:none}
+#pvKo.pv-ko{display:flex;flex-wrap:wrap;align-items:flex-start;gap:16px 14px;font-size:var(--pvf,30px);line-height:1.3;letter-spacing:0;margin:8px 0 0}
+#pvKo .pc{display:inline-flex;flex-direction:column;align-items:center;gap:2px;padding:2px 3px;border-radius:8px;cursor:pointer}
+#pvKo .pcv{font-family:var(--f-en);font-size:var(--pvf,30px);font-weight:600;color:#1f2937}
+#pvKo .pck{font-family:var(--f-ko);font-size:var(--pvf,30px);font-weight:700;color:#c2410c}
+#pvKo .pc.say{background:#ffedd5}
+#pvMean{font-size:18px;color:var(--muted);margin-top:14px}
+.pronview #pv{flex:1 1 auto}
+#card.pronview{display:flex;flex-direction:column;min-height:var(--cardh,auto)}
+header .brand h1{font-size:16px;line-height:1.3;margin:0}
+header .brand small{display:none}
+header .brand{margin:0 0 6px!important}
+#tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+#tabs button{font-size:13px;padding:4px 2px;min-height:40px;white-space:nowrap}
+.range[hidden]{display:none!important}
+.range{padding:6px 10px!important;font-size:13px!important;display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;margin:6px 0 0!important}
+.range #rangeInfo{font-size:13px}
+.range b{margin-right:2px}
+.range .mini{min-height:40px;padding:4px 10px;margin:0 0 0 auto!important;font-size:13px}
+.viewtabs{margin:8px 0!important}
+.viewtabs button{min-height:40px!important;font-size:14px!important;padding:4px 8px!important}
+header{margin-bottom:0!important}
+#card:not(.pronview) #vi .tok .w{font-size:20px}
+#card:not(.pronview) #vi .tok .p{font-size:16px}
+#card:not(.pronview) #ko{font-size:32px;font-weight:700;color:#111827;background:#fef3c7;padding:10px 14px;border-radius:12px;line-height:1.35;margin:12px 0 4px}
+@media (max-width:400px){#card:not(.pronview) #ko{font-size:30px}}
+.ytdock{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin:4px 0}
+.ytToggle{border:1px solid var(--line);background:var(--surface);color:var(--fg);font:inherit;font-size:14px;min-height:40px;padding:6px 12px;border-radius:9px;cursor:pointer}
+.ytdock .frame{width:200px;height:113px;aspect-ratio:auto;background:#000;border-radius:8px;overflow:hidden}
+.ytdock.open .frame{width:100%;height:auto;aspect-ratio:16/9}
+.ytdock .frame iframe,.ytdock .frame #ytPlayer{width:100%;height:100%;display:block;border:0}
 </style>
 
 <div class="wrap">
@@ -187,7 +217,6 @@ details.list summary{font-size:16px;padding:12px 16px;min-height:48px}
     <div class="tabs" id="tabs" role="group" aria-label="에피소드"></div>
     <div class="range" id="rangeBox" hidden>오늘의 구간 <b id="rangeTxt"></b><span id="rangeInfo"></span><button class="mini" id="clearRange" type="button">구간 해제</button></div>
   </header>
-
   <div class="viewtabs" role="tablist" aria-label="보기"><button type="button" role="tab" id="vPron" aria-selected="true">발음·뜻 보기</button><button type="button" role="tab" id="vBase" aria-selected="false">기본 보기</button></div>
 
   <section class="card pronview" id="card" aria-live="polite">
@@ -201,7 +230,7 @@ details.list summary{font-size:16px;padding:12px 16px;min-height:48px}
     <p class="ko" id="ko" title="눌러서 잠깐 보기"></p>
     <div class="pv" id="pv"><p class="pv-vi" id="pvVi"></p><p class="pv-ko" id="pvKo"></p><p class="pv-mean" id="pvMean"></p></div>
     <div class="glossline" id="gloss"></div>
-    <div class="vid" id="vidBox"><div class="frame"><div id="ytPlayer"></div></div>
+    <div class="vid" id="vidBox">
       <div class="vrow"><button class="once" id="onceS" type="button">▶ 천천히 한 번</button><button class="once" id="onceF" type="button">▶ 빠르게 한 번</button><span id="vidInfo"></span></div></div>
   </section>
 
@@ -214,6 +243,10 @@ details.list summary{font-size:16px;padding:12px 16px;min-height:48px}
     <div class="rows" id="rows"></div>
   </details>
   <details class="helpbox"><summary>사용법 보기</summary><p class="help">영상 속 선생님이 문장마다 <b>천천히(한 단어씩) 두 번</b>, <b>보통 빠르기로 한 번</b> 읽어 줘요. 이 페이지는 그 실제 녹음을 그대로 잘라서, 문장마다 <b>천천히 읽은 부분 30회 → 보통 빠르기로 읽은 부분 20회</b>(합계 50회) 반복해요. 화면 아래에 ‘천천히 12/30’, ‘빠르게 5/20’처럼 지금 단계가 보여요. 구간 링크(#1-5 같은)로 열면 다음 문장으로 자동으로 넘어가고, 5문장을 다 마치면 <b>‘구간 전체 이어 듣기’(선택)</b> 버튼이 나와요 — 안 해도 오늘 목표(문장마다 30+20)는 끝이에요. ‘완료’는 횟수를 다 채우지 않아도 다음 문장으로 넘어가요. ‹ › 로 문장을 옮기면 바로 재생돼요. 단어를 누르면 뜻이 나와요(기계 음성은 쓰지 않아요). ‘▶ 한 번 듣기’는 횟수에 포함되지 않아요. 속도는 기본 1배(천천히 단계는 원래 느리게 읽은 녹음이에요). 한글 발음은 영상과 같은 북부(하노이) 발음 기준(r·d·gi→ㅈ, tr·ch→ㅉ, s·x→ㅆ)이에요. ✓ 표시는 이 기기에만 저장돼요.</p></details>
+  <section class="ytdock" id="ytDock">
+    <button type="button" class="ytToggle" id="ytToggle" aria-expanded="false" aria-controls="ytFrame">영상 보기 ▾</button>
+    <div class="frame" id="ytFrame"><div id="ytPlayer"></div></div>
+  </section>
   <p class="credit">영상·음성: YouTube 채널 <a href="https://www.youtube.com/channel/UCsDHOpkd132-2wYje3LpIsg" target="_blank" rel="noopener">Tieng Viet Co Hien - 베트남어 히엔쌤</a> · 시리즈 001–004. 이 페이지는 원래 영상을 YouTube 플레이어로 재생만 하며, 음원을 따로 저장하거나 올리지 않아요. 한국어 뜻은 영상 화면의 문장을 따랐어요.</p>
 </div>
 
@@ -281,7 +314,7 @@ function renderTabs(){
   Object.entries(EPS).forEach(([k,[vi,ko]])=>{
     const b=document.createElement("button"); b.type="button";
     const list=S.filter(s=>s.ep===k);
-    b.textContent=`${ko} (${list[0].n}–${list[list.length-1].n})`;
+    b.textContent=`${ko.split(' ')[0]} ${list[0].n}–${list[list.length-1].n}`;b.title=`${ko} (${list[0].n}–${list[list.length-1].n})`;
     b.setAttribute("aria-pressed",k===ep);
     b.onclick=()=>{stop();ep=k;cur=S.indexOf(list[0]);count=0;if((range||rev)&&!inRange(cur))leaveRange();render()};
     $("tabs").appendChild(b);
@@ -308,22 +341,27 @@ function render(){
   $("words").innerHTML=s.gl.map(([a,b])=>`<span><b>${esc(a)}</b>${esc(b)}</span>`).join("");
   $("wordsBox").hidden=!s.gl.length;
   $("pvVi").innerHTML=s.ko_pron.map(([w],i)=>`<span class="pw" role="button" tabindex="0" data-i="${i}">${esc(w)}</span>`).join("");
-  $("pvKo").innerHTML=s.ko_pron.map(([w,k],i)=>`<span class="pg" role="button" tabindex="0" data-i="${i}" title="${esc(w)}">${esc(k)}</span>`).join("");
+  $("pvKo").innerHTML=s.ko_pron.map(([w,k],i)=>`<span class="pc pg" role="button" tabindex="0" data-i="${i}" title="눌러서 뜻 보기"><span class="pcv" lang="vi">${esc(w)}</span><span class="pck">${esc(k)}</span></span>`).join("");
   $("pvMean").textContent=s.ko;
   $("gloss").innerHTML="";
   $("vidInfo").textContent=`천천히 ${dur(s,"sl").toFixed(1)}초 · 빠르게 ${dur(s,"fa").toFixed(1)}초`;
   $("rangeBox").classList.toggle("rev",!!rev);
   if(rev){$("rangeBox").hidden=false;$("rangeTxt").textContent=`🔁 복습 ${rev.txt}`;
     $("mode").textContent=`복습 ${revPos()+1} / ${rev.list.length}번째 문장`;
-    $("rangeInfo").textContent=` · ${rev.list.length}문장 · 문장마다 1배로 ${rev.n}회 (천천히 없음)`;}
+    $("rangeInfo").textContent=` · ${rev.list.length}문장 × ${rev.n}회 (1배)`;}
   else if(range){$("rangeBox").hidden=false;$("rangeTxt").textContent=`${pad(range[0])}–${pad(range[1])}`;
     $("mode").textContent=phase==="all"?`전체 이어 듣기 · ${cur+2-range[0]}/${range[1]-range[0]+1}`:`구간 ${cur+2-range[0]} / ${range[1]-range[0]+1}번째 문장`;
-    $("rangeInfo").textContent=` · ${range[1]-range[0]+1}문장 · 문장마다 천천히 ${nS()} + 빠르게 ${nF()}`;}
+    $("rangeInfo").textContent=` · 문장마다 천천히 ${nS()} + 빠르게 ${nF()}`;}
   else{$("rangeBox").hidden=true;$("mode").textContent="한 문장";}
   $("allBtn").hidden=!(range&&(rangeDone||phase==="all"));
   $("allBtn").textContent=phase==="all"?(playing?"전체 이어 듣기 멈추기":"전체 이어 듣기 계속"):`구간 전체 이어 듣기 ${ALL_LOOPS}회 (선택)`;
-  renderRows(); renderCount(); cueCurrent();
+  renderRows(); renderCount(); cueCurrent(); fitPv();
 }
+function fitPv(){const n=S[cur].ko_pron.length, pk=$("pvKo");let f=n>14?26:n>10?28:30;pk.style.setProperty('--pvf',f+'px');
+  while(f>18&&[...pk.children].some(e=>e.getBoundingClientRect().right>pk.getBoundingClientRect().right+1)){f-=2;pk.style.setProperty('--pvf',f+'px');}
+  const c=$("card"),bar=document.querySelector('.bar');const top=c.getBoundingClientRect().top+window.scrollY;const h=window.innerHeight-(bar?bar.offsetHeight:0)-top-12;c.style.setProperty('--cardh',Math.max(260,h)+'px');}
+window.addEventListener('resize',()=>fitPv());
+$("ytToggle").onclick=()=>{const d=$("ytDock"),o=!d.classList.contains('open');d.classList.toggle('open',o);$("ytToggle").setAttribute('aria-expanded',o);$("ytToggle").textContent=o?'영상 작게 ▴':'영상 보기 ▾';};
 function renderRows(){
   const list=S.map((s,i)=>[s,i]).filter(([s])=>s.ep===ep);
   $("listSum").textContent=`문장 목록 · ${EPS[ep][1]} ${list.length}문장`;
