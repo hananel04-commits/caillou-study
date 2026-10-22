@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:,">
+<title>English Diary · 영어 하루 한 Day (50번 듣기)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+
+/* Layout: one column study desk — sentence card on top, notes below, controls pinned to the bottom edge */
+:root{
+  --bg:#F3F5F4; --surface:#FFFFFF; --fg:#1C2524; --muted:#5E6B69; --line:#D9E0DE;
+  --accent:#0E7C74; --accent-soft:#DDF0EC; --mark:#F2B33D; --mark-soft:#FDF1D6;
+  --f-en:"Lexend",system-ui,sans-serif; --f-ko:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121817; --surface:#1A2221; --fg:#E7EEEC; --muted:#9AA8A5; --line:#2C3836;
+  --accent:#4FC2B6; --accent-soft:#173532; --mark:#F2B33D; --mark-soft:#3A2F17; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121817; --surface:#1A2221; --fg:#E7EEEC; --muted:#9AA8A5; --line:#2C3836;
+  --accent:#4FC2B6; --accent-soft:#173532; --mark:#F2B33D; --mark-soft:#3A2F17; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-ko);font-size:15px;line-height:1.55;margin:0}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 230px;display:grid;gap:14px}
+header{display:grid;gap:10px}
+.brand{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.brand h1{font-family:var(--f-en);font-weight:600;font-size:19px;margin:0;letter-spacing:-.01em}
+.brand small{color:var(--muted);font-size:13px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--line);background:var(--surface);color:var(--fg);font:inherit;font-size:13px;padding:6px 11px;border-radius:999px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.range{display:flex;align-items:center;gap:8px;background:var(--mark-soft);border-radius:10px;padding:8px 12px;font-size:14px;flex-wrap:wrap}
+.range b{font-family:var(--f-en)}
+.range button{margin-left:auto}
+.mini{border:1px solid var(--line);background:var(--surface);color:var(--muted);font:inherit;font-size:12px;padding:3px 9px;border-radius:7px;cursor:pointer}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 16px;display:grid;gap:14px}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--muted);font-size:13px;font-family:var(--f-en)}
+.meta .no{font-variant-numeric:tabular-nums}
+.toggles{display:flex;gap:6px}
+.toggles button{border:1px solid var(--line);background:none;color:var(--muted);font:inherit;font-size:12px;padding:3px 9px;border-radius:7px;cursor:pointer}
+.toggles button[aria-pressed="true"]{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+.en{display:flex;flex-wrap:wrap;gap:4px 9px;margin:0;align-items:flex-start}
+.tok{display:inline-flex;flex-direction:column;align-items:center;min-width:0}
+.tok .w{font-family:var(--f-en);font-size:24px;font-weight:500;line-height:1.25}
+.tok .p{font-size:12px;color:var(--accent);line-height:1.3;white-space:nowrap}
+.hideen .tok .w{color:transparent;background:var(--line);border-radius:4px}
+.hidep .tok .p{visibility:hidden}
+.ko{font-size:17px;margin:0;padding-top:10px;border-top:1px dashed var(--line)}
+.hideko .ko{color:transparent;background:var(--line);border-radius:6px;cursor:pointer}
+.notes{display:grid;gap:10px}
+.notes h2{font-size:12px;letter-spacing:.06em;color:var(--muted);margin:0;font-weight:600}
+.words{display:flex;flex-wrap:wrap;gap:6px}
+.words span{background:var(--accent-soft);border-radius:8px;padding:4px 9px;font-size:13.5px}
+.words span b{font-family:var(--f-en);font-weight:500;margin-right:5px}
+.gram{display:grid;gap:7px}
+.gram div{display:flex;gap:9px;font-size:14px}
+.gram .tag{flex:0 0 auto;font-size:12px;font-weight:600;color:var(--fg);background:var(--mark-soft);border-radius:999px;padding:1px 9px;height:fit-content}
+.gram p{margin:0;min-width:0}
+details.list{background:var(--surface);border:1px solid var(--line);border-radius:14px}
+details.list summary{cursor:pointer;padding:12px 16px;font-weight:600;font-size:14px}
+.rows{display:grid;max-height:340px;overflow:auto;border-top:1px solid var(--line)}
+.rows button{display:grid;grid-template-columns:42px 1fr 18px;gap:8px;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;color:var(--fg);font:inherit;padding:9px 16px;cursor:pointer}
+.rows button .n{font-family:var(--f-en);color:var(--muted);font-variant-numeric:tabular-nums;font-size:13px}
+.rows button .t{font-family:var(--f-en);font-size:14px;min-width:0}
+.rows button.cur{background:var(--accent-soft)}
+.rows button.inr .n{color:var(--fg);font-weight:600}
+.rows .done{color:var(--accent)}
+.help{color:var(--muted);font-size:13px;margin:0}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding-top:10px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));z-index:5}
+.barin{max-width:720px;margin:0 auto;display:grid;gap:9px}
+.prog{display:flex;align-items:center;gap:10px;font-family:var(--f-en);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.track{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.track i{display:block;height:100%;width:0;background:var(--mark);transition:width .2s}
+.main{display:flex;gap:8px;align-items:center}
+.main button{font:inherit;cursor:pointer;border-radius:12px}
+.nav{border:1px solid var(--line);background:var(--surface);color:var(--fg);width:46px;height:46px;font-size:18px}
+.play{flex:1;height:46px;border:0;background:var(--accent);color:var(--surface);font-weight:600;font-size:16px}
+.reset{border:1px solid var(--line);background:none;color:var(--muted);height:46px;padding:0 10px;font-size:13px}
+.sets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.sets label{display:grid;gap:2px;font-size:11px;color:var(--muted)}
+.sets select{font:inherit;font-size:14px;padding:5px 6px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);width:100%}
+button:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.status{font-size:12px;color:var(--muted);min-height:1.3em}
+
+/* --- added: tappable words, 완료 button, video hook --- */
+.tok{cursor:pointer;border-radius:6px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.tok:active,.tok.say{background:var(--accent-soft)}
+.donebtn{border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);height:46px;padding:0 12px;font-weight:600;font-size:14px}
+.donebtn:disabled{opacity:.4;cursor:default}
+.vid{display:grid;gap:8px}
+.vid[hidden]{display:none}
+.vid .frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden}
+.vid .frame iframe,.vid .frame>div{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vid .row{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+
+/* --- added: 발음·뜻 view tab --- */
+.viewtabs{display:flex;gap:6px;background:var(--line);padding:4px;border-radius:12px}
+.viewtabs button{flex:1;border:0;background:none;color:var(--muted);font:inherit;font-size:14px;font-weight:600;padding:8px 6px;border-radius:9px;cursor:pointer}
+.viewtabs button[aria-selected="true"]{background:var(--surface);color:var(--accent);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.pv{display:none;gap:12px}
+.pronview .pv{display:grid}
+.pronview #en,.pronview #ko,.pronview .toggles{display:none}
+.pv-en{margin:0;font-family:var(--f-en);font-size:14px;color:var(--muted);line-height:1.5;display:flex;flex-wrap:wrap;gap:2px 6px}
+.pv-ko{margin:0;font-size:30px;font-weight:700;line-height:1.35;display:flex;flex-wrap:wrap;gap:4px 12px;word-break:keep-all}
+.pv-mean{margin:0;font-size:17px;padding-top:10px;border-top:1px dashed var(--line)}
+.pw,.pg{cursor:pointer;border-radius:6px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.pw.say,.pg.say,.pw:active,.pg:active{background:var(--accent-soft)}
+@media (prefers-reduced-motion:reduce){.track i{transition:none}}
+
+/* --- added: phone layout (bigger text, >=44px tap targets, 16px form controls so Android doesn't zoom) --- */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-size:16px;overflow-x:hidden}
+.wrap{padding-block:14px 280px;min-width:0}
+.wrap>*{min-width:0}
+.brand h1{font-size:21px}
+.brand small{font-size:14px}
+.tabs{gap:8px}
+.tabs button{font-size:15px;min-height:44px;padding:8px 14px}
+.range{font-size:15px}
+.mini{font-size:14px;min-height:40px;padding:6px 12px}
+.meta{font-size:14px}
+.meta{flex-wrap:wrap}
+.toggles{flex:0 0 auto;margin-left:auto}
+.toggles button{font-size:14px;min-height:40px;padding:6px 11px;white-space:nowrap}
+.tok .w{font-size:30px}
+.tok .p{font-size:14px}
+.ko{font-size:19px}
+.enref{font-size:15px}
+.words span{font-size:15px}
+.gram div{font-size:15px}
+.gram .tag{font-size:13px}
+.notes h2{font-size:13px}
+details.list summary{font-size:16px;padding:12px 16px;min-height:48px}
+.rows button{min-height:48px;padding:12px 16px}
+.rows button .n{font-size:14px}
+.rows button .t{font-size:16px}
+.helpbox summary{cursor:pointer;color:var(--muted);font-size:14px;padding:10px 2px;min-height:44px}
+.help{font-size:13px}
+.viewtabs button{font-size:16px;min-height:46px}
+.pv-en{font-size:16px}
+.pv-ko{font-size:36px;gap:6px 14px}
+.pv-mean{font-size:19px}
+.barin{gap:10px}
+.prog{font-size:14px}
+.main{gap:6px}
+.main button{white-space:nowrap}
+.nav{width:48px;height:48px;font-size:24px;flex:0 0 auto}
+.play{height:48px;font-size:17px;min-width:0}
+.reset,.donebtn{height:48px;font-size:16px;padding:0 10px;flex:0 0 auto}
+.sets label{font-size:13px}
+.sets{grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr) minmax(0,.9fr)}
+.sets select{font-size:16px;min-height:44px;padding:6px 8px}
+.status{font-size:13px}
+@media (max-width:400px){.reset{padding:0 7px;font-size:15px}.donebtn{padding:0 9px}.tok .w{font-size:27px}.pv-ko{font-size:32px}}
+
+/* --- en-day additions --- */
+.vid{display:grid}
+.vid .frame{background:#000}
+.tabs button .dn{font-family:var(--f-en);font-weight:600}
+.tabs button .dc{font-size:12px;opacity:.8;margin-left:4px}
+.daytitle{margin:0;font-family:var(--f-en);font-size:15px;color:var(--muted)}
+.daytitle b{color:var(--fg);font-weight:600}
+.dayrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.daystart{border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);font:inherit;font-weight:600;font-size:15px;min-height:44px;padding:8px 14px;border-radius:10px;cursor:pointer}
+.est{font-size:13px;color:var(--muted)}
+.phase{display:inline-block;border-radius:999px;padding:1px 10px;font-family:var(--f-ko);font-weight:700;font-size:14px;white-space:nowrap}
+.phase.slow{background:var(--mark-soft);color:var(--fg)}
+.phase.fast{background:var(--accent);color:var(--surface)}
+.phasebig{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--muted)}
+.phasebig .ph{font-size:18px;font-weight:700;color:var(--fg)}
+.phasebig .ph.fast{color:var(--accent)}
+.phasebig .ph b{font-family:var(--f-en);font-variant-numeric:tabular-nums}
+.glossline{min-height:1.5em;font-size:16px;color:var(--fg);background:var(--mark-soft);border-radius:8px;padding:6px 10px}
+.glossline:empty{display:none}
+.glossline b{font-family:var(--f-en);margin-right:6px}
+#en .tok .w{font-size:26px}
+.prline{margin:0;font-size:17px;color:var(--accent);display:flex;flex-wrap:wrap;gap:2px 10px}
+.hidep .prline{visibility:hidden}
+.pronview #en,.pronview #ko,.pronview #pr,.pronview .toggles{display:none}
+.pv-ko .pg{display:inline-flex;flex-direction:column;align-items:flex-start}
+.pv-ko .pg small{font-family:var(--f-en);font-size:13px;font-weight:400;color:var(--muted);line-height:1.2}
+.pv-en .pw{padding:0 1px}
+.credit{font-size:13px;color:var(--muted);margin:0}
+.credit a{color:var(--accent)}
+.once{border:1px solid var(--line);background:var(--surface);color:var(--fg);font:inherit;font-size:15px;min-height:44px;padding:6px 12px;border-radius:9px;cursor:pointer}
+.vrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted);font-family:var(--f-en)}
+.range[hidden]{display:none}
+.setcard{gap:12px}
+.sets{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.sets label{font-size:14px}
+.wrap{padding-block:14px 190px}
+@media (max-width:400px){.pv-ko{font-size:30px}.sets select{padding:6px 4px}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand"><h1>English Diary · 50번 듣기</h1><small>Day 50 → 1 거꾸로</small></div>
+    <div class="tabs" id="tabs" role="group" aria-label="Day"></div>
+    <p class="daytitle" id="daytitle"></p>
+    <div class="range" id="rangeBox" hidden>구간 <b id="rangeTxt"></b><span id="rangeInfo"></span><button class="mini" id="clearRange" type="button">구간 해제</button></div>
+  </header>
+
+  <div class="viewtabs" role="tablist" aria-label="보기"><button type="button" role="tab" id="vPron" aria-selected="true">발음·뜻 보기</button><button type="button" role="tab" id="vBase" aria-selected="false">기본 보기</button></div>
+
+  <section class="card pronview" id="card" aria-live="polite">
+    <div class="meta"><span class="no" id="no"></span>
+      <div class="toggles">
+        <button type="button" id="tEn" aria-pressed="true">영어</button>
+        <button type="button" id="tP" aria-pressed="true">발음</button>
+        <button type="button" id="tKo" aria-pressed="true">한국어</button>
+      </div></div>
+    <div class="phasebig" id="phaseBig"></div>
+    <p class="en" id="en"></p>
+    <p class="prline" id="pr"></p>
+    <p class="ko" id="ko" title="눌러서 잠깐 보기"></p>
+    <div class="pv" id="pv"><p class="pv-en" id="pvEn"></p><p class="pv-ko" id="pvKo"></p><p class="pv-mean" id="pvMean"></p></div>
+    <div class="glossline" id="gloss"></div>
+    <div class="vid" id="vidBox"><div class="frame"><div id="ytPlayer"></div></div>
+      <div class="vrow"><button class="once" id="once" type="button">▶ 한 번 듣기 (1배)</button><span id="vidInfo"></span></div></div>
+  </section>
+
+  <section class="card setcard">
+    <div class="dayrow"><button class="daystart" id="dayAll" type="button">▶ 이 Day 처음부터 끝까지</button><span class="est" id="est"></span></div>
+    <div class="sets">
+      <label for="plan">반복(천천히+빠르게)<select id="plan"><option value="30-20" selected>30+20=50</option><option value="15-10">15+10=25</option><option value="6-4">6+4=10</option><option value="3-2">3+2=5</option><option value="1-1">1+1=2</option><option value="0-50">빠르게만 50</option></select></label>
+      <label for="spd">천천히 속도<select id="spd"><option value="0.5">0.5배</option><option value="0.75" selected>0.75배</option></select></label>
+      <label for="gap">쉬는 시간<select id="gap"><option value="0">바로</option><option value="0.5" selected>0.5초</option><option value="1">1초</option><option value="2">2초</option></select></label>
+      <label for="fin">끝에 이어 듣기<select id="fin"><option value="0">안 함</option><option value="1">1번</option><option value="3" selected>3번</option><option value="5">5번</option></select></label>
+    </div>
+  </section>
+
+  <section class="card notes">
+    <div class="notes" id="wordsBox"><h2>단어 · 뜻 (단어를 누르면 발음이 나와요)</h2><div class="words" id="words"></div></div>
+  </section>
+
+  <details class="list" id="listBox">
+    <summary id="listSum">문장 목록</summary>
+    <div class="rows" id="rows"></div>
+  </details>
+  <details class="helpbox"><summary>사용법 보기</summary><p class="help">‘가브리엘의 잉글리시 다이어리’ 영상(영어만 1회 읽기)을 문장 단위로 잘라 반복해요. 문장마다 기본 50번: 먼저 <b>천천히(0.75배) 30번</b>, 이어서 <b>빠르게(원래 속도 1배) 20번</b>. 영상에는 느린 낭독이 따로 없어서 ‘천천히’는 같은 낭독을 0.75배로 재생해요. ‘▶ 이 Day 처음부터 끝까지’를 누르면 첫 문장부터 50번씩 듣고 자동으로 다음 문장으로 넘어가요. 마지막 문장까지 끝나면 Day 전체를 원래 속도로 이어서 들어요(‘끝에 이어 듣기’ 횟수). ‘완료’는 횟수를 다 채우지 않아도 다음 문장으로 넘어가요. ‹ › 로 옮기면 바로 재생돼요. 영어 단어를 누르면 그 단어 발음(기기 음성)이 나와요. 링크: <b>#d50</b>(Day 50 열기), <b>#d50-3</b>(Day 50의 3번 문장), <b>#d50-1-4</b>(Day 50의 1–4번 구간), <b>#1-4</b>(지금 Day의 1–4번). ✓ 표시는 이 기기에만 저장돼요.</p></details>
+  <p class="credit">영상·음성: <a href="https://youtu.be/m1nYR8cLWoQ" target="_blank" rel="noopener">영어독립 · [가브리엘의 잉글리시 다이어리] 영어만 1회 Day 1~50</a>. 이 페이지는 공식 영상을 YouTube 플레이어로 재생만 하며, 음원을 따로 저장하거나 올리지 않아요.</p>
+</div>
+
+<div class="bar">
+  <div class="barin">
+    <div class="prog"><span id="cnt">0 / 50</span><div class="track"><i id="fill"></i></div><span id="mode">한 문장</span></div>
+    <div class="main">
+      <button class="nav" id="prev" type="button" aria-label="이전 문장">‹</button>
+      <button class="play" id="play" type="button">반복 시작</button>
+      <button class="nav" id="next" type="button" aria-label="다음 문장">›</button>
+      <button class="donebtn" id="doneBtn" type="button" title="이 문장을 완료로 표시하고 다음 문장으로">완료</button>
+      <button class="reset" id="reset" type="button">횟수 초기화</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+</div>
+
+<script>
+const DATA={"video":{"id":"m1nYR8cLWoQ","title":"[가브리엘의 잉글리시 다이어리] 영어만 1회 Day 1~50","channel":"영어독립","url":"https://youtu.be/m1nYR8cLWoQ"},"days":[{"d":50,"title":"Welcoming our baby boy into the world","title_ko":"우리 아기, 세상에 온 걸 환영해","s":[{"n":1,"en":"Day 50. Welcoming our baby boy into the world.","ch":[["Day 50","데이 피프티"],["Welcoming","웰커밍"],["our baby boy","아워 베이비 보이"],["into the world","인투 더 월드"]],"ko":"50일차. 우리 아들, 세상에 온 걸 환영해.","w":[["welcome","환영하다"],["baby boy","아들 아기"],["into the world","세상으로"]],"st":3413.59,"et":3418.15},{"n":2,"en":"I can barely believe it.","ch":[["I can barely","아이 캔 베얼리"],["believe it","빌리브 잇"]],"ko":"정말 믿기지가 않아요.","w":[["barely","거의 ~않다, 간신히"]],"st":3419.59,"et":3421.52},{"n":3,"en":"My heart is so full. I feel like it might burst.","ch":[["My heart","마이 하트"],["is so full","이즈 쏘우 풀"],["I feel like","아이 필 라익"],["it might burst","잇 마잇 버스트"]],"ko":"마음이 너무 벅차요. 터질 것만 같아요.","w":[["full","가득 찬, 벅찬"],["feel like","~인 것 같다"],["burst","터지다"]],"st":3421.74,"et":3425.9},{"n":4,"en":"Last night around 6:00 p.m., my water broke.","ch":[["Last night","래슷 나잇"],["around 6 p.m.","어라운드 씩스 피엠"],["my water broke","마이 워러 브로욱"]],"ko":"어젯밤 6시쯤 양수가 터졌어요.","w":[["around","~쯤"],["water broke","양수가 터지다"]],"st":3426.47,"et":3429.9},{"n":5,"en":"Everything after that was a whirlwind of emotions.","ch":[["Everything","에브리씽"],["after that","애프터 댓"],["was a whirlwind","워즈 어 월윈드"],["of emotions","어브 이모우션즈"]],"ko":"그 뒤로는 온갖 감정이 휘몰아쳤어요.","w":[["whirlwind","회오리바람, 정신없이 몰아침"],["emotion","감정"]],"st":3430.35,"et":3433.75},{"n":6,"en":"Nerves, excitement, a little fear, but mostly just love.","ch":[["Nerves","너브즈"],["excitement","익싸잇먼트"],["a little fear","어 리를 피어"],["but mostly","벗 모우슬리"],["just love","저슷 러브"]],"ko":"긴장, 설렘, 약간의 두려움… 그래도 대부분은 그냥 사랑이었어요.","w":[["nerves","긴장"],["excitement","설렘, 흥분"],["fear","두려움"],["mostly","대부분"]],"st":3433.74,"et":3439.11},{"n":7,"en":"And then around 8:30 a.m. this morning, he entered the world.","ch":[["And then","앤 덴"],["around 8:30 a.m.","어라운드 에잇 써리 에이엠"],["this morning","디스 모닝"],["he entered","히 엔터드"],["the world","더 월드"]],"ko":"그리고 오늘 아침 8시 반쯤, 아기가 세상에 나왔어요.","w":[["enter","들어오다"],["enter the world","태어나다"]],"st":3439.6,"et":3444.72},{"n":8,"en":"The most amazing thing? He opened his eyes and looked right at me like he already knew who I was.","ch":[["The most amazing thing","더 모우슷 어메이징 씽"],["He opened his eyes","히 오우펀드 히즈 아이즈"],["and looked right at me","앤 룩트 라잇 앳 미"],["like he already knew","라익 히 올레디 뉴"],["who I was","후 아이 워즈"]],"ko":"가장 놀라운 건요, 아기가 눈을 뜨더니 마치 제가 누군지 이미 아는 것처럼 저를 똑바로 쳐다봤어요.","w":[["amazing","놀라운"],["look right at","똑바로 쳐다보다"],["already","이미"]],"st":3445.21,"et":3452.86},{"n":9,"en":"It was just one look, but it said everything.","ch":[["It was just one look","잇 워즈 저슷 원 룩"],["but it said","벗 잇 쎄드"],["everything","에브리씽"]],"ko":"그저 한 번 바라본 것뿐인데, 모든 걸 말해 주었어요.","w":[["look","바라봄, 눈길"]],"st":3453.68,"et":3456.78},{"n":10,"en":"\"Mom, I'm here. I've been waiting for you.\"","ch":[["Mom","맘"],["I'm here","아임 히어"],["I've been waiting","아이브 빈 웨이팅"],["for you","포 유"]],"ko":"\"엄마, 나 왔어요. 엄마를 기다리고 있었어요.\"","w":[["I've been waiting","(계속) 기다리고 있었다"]],"st":3457.1,"et":3460.45},{"n":11,"en":"My husband cut the cord, his hands shaking, eyes full of tears.","ch":[["My husband","마이 허즈번드"],["cut the cord","컷 더 코드"],["his hands shaking","히즈 핸즈 쉐이킹"],["eyes full of tears","아이즈 풀 어브 티어즈"]],"ko":"남편이 탯줄을 잘랐는데, 손은 떨리고 눈에는 눈물이 가득했어요.","w":[["cord","탯줄(끈)"],["shake","떨다"],["tears","눈물"]],"st":3461.11,"et":3466.5},{"n":12,"en":"He kept whispering, \"You did it. You really did it.\"","ch":[["He kept whispering","히 켑트 위스퍼링"],["You did it","유 디딧"],["You really did it","유 리얼리 디딧"]],"ko":"남편은 계속 속삭였어요. \"해냈어. 정말 해냈어.\"","w":[["keep -ing","계속 ~하다"],["whisper","속삭이다"],["You did it","해냈어"]],"st":3467.04,"et":3471.26},{"n":13,"en":"Now we're resting in our hospital room, exhausted, but endlessly grateful.","ch":[["Now we're resting","나우 위어 레스팅"],["in our hospital room","인 아워 하스피럴 룸"],["exhausted","이그저스티드"],["but endlessly grateful","벗 엔들리슬리 그레잇풀"]],"ko":"지금은 병실에서 쉬고 있어요. 녹초가 됐지만 한없이 감사해요.","w":[["rest","쉬다"],["exhausted","녹초가 된"],["endlessly","끝없이"],["grateful","감사하는"]],"st":3472.04,"et":3477.43},{"n":14,"en":"He's in the nursery for now, and we're counting the seconds until we can hold him again.","ch":[["He's in the nursery","히즈 인 더 너서리"],["for now","포 나우"],["and we're counting","앤 위어 카운팅"],["the seconds","더 세컨즈"],["until we can hold him","언틸 위 캔 홀딤"],["again","어게인"]],"ko":"아기는 지금 신생아실에 있고, 우리는 다시 안아 볼 때까지 1초 1초를 세고 있어요.","w":[["nursery","신생아실"],["for now","지금은"],["count the seconds","1초 1초 손꼽아 기다리다"],["hold","안다"]],"st":3478.21,"et":3483.34},{"n":15,"en":"One thing we haven't decided: his name.","ch":[["One thing","원 씽"],["we haven't decided","위 해븐 디싸이디드"],["his name","히즈 네임"]],"ko":"아직 못 정한 게 하나 있어요. 바로 아기 이름이요.","w":[["decide","정하다"]],"st":3484.05,"et":3487.04},{"n":16,"en":"Even though we have a few names in mind, I think deep down we're both just waiting for that feeling.","ch":[["Even though","이븐 도우"],["we have a few names","위 해버 퓨 네임즈"],["in mind","인 마인드"],["I think","아이 씽크"],["deep down","딥 다운"],["we're both","위어 보우쓰"],["just waiting","저슷 웨이팅"],["for that feeling","포 댓 필링"]],"ko":"마음에 둔 이름이 몇 개 있긴 하지만, 속으로는 우리 둘 다 그 느낌이 오기를 기다리고 있는 것 같아요.","w":[["even though","~이긴 하지만"],["have ~ in mind","~을 생각해 두다"],["deep down","마음 속으로는"]],"st":3487.53,"et":3494.53},{"n":17,"en":"The moment where we hear a name and our hearts just whisper, \"That's him.\"","ch":[["The moment","더 모우먼트"],["where we hear a name","웨어 위 히어러 네임"],["and our hearts","앤 아워 하츠"],["just whisper","저슷 위스퍼"],["That's him","댓츠 힘"]],"ko":"어떤 이름을 듣는 순간 우리 마음이 \"바로 이 아이야\" 하고 속삭이는 그 순간이요.","w":[["moment","순간"],["That's him","바로 그 아이야"]],"st":3494.89,"et":3499.36},{"n":18,"en":"So, we'll wait because he deserves the perfect name.","ch":[["So, we'll wait","쏘우 윌 웨잇"],["because he deserves","비커즈 히 디저브즈"],["the perfect name","더 퍼펙트 네임"]],"ko":"그래서 기다릴 거예요. 아기는 완벽한 이름을 가질 자격이 있으니까요.","w":[["deserve","~을 받을 자격이 있다"],["perfect","완벽한"]],"st":3499.86,"et":3503.93},{"n":19,"en":"One that holds all the love, dreams, and wonder that brought him into this world.","ch":[["One that holds","원 댓 홀즈"],["all the love","올 더 러브"],["dreams","드림즈"],["and wonder","앤 원더"],["that brought him","댓 브롯 힘"],["into this world","인투 디스 월드"]],"ko":"아기를 이 세상에 데려온 모든 사랑과 꿈, 경이로움을 다 담은 이름으로요.","w":[["hold","담다"],["wonder","경이로움"],["bring ~ into the world","~을 세상에 낳다"]],"st":3504.36,"et":3509.53},{"n":20,"en":"And I know we'll find it.","ch":[["And I know","앤 아이 노우"],["we'll find it","윌 파인딧"]],"ko":"그리고 우린 꼭 찾을 거예요. 그걸 알아요.","w":[["find","찾다"]],"st":3509.96,"et":3512.58}],"st":3413.59,"et":3512.58},{"d":1,"title":"Sweet intentions, salty results","title_ko":"좋은 뜻, 짠 결과","s":[{"n":1,"en":"Day one. Sweet intentions, salty results.","ch":[["Day one","데이 원"],["Sweet intentions","스윗 인텐션즈"],["salty results","쏠티 리절츠"]],"ko":"1일차. 마음은 달콤했는데, 결과는 짰어요.","w":[["intention","의도, 뜻"],["salty","짠"],["result","결과"]],"st":4.06,"et":8.54},{"n":2,"en":"It was my husband's birthday last weekend, so I was thinking of making him a homemade cake.","ch":[["It was my husband's birthday","잇 워즈 마이 허즈번즈 버쓰데이"],["last weekend","래슷 위켄드"],["so I was thinking of","쏘우 아이 워즈 씽킹 어브"],["making him","메이킹 임"],["a homemade cake","어 홈메이드 케익"]],"ko":"지난 주말이 남편 생일이라서, 직접 만든 케이크를 만들어 줄까 생각했어요.","w":[["husband","남편"],["think of -ing","~할까 생각하다"],["homemade","집에서 만든"]],"st":10.03,"et":15.98},{"n":3,"en":"Some people say it's a waste of time when there are so many amazing bakeries, but I don't see it that way.","ch":[["Some people say","썸 피플 세이"],["it's a waste of time","잇처 웨이스트 어브 타임"],["when there are","웬 데어라"],["so many","쏘우 매니"],["amazing bakeries","어메이징 베이커리즈"],["but I don't see it","벗 아이 돈 씨잇"],["that way","댓 웨이"]],"ko":"멋진 빵집이 이렇게 많은데 시간 낭비라고 하는 사람들도 있지만, 저는 그렇게 생각하지 않아요.","w":[["waste of time","시간 낭비"],["bakery","빵집"],["see it that way","그렇게 생각하다"]],"st":16.51,"et":23.2},{"n":4,"en":"There's something special about making it yourself.","ch":[["There's something special","데어즈 썸씽 스페셜"],["about making it","어바웃 메이킹 잇"],["yourself","유어셀프"]],"ko":"직접 만드는 데에는 뭔가 특별한 게 있거든요.","w":[["special","특별한"],["yourself","직접, 스스로"]],"st":23.69,"et":26.65},{"n":5,"en":"After baking and decorating, I proudly brought the beautiful cake to my husband and sang happy birthday.","ch":[["After baking","애프터 베이킹"],["and decorating","앤 데커레이팅"],["I proudly brought","아이 프라우들리 브롯"],["the beautiful cake","더 뷰리풀 케익"],["to my husband","투 마이 허즈번드"],["and sang","앤 쌩"],["happy birthday","해피 버쓰데이"]],"ko":"굽고 장식까지 마친 뒤, 뿌듯하게 그 예쁜 케이크를 남편에게 가져가서 생일 축하 노래를 불러 줬어요.","w":[["bake","굽다"],["decorate","장식하다"],["proudly","뿌듯하게"],["brought","가져왔다(bring)"],["sang","노래했다(sing)"]],"st":27.45,"et":33.83},{"n":6,"en":"But as he took his first bite, he made a funny face.","ch":[["But as he took","벗 애즈 히 툭"],["his first bite","히즈 퍼슷 바잇"],["he made","히 메이드"],["a funny face","어 퍼니 페이스"]],"ko":"그런데 남편이 첫입을 먹더니 묘한 표정을 지었어요.","w":[["take a bite","한입 먹다"],["make a funny face","이상한 표정을 짓다"]],"st":34.41,"et":38.03},{"n":7,"en":"\"This is interesting,\" he said.","ch":[["This is interesting","디스 이즈 인터레스팅"],["he said","히 쎄드"]],"ko":"\"이거 흥미롭네.\" 남편이 말했어요.","w":[["interesting","흥미로운, 특이한"]],"st":38.58,"et":42.06},{"n":8,"en":"\"Interesting? What does that mean?\"","ch":[["Interesting?","인터레스팅?"],["What does that mean?","왓 더즈 댓 민?"]],"ko":"\"흥미롭다고? 그게 무슨 뜻이야?\"","w":[["mean","뜻하다"]],"st":42.56,"et":45.21},{"n":9,"en":"\"Hmm, think of it as a compliment.\"","ch":[["Hmm","흠"],["think of it as","씽커빗 애즈"],["a compliment","어 캄플러먼트"]],"ko":"\"음, 칭찬이라고 생각해.\"","w":[["think of A as B","A를 B로 여기다"],["compliment","칭찬"]],"st":45.78,"et":48.82},{"n":10,"en":"His expression said otherwise, so I tried a bite myself.","ch":[["His expression","히즈 익스프레션"],["said otherwise","쎄드 아더와이즈"],["so I tried a bite","쏘우 아이 트라이더 바잇"],["myself","마이셀프"]],"ko":"그런데 표정은 전혀 아니라고 말하고 있어서, 저도 직접 한입 먹어 봤어요.","w":[["expression","표정"],["otherwise","그렇지 않다고, 다르게"],["try a bite","한입 먹어 보다"]],"st":49.44,"et":53.99},{"n":11,"en":"Turns out I used salt instead of sugar.","ch":[["Turns out","턴즈 아웃"],["I used salt","아이 유즈드 쏠트"],["instead of sugar","인스테더브 슈거"]],"ko":"알고 보니 설탕 대신 소금을 넣었더라고요.","w":[["turns out","알고 보니"],["salt","소금"],["instead of","~대신에"],["sugar","설탕"]],"st":54.5,"et":57.76},{"n":12,"en":"Oh well, at least it saves us from all those extra calories.","ch":[["Oh well","오우 웰"],["at least","앳 리스트"],["it saves us","잇 세이브즈 어스"],["from all those","프럼 올 도우즈"],["extra calories","엑스트라 캘러리즈"]],"ko":"뭐 어때요, 적어도 그 많은 칼로리는 피했잖아요.","w":[["oh well","뭐 어쩔 수 없지"],["at least","적어도"],["save A from B","A가 B를 피하게 해 주다"],["extra","추가의"]],"st":58.14,"et":62.26}],"st":4.06,"et":62.26}]};
+const KP="enDay_"; // localStorage prefix (separate from english.html / vi pages)
+const DAYS=DATA.days; // newest Day first
+const VID=DATA.video.id;
+const $=id=>document.getElementById(id);
+const store={get(k,d){try{const v=localStorage.getItem(KP+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(KP+k,JSON.stringify(v))}catch(e){}}};
+let done=new Set(store.get("done",[]));
+let day=null, S=[], cur=0, range=null, playing=false, count=0, timer=null, allTotal=0, allCount=0, phase="each";
+function findDay(n){return DAYS.find(d=>d.d===+n)}
+function setDay(n){day=findDay(n)||DAYS[0]; S=day.s; store.set("day",day.d);}
+function sid(i){return `${day.d}-${S[i].n}`}
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function norm(w){return String(w).toLowerCase().replace(/[’]/g,"'").replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu,"")}
+function plan(){const [a,b]=$("plan").value.split("-").map(Number);return {slow:a,fast:b,total:a+b}}
+function curPhase(){const p=plan();return count<p.slow?"slow":"fast"}
+function rateFor(){return (phase==="all"||curPhase()==="fast")?1:+$("spd").value}
+function fmtMin(sec){return Math.max(1,Math.round(sec/60))}
+function estimate(d){const p=plan(),g=+$("gap").value,sr=+$("spd").value,ov=0.35;
+  let t=0;d.s.forEach(s=>{const L=s.et-s.st;t+=p.slow*(L/sr+g+ov)+p.fast*(L+g+ov)});
+  const all=d.s.reduce((a,s)=>a+(s.et-s.st)+0.3,0);return t+all*(+$("fin").value)}
+// hash: #d50 | #d50-3 | #d50-1-4 | #3 | #1-4  (plain numbers = the Day that's open now)
+function parseHash(){
+  const h=decodeURIComponent(location.hash.replace("#","")).trim().toLowerCase();
+  let m=h.match(/^d(\d{1,2})(?:-(\d{1,3})(?:-(\d{1,3}))?)?$/), dn, a, b;
+  if(m){dn=+m[1];a=m[2];b=m[3];}
+  else if((m=h.match(/^r?(\d{1,3})(?:-(\d{1,3}))?$/))){dn=day?day.d:store.get("day",DAYS[0].d);a=m[1];b=m[2];}
+  else return false;
+  if(!findDay(dn)) {$("status").textContent=`Day ${dn}은(는) 아직 없어요.`;return false}
+  setDay(dn); count=0; phase="each"; allCount=0;
+  if(!a){range=null;cur=0;allTotal=0;return true}
+  a=+a;b=b?+b:a;
+  const lo=Math.max(1,Math.min(a,b)), hi=Math.min(S.length,Math.max(a,b));
+  range=hi>lo?[lo,hi]:null; allTotal=range?+$("fin").value:0; cur=lo-1; return true;
+}
+function inRange(i){return range&&i+1>=range[0]&&i+1<=range[1]}
+function dayDone(d){return d.s.filter(s=>done.has(`${d.d}-${s.n}`)).length}
+function renderTabs(){
+  $("tabs").innerHTML=DAYS.map(d=>{const k=dayDone(d);return `<button type="button" data-d="${d.d}" aria-pressed="${d===day}"><span class="dn">Day ${d.d}</span><span class="dc">${k===d.s.length?"✓":k?k+"/"+d.s.length:d.s.length+"문장"}</span></button>`}).join("");
+}
+$("tabs").addEventListener("click",e=>{const b=e.target.closest("button[data-d]");if(!b)return;stop();history.replaceState(null,"","#d"+b.dataset.d);setDay(+b.dataset.d);cur=0;count=0;range=null;phase="each";allTotal=0;render();$("status").textContent=""});
+function wordsFor(s,w){const n=norm(w);if(!n)return null;
+  return s.w.find(([k])=>k.toLowerCase().split(/\s+/).map(norm).includes(n))||s.w.find(([k])=>norm(k).startsWith(n.slice(0,Math.max(4,n.length-2))))||null}
+function render(){
+  const s=S[cur];
+  renderTabs();
+  $("daytitle").innerHTML=`<b>Day ${day.d}.</b> ${esc(day.title)} · ${esc(day.title_ko)}`;
+  $("est").textContent=`${S.length}문장 · 예상 약 ${fmtMin(estimate(day))}분`;
+  $("no").textContent=`Day ${day.d} · ${s.n} / ${S.length}`;
+  const toks=s.en.split(/\s+/);
+  $("en").innerHTML=toks.map((w,i)=>`<span class="tok" role="button" tabindex="0" data-w="${esc(w)}"><span class="w">${esc(w)}</span></span>`).join("");
+  $("pr").innerHTML=s.ch.map(([e,k])=>`<span class="pg" role="button" tabindex="0" data-w="${esc(e)}">${esc(k)}</span>`).join("");
+  $("ko").textContent=s.ko;
+  $("words").innerHTML=s.w.map(([a,b])=>`<span class="pw" role="button" tabindex="0" data-w="${esc(a)}"><b>${esc(a)}</b>${esc(b)}</span>`).join("");
+  $("wordsBox").hidden=!s.w.length;
+  $("pvEn").innerHTML=toks.map(w=>`<span class="pw" role="button" tabindex="0" data-w="${esc(w)}">${esc(w)}</span>`).join("");
+  $("pvKo").innerHTML=s.ch.map(([e,k])=>`<span class="pg" role="button" tabindex="0" data-w="${esc(e)}">${esc(k)}<small>${esc(e)}</small></span>`).join("");
+  $("pvMean").textContent=s.ko;
+  $("gloss").innerHTML="";
+  $("vidInfo").textContent=`${fmtT(s.st)} – ${fmtT(s.et)} · ${(s.et-s.st).toFixed(1)}초`;
+  $("dayAll").textContent=`▶ Day ${day.d} 처음부터 끝까지`;
+  if(range){$("rangeBox").hidden=false;$("rangeTxt").textContent=`Day ${day.d} · ${range[0]}–${range[1]}`;$("mode").textContent=phase==="all"?`이어 듣기 ${cur+2-range[0]}/${range[1]-range[0]+1}`:`${cur+2-range[0]} / ${range[1]-range[0]+1}번째`;$("rangeInfo").textContent=` · ${range[1]-range[0]+1}문장`+(allTotal?` · 끝에 이어 듣기 ${allTotal}번`:``);}
+  else{$("rangeBox").hidden=true;$("mode").textContent="한 문장";}
+  renderRows(); renderCount();
+}
+function fmtT(t){const m=Math.floor(t/60),x=t-m*60;return `${m}:${x.toFixed(1).padStart(4,"0")}`}
+function renderRows(){
+  $("listSum").textContent=`문장 목록 · Day ${day.d} · ${S.length}문장`;
+  $("rows").innerHTML=S.map((s,i)=>`<button type="button" data-i="${i}" class="${i===cur?"cur":""} ${inRange(i)?"inr":""}"><span class="n">${s.n}</span><span class="t">${esc(s.en)}</span><span class="done">${done.has(sid(i))?"✓":""}</span></button>`).join("");
+}
+$("rows").addEventListener("click",e=>{const b=e.target.closest("button[data-i]");if(!b)return;stop();$("status").textContent="";cur=+b.dataset.i;count=0;if(range&&!inRange(cur)){range=null;phase="each";allTotal=0;}render();start();window.scrollTo({top:0,behavior:"smooth"})});
+function renderCount(){
+  const p=plan();
+  if(phase==="all"){$("cnt").textContent=`이어 듣기 ${allCount} / ${allTotal}`;$("fill").style.width=Math.min(100,allCount/allTotal*100)+"%";$("play").textContent=playing?"일시정지":"이어서 듣기";
+    $("phaseBig").innerHTML=`<span class="ph fast">이어 듣기 <b>${allCount}/${allTotal}</b></span><span>원래 속도</span>`;}
+  else{const ph=curPhase();
+    const txt=ph==="slow"?`천천히 ${count}/${p.slow}`:`빠르게 ${count-p.slow}/${p.fast}`;
+    $("cnt").textContent=`${count} / ${p.total}`;$("fill").style.width=Math.min(100,count/p.total*100)+"%";
+    $("play").textContent=playing?"일시정지":(count>0&&count<p.total?"이어서 듣기":"반복 시작");
+    $("phaseBig").innerHTML=count>=p.total?`<span class="ph fast">${p.total}번 완료 ✓</span>`:`<span class="ph ${ph}">${ph==="slow"?"천천히":"빠르게"} <b>${ph==="slow"?count:count-p.slow}/${ph==="slow"?p.slow:p.fast}</b></span><span>${ph==="slow"?$("spd").value+"배":"1배"}${ph==="slow"&&p.fast?` → 다음: 빠르게 ${p.fast}번`:""}</span>`;
+    $("mode").dataset.ph=txt;}
+  $("doneBtn").disabled=(phase==="all");
+}
+
+// ---------- YouTube IFrame player = the only audio source ----------
+let yt=null, ytReady=false, poll=null, seg=null, onSegEnd=null, armed=false, segT0=0, pendingPlay=null;
+(function(){const s=document.createElement("script");s.src="https://www.youtube.com/iframe_api";s.id="ytApi";document.head.appendChild(s);})();
+window.onYouTubeIframeAPIReady=function(){
+  yt=new YT.Player("ytPlayer",{width:"100%",height:"100%",videoId:VID,
+    playerVars:{playsinline:1,rel:0,modestbranding:1,controls:1,start:Math.floor(S[cur].st),iv_load_policy:3,cc_load_policy:0},
+    events:{onReady:()=>{ytReady=true;window.__ytReady=true;if(pendingPlay){const p=pendingPlay;pendingPlay=null;playSeg(p.i,p.cb,p.r);}},
+            onError:e=>{$("status").textContent="영상을 재생할 수 없어요 (YouTube 오류 "+e.data+"). 잠시 후 다시 눌러 주세요.";stop();}}});
+};
+function playSeg(i,cb,rate){
+  const s=S[i]; seg=s; onSegEnd=cb; armed=false; segT0=Date.now(); const r=rate||rateFor();
+  if(!ytReady){pendingPlay={i,cb,r};$("status").textContent="플레이어 준비 중…";return}
+  clearInterval(poll);
+  try{ yt.setPlaybackRate(r); yt.seekTo(s.st,true); yt.playVideo(); }catch(e){}
+  poll=setInterval(()=>{
+    if(speaking) return;
+    let t=0; try{t=yt.getCurrentTime();}catch(e){return}
+    if(!armed){ if(t>=s.st-0.4&&t<s.et){armed=true;try{if(yt.getPlaybackRate()!==r)yt.setPlaybackRate(r)}catch(e){}}
+      else if(Date.now()-segT0>600&&(t<s.st-1||t>s.et+0.5)){ try{yt.seekTo(s.st,true);yt.playVideo();}catch(e){} segT0=Date.now(); }
+      if(Date.now()-segT0>12000){ $("status").textContent="재생이 시작되지 않았어요. 영상(▶)을 한 번 누른 뒤 ‘반복 시작’을 눌러 주세요."; } return; }
+    if(t>=s.et){ clearInterval(poll); try{yt.pauseVideo();}catch(e){} const f=onSegEnd; onSegEnd=null; if(f) f(); }
+  },50);
+}
+function haltSeg(){clearInterval(poll);onSegEnd=null;try{if(ytReady)yt.pauseVideo();}catch(e){}}
+
+function playIdx(i){ cur=i; render(); if(!/쉬는 중|다음 문장|이어서/.test($("status").textContent)) $("status").textContent=""; playSeg(i,segEnded); }
+function segEnded(){
+  if(!playing) return;
+  const g=+$("gap").value*1000;
+  if(phase==="all"){
+    if(cur+1<=range[1]-1){ timer=setTimeout(()=>{if(playing) playIdx(cur+1)},Math.min(g,300)); return; }
+    allCount++; renderCount();
+    if(allCount>=allTotal){ playing=false; phase="each"; renderCount(); $("status").textContent=`Day ${day.d} 끝! 문장마다 ${plan().total}번 + 이어 듣기 ${allTotal}번을 모두 들었어요.`; return; }
+    timer=setTimeout(()=>{if(playing) playIdx(range[0]-1)},Math.max(g,800)); return;
+  }
+  const p=plan();
+  count++; renderCount();
+  if(count>=p.total){ sentenceFinished(false); return; }
+  const sw=(count===p.slow&&p.fast>0&&p.slow>0);
+  $("status").textContent=sw?"이제 빠르게(1배)!":(g?"⏸ 쉬는 중":"");
+  timer=setTimeout(()=>{if(playing){if($("status").textContent==="⏸ 쉬는 중")$("status").textContent="";playSeg(cur,segEnded);}},sw?Math.max(g,1200):g);
+}
+function start(){
+  const p=plan();
+  if(phase==="all"){ if(allCount>=allTotal){allCount=0;} playing=true; renderCount(); playIdx(cur); return; }
+  if(count>=p.total){count=0;if(range&&cur>=range[1]-1)cur=range[0]-1;}
+  playing=true;renderCount();playIdx(cur);}
+function stop(){playing=false;clearTimeout(timer);haltSeg();renderCount();if($("status").textContent==="⏸ 쉬는 중")$("status").textContent="";}
+function move(i){stop();$("status").textContent="";if(i<0||i>=S.length)return;cur=i;count=0;if(range&&!inRange(cur)){range=null;phase="each";allTotal=0;}render();start()}
+$("play").onclick=()=>playing?stop():start();
+$("reset").onclick=()=>{stop();count=0;if(phase==="all"){phase="each";allCount=0;if(range)cur=range[0]-1;}render();$("status").textContent=""};
+$("prev").onclick=()=>move(cur-1);
+$("next").onclick=()=>move(cur+1);
+$("plan").onchange=()=>{store.set("plan",$("plan").value);render()};
+$("spd").onchange=()=>{try{if(ytReady&&playing)yt.setPlaybackRate(rateFor())}catch(e){};store.set("spd",$("spd").value);render()};
+$("gap").onchange=()=>{store.set("gap",$("gap").value);render()};
+$("fin").onchange=()=>{store.set("fin",$("fin").value);if(range&&phase!=="all")allTotal=+$("fin").value;render()};
+$("clearRange").onclick=()=>{stop();range=null;count=0;phase="each";allTotal=0;history.replaceState(null,"","#d"+day.d);render()};
+$("dayAll").onclick=()=>{stop();const h=`#d${day.d}-1-${S.length}`;if(location.hash===h){parseHash();render();start();}else location.hash=h;};
+$("once").onclick=()=>{const was=playing;stop();if(was)return;playSeg(cur,()=>{},1);};
+function tog(id,cls){const b=$(id);b.onclick=()=>{const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);$("card").classList.toggle(cls,!on);store.set(id,on)};const on=store.get(id,true);b.setAttribute("aria-pressed",on);$("card").classList.toggle(cls,!on)}
+tog("tEn","hideen");tog("tP","hidep");tog("tKo","hideko");
+$("ko").onclick=()=>{const c=$("card");if(c.classList.contains("hideko")){c.classList.remove("hideko");setTimeout(()=>{if($("tKo").getAttribute("aria-pressed")!=="true")c.classList.add("hideko")},2500)}};
+function sentenceFinished(manual){
+  done.add(sid(cur)); store.set("done",[...done]); renderRows(); renderTabs();
+  const p=plan(), g=+$("gap").value*1000, label=manual?"완료":`${p.total}번 완료`;
+  if(range&&cur+1<=range[1]-1){
+    count=0; const nx=cur+1;
+    $("status").textContent=`${S[cur].n}번 ${label} · 다음 문장으로`;
+    if(playing){ timer=setTimeout(()=>{if(playing) playIdx(nx)},manual?300:Math.max(g,1500)); }
+    else { cur=nx; render(); start(); }
+    return;
+  }
+  if(range&&allTotal>0){
+    phase="all"; allCount=0; count=0; renderCount();
+    $("status").textContent=`이제 ${range[0]}–${range[1]}번을 원래 속도로 이어서 ${allTotal}번 들어요.`;
+    if(playing){ timer=setTimeout(()=>{if(playing) playIdx(range[0]-1)},manual?500:2000); }
+    else { cur=range[0]-1; render(); start(); }
+    return;
+  }
+  if(manual&&!range&&cur<S.length-1){
+    $("status").textContent=`${S[cur].n}번 완료 · 다음 문장으로`;
+    count=0; cur++;
+    if(playing){ timer=setTimeout(()=>{if(playing) playIdx(cur)},300); } else { render(); start(); }
+    return;
+  }
+  playing=false; renderCount();
+  $("status").textContent=range?`Day ${day.d} ${range[0]}–${range[1]}번을 모두 마쳤어요.`:(manual?"마지막 문장까지 완료했어요.":`${p.total}번 완료했어요.`);
+}
+$("doneBtn").onclick=()=>{ if(phase==="all") return; clearTimeout(timer); haltSeg(); sentenceFinished(true); };
+
+// ---------- tap a word / chunk = hear it (Web Speech API, en-US) + show its meaning ----------
+const TTS_LANG="en-US"; let ttsVoice=null, speaking=false;
+function pickVoice(){ if(!("speechSynthesis" in window)) return; const vs=speechSynthesis.getVoices();
+  ttsVoice=vs.find(v=>v.lang.replace("_","-")==="en-US"&&/samantha|google|natural/i.test(v.name))||vs.find(v=>v.lang.replace("_","-").toLowerCase()==="en-us")||vs.find(v=>v.lang.toLowerCase().startsWith("en"))||null; }
+if("speechSynthesis" in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+function sayWord(w,el){
+  const t=String(w).replace(/[“”"]/g,"").replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu,""); if(!t) return;
+  const g=wordsFor(S[cur],t.split(/\s+/).length===1?t:"");
+  $("gloss").innerHTML=g?`<b>${esc(g[0])}</b>${esc(g[1])}`:`<b>${esc(t)}</b>`;
+  document.querySelectorAll(".say").forEach(e=>e.classList.remove("say")); if(el) el.classList.add("say");
+  if(!("speechSynthesis" in window)){ $("status").textContent="이 브라우저는 단어 발음 기능을 지원하지 않아요."; return; }
+  const resume=playing&&armed&&onSegEnd; if(resume){ try{yt.pauseVideo()}catch(e){} }
+  speechSynthesis.cancel(); speaking=true;
+  const u=new SpeechSynthesisUtterance(t); u.lang=TTS_LANG; if(ttsVoice) u.voice=ttsVoice; u.rate=0.85;
+  if(!ttsVoice){ pickVoice(); if(!ttsVoice) $("status").textContent="기기에 영어(en-US) 음성이 없을 수 있어요. 설정 > 텍스트 음성 변환에서 영어를 추가해 주세요."; }
+  let fired=false; const fin=()=>{ if(fired) return; fired=true; speaking=false; if(el) el.classList.remove("say"); if(resume&&playing){ try{yt.playVideo()}catch(e){} } };
+  u.onend=fin; u.onerror=fin; setTimeout(fin,Math.max(2500,t.length*250));
+  speechSynthesis.speak(u);
+}
+["en","pr","pvEn","pvKo","words"].forEach(id=>{
+  $(id).addEventListener("click",e=>{const t=e.target.closest("[data-w]"); if(t) sayWord(t.dataset.w,t);});
+  $(id).addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const t=e.target.closest("[data-w]"); if(t){e.preventDefault();sayWord(t.dataset.w,t);}});
+});
+function setView(v){
+  const pron=v!=="base";
+  $("card").classList.toggle("pronview",pron);
+  $("vBase").setAttribute("aria-selected",String(!pron));
+  $("vPron").setAttribute("aria-selected",String(pron));
+  store.set("view",pron?"pron":"base");
+}
+$("vBase").onclick=()=>setView("base");
+$("vPron").onclick=()=>setView("pron");
+setView(store.get("view","pron"));
+[["spd","0.75"],["plan","30-20"],["gap","0.5"],["fin","3"]].forEach(([k,d])=>{const v=store.get(k,d); if([...$(k).options].some(o=>o.value===v)) $(k).value=v;});
+setDay(store.get("day",DAYS[0].d));
+parseHash();
+window.addEventListener("hashchange",()=>{stop();if(parseHash()){render(); if(range) start();}});
+render();
+</script>
