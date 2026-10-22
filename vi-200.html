@@ -186,7 +186,7 @@ details.list summary{font-size:16px;padding:12px 16px;min-height:48px}
 #pvKo .pc.say{background:#ffedd5}
 #pvMean{font-size:18px;color:var(--muted);margin-top:14px}
 .pronview #pv{flex:1 1 auto}
-#card.pronview{display:flex;flex-direction:column;min-height:var(--cardh,auto)}
+#card.pronview{box-sizing:border-box;display:flex;flex-direction:column;min-height:var(--cardh,auto)}
 header .brand h1{font-size:16px;line-height:1.3;margin:0}
 header .brand small{display:none}
 header .brand{margin:0 0 6px!important}
@@ -198,12 +198,25 @@ header .brand{margin:0 0 6px!important}
 .range b{margin-right:2px}
 .range .mini{min-height:40px;padding:4px 10px;margin:0 0 0 auto!important;font-size:13px}
 .viewtabs{margin:8px 0!important}
+.range{flex-wrap:nowrap!important;white-space:nowrap}
+.range .mini{min-height:34px!important;padding:2px 10px!important}
+.once{min-height:36px;padding:4px 10px;font-size:13px}
+.vrow{flex-wrap:nowrap;white-space:nowrap}
+.bar .sets label{font-size:11px;white-space:nowrap}
+.bar .sets select{min-height:34px!important;padding-top:2px!important;padding-bottom:2px!important;width:100%}
+.bar .main button{min-height:46px!important}
+.bar .status:empty{display:none}
 .viewtabs button{min-height:40px!important;font-size:14px!important;padding:4px 8px!important}
 header{margin-bottom:0!important}
+#card:not(.pronview){display:flex;flex-direction:column}
+#card:not(.pronview)>*{order:3}#card:not(.pronview)>.meta{order:0}#card:not(.pronview)>#vi{order:2}#card:not(.pronview)>#ko{order:1}
+#card.blong #vi .tok .p{display:none!important}
+#card.blong:not(.pronview) #vi .tok .w{font-size:var(--bvf,17px)!important}
 #card:not(.pronview) #vi .tok .w{font-size:20px}
 #card:not(.pronview) #vi .tok .p{font-size:16px}
 #card:not(.pronview) #ko{font-size:32px;font-weight:700;color:#111827;background:#fef3c7;padding:10px 14px;border-radius:12px;line-height:1.35;margin:12px 0 4px}
 @media (max-width:400px){#card:not(.pronview) #ko{font-size:30px}}
+#card.blong:not(.pronview) #ko{font-size:var(--kof,30px)!important}
 .ytdock{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin:4px 0}
 .ytToggle{border:1px solid var(--line);background:var(--surface);color:var(--fg);font:inherit;font-size:14px;min-height:40px;padding:6px 12px;border-radius:9px;cursor:pointer}
 .ytdock .frame{width:200px;height:113px;aspect-ratio:auto;background:#000;border-radius:8px;overflow:hidden}
@@ -215,7 +228,7 @@ header{margin-bottom:0!important}
   <header>
     <div class="brand"><h1>베트남어 200문장 · 천천히 30 + 빠르게 20</h1><small id="epname"></small></div>
     <div class="tabs" id="tabs" role="group" aria-label="에피소드"></div>
-    <div class="range" id="rangeBox" hidden>오늘의 구간 <b id="rangeTxt"></b><span id="rangeInfo"></span><button class="mini" id="clearRange" type="button">구간 해제</button></div>
+    <div class="range" id="rangeBox" hidden>오늘의 구간 <b id="rangeTxt"></b><span id="rangeInfo"></span><button class="mini" id="clearRange" type="button">해제</button></div>
   </header>
   <div class="viewtabs" role="tablist" aria-label="보기"><button type="button" role="tab" id="vPron" aria-selected="true">발음·뜻 보기</button><button type="button" role="tab" id="vBase" aria-selected="false">기본 보기</button></div>
 
@@ -231,7 +244,7 @@ header{margin-bottom:0!important}
     <div class="pv" id="pv"><p class="pv-vi" id="pvVi"></p><p class="pv-ko" id="pvKo"></p><p class="pv-mean" id="pvMean"></p></div>
     <div class="glossline" id="gloss"></div>
     <div class="vid" id="vidBox">
-      <div class="vrow"><button class="once" id="onceS" type="button">▶ 천천히 한 번</button><button class="once" id="onceF" type="button">▶ 빠르게 한 번</button><span id="vidInfo"></span></div></div>
+      <div class="vrow"><button class="once" id="onceS" type="button">▶ 천천히</button><button class="once" id="onceF" type="button">▶ 빠르게</button><span id="vidInfo"></span></div></div>
   </section>
 
   <section class="card notes">
@@ -351,7 +364,7 @@ function render(){
     $("rangeInfo").textContent=` · ${rev.list.length}문장 × ${rev.n}회 (1배)`;}
   else if(range){$("rangeBox").hidden=false;$("rangeTxt").textContent=`${pad(range[0])}–${pad(range[1])}`;
     $("mode").textContent=phase==="all"?`전체 이어 듣기 · ${cur+2-range[0]}/${range[1]-range[0]+1}`:`구간 ${cur+2-range[0]} / ${range[1]-range[0]+1}번째 문장`;
-    $("rangeInfo").textContent=` · 문장마다 천천히 ${nS()} + 빠르게 ${nF()}`;}
+    $("rangeInfo").textContent=``;}
   else{$("rangeBox").hidden=true;$("mode").textContent="한 문장";}
   $("allBtn").hidden=!(range&&(rangeDone||phase==="all"));
   $("allBtn").textContent=phase==="all"?(playing?"전체 이어 듣기 멈추기":"전체 이어 듣기 계속"):`구간 전체 이어 듣기 ${ALL_LOOPS}회 (선택)`;
@@ -359,8 +372,13 @@ function render(){
 }
 function fitPv(){const n=S[cur].ko_pron.length, pk=$("pvKo");let f=n>14?26:n>10?28:30;pk.style.setProperty('--pvf',f+'px');
   while(f>18&&[...pk.children].some(e=>e.getBoundingClientRect().right>pk.getBoundingClientRect().right+1)){f-=2;pk.style.setProperty('--pvf',f+'px');}
-  const c=$("card"),bar=document.querySelector('.bar');const top=c.getBoundingClientRect().top+window.scrollY;const h=window.innerHeight-(bar?bar.offsetHeight:0)-top-12;c.style.setProperty('--cardh',Math.max(260,h)+'px');}
-window.addEventListener('resize',()=>fitPv());
+  const c=$("card"),bar=document.querySelector('.bar');const top=c.getBoundingClientRect().top+window.scrollY;const lim=window.innerHeight-(bar?bar.offsetHeight:0);const h=lim-top-12;c.style.setProperty('--cardh',Math.max(260,h)+'px');
+  const over=()=>c.getBoundingClientRect().bottom+window.scrollY>lim-2;
+  c.classList.remove('blong');c.style.removeProperty('--kof');c.style.removeProperty('--bvf');
+  if(c.classList.contains('pronview')){while(f>18&&over()){f-=2;pk.style.setProperty('--pvf',f+'px');}}
+  else if(over()){c.classList.add('blong');let v=18,k=parseFloat(getComputedStyle($("ko")).fontSize);c.style.setProperty('--kof',k+'px');c.style.setProperty('--bvf',v+'px');while(over()&&v>13){v-=1;c.style.setProperty('--bvf',v+'px');}while(over()&&k>24){k-=2;c.style.setProperty('--kof',k+'px');}}
+  window.__fit={view:c.classList.contains('pronview')?'pron':'base',blong:c.classList.contains('blong'),over:over(),pvf:f};}
+window.addEventListener('resize',()=>fitPv());if(document.fonts)document.fonts.ready.then(()=>fitPv());
 $("ytToggle").onclick=()=>{const d=$("ytDock"),o=!d.classList.contains('open');d.classList.toggle('open',o);$("ytToggle").setAttribute('aria-expanded',o);$("ytToggle").textContent=o?'영상 작게 ▴':'영상 보기 ▾';};
 function renderRows(){
   const list=S.map((s,i)=>[s,i]).filter(([s])=>s.ep===ep);
@@ -497,6 +515,7 @@ function setView(v){
   $("vBase").setAttribute("aria-selected",String(!pron));
   $("vPron").setAttribute("aria-selected",String(pron));
   store.set("view",pron?"pron":"base");
+  try{fitPv()}catch(e){}
 }
 $("vBase").onclick=()=>setView("base");
 $("vPron").onclick=()=>setView("pron");
