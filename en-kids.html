@@ -61,6 +61,25 @@ body.squeeze .books,body.squeeze .top h1 small{display:none}
 .pic .yt iframe,.pic .yt>div{width:100%;height:100%;border:0;pointer-events:none}
 .pic .shield{position:absolute;inset:0;z-index:2;background:transparent}
 .pic.vid .shield{z-index:4}
+.rep{position:absolute;left:6px;right:6px;bottom:6px;z-index:5;display:none;align-items:center;gap:8px;background:rgba(255,255,255,.93);border-radius:12px;padding:5px 10px;box-shadow:0 1px 6px rgba(0,0,0,.28);pointer-events:none;min-width:0}
+.rep.show{display:flex}
+.rep .rn{font-weight:800;font-size:19px;font-variant-numeric:tabular-nums;color:#14171a;white-space:nowrap}
+.rep .rn b{color:var(--accent);font-family:var(--f-en)}
+.rep .rd{display:flex;align-items:center;gap:4px;flex:1;min-width:0;justify-content:center}
+.rep .rd i{width:14px;height:14px;border-radius:50%;border:2px solid var(--accent);box-sizing:border-box;background:#fff;flex:none}
+.rep .rd i.on{background:var(--accent)}
+.rep .rd i.cur{background:var(--accent-soft)}
+.rep.playing .rd i.cur{animation:dotp 1s ease-in-out infinite}
+.rep .bar{flex:1;height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.rep .bar u{display:block;height:100%;background:var(--accent);text-decoration:none}
+.rep .rp{font-weight:800;font-size:14px;color:var(--accent);white-space:nowrap;max-width:46%;overflow:hidden;text-overflow:ellipsis}
+.rep.pulse{animation:repflash .7s ease-out}
+@keyframes repflash{0%{background:var(--accent);transform:scale(1.04)}100%{background:rgba(255,255,255,.93);transform:scale(1)}}
+@keyframes dotp{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+.rep.pulse .rn,.rep.pulse .rp{animation:repflashtx .7s ease-out}
+@keyframes repflashtx{0%{color:#fff}100%{}}
+@media (prefers-reduced-motion:reduce){.rep.pulse,.rep.pulse .rn,.rep.pulse .rp,.rep.playing .rd i.cur{animation:none}}
+.banner .b2.live{font-size:15px;font-weight:800;color:var(--accent)}
 .unav{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .unav button{height:46px;border:2px solid var(--accent-soft);background:var(--accent-soft);color:var(--accent);border-radius:14px;font-weight:800;font-size:16px;padding:0 6px;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;min-width:0}
 .unav button:active{background:var(--accent);color:#fff}
@@ -129,7 +148,7 @@ select{font:inherit;font-size:16px;min-height:44px;padding:6px 8px;border:1px so
     <p class="ko" id="ko"></p>
     <p class="il" id="il"></p>
     <div class="unav" id="unav"><button type="button" id="uprev"><span class="ar">⏮</span><span class="lb">이전 단어</span></button><button type="button" id="unext"><span class="lb">다음 단어</span><span class="ar">⏭</span></button></div>
-    <div class="pic" id="pic"><div class="yt"><div id="ytPlayer"></div></div><div class="shield"></div><img id="img" alt="" decoding="async"><span class="badge" id="badge"></span><div class="cap" id="cap"></div></div>
+    <div class="pic" id="pic"><div class="yt"><div id="ytPlayer"></div></div><div class="shield"></div><img id="img" alt="" decoding="async"><span class="badge" id="badge"></span><div class="cap" id="cap"></div><div class="rep" id="rep" aria-live="off"></div></div>
   </section>
 
   <details class="list" id="listBox"><summary id="listSum">문장 목록</summary><div class="rows" id="rows"></div></details>
@@ -219,13 +238,12 @@ function renderStep(){
   if(P.step>=4){ b1=`<b>끝!</b> 4단계 완료 ✓`; b2="다음 문장으로 가 볼까요?"; }
   else{
     const rep=Math.min(P.r+1,n[P.step]);
-    b1=`${NAMES[P.step]} <b>${rep}/${n[P.step]}</b>`;
+    b1=`${NAMES[P.step]} <b>${rep}/${n[P.step]}${P.step>=2?"회":""}</b>`;
     if(P.step===0){const w=wordsList[Math.min(P.u,wordsList.length-1)]; b2=`단어 ${Math.min(P.u+1,wordsList.length)}/${wordsList.length} · ${w?w.k:""}`}
     else if(P.step===1) b2=`끊어서 · ${Math.min(P.u+1,S[cur].ch.length)}/${S[cur].ch.length} 덩어리`;
-    else if(P.step===2) b2=`${opt.rate}배속 · 영상 소리`;
-    else b2="원래 속도 · 영상 소리";
+    else b2=vidB2();
   }
-  $("b1").innerHTML=b1; $("b2").textContent=b2;
+  $("b1").innerHTML=b1; $("b2").textContent=b2; $("b2").classList.toggle("live",playing&&(P.step===2||P.step===3)&&!!vph); renderPill();
   const tot=totalUnits(), d=doneUnits();
   {const w=whereOf(S[cur]); $("cnt").textContent=`Book ${w.b} · ${w.i}/${w.t}문장 (${S[cur].n}/${S.length})`;}
   $("fill").style.width=(P.step>=4?100:tot?d/tot*100:0)+"%";
@@ -336,66 +354,103 @@ function warm(url){ if(warmed.has(url)||!window.fetch) return; warmed.add(url); 
 function preload(){ wordsList.forEach(w=>warm(w.url)); chunkItems(cur).forEach(c=>warm(c.url)); } // cache warm-up only (no Audio objects, never plays)
 
 // ---------- YouTube player (slow / fast steps) ----------
-// YouTube draws its own big centre ⏸ button (+ title / logo) for ~4.5 s after every PLAY START or seekTo(...,true) -- even with controls=0.
+// YouTube draws its own centre ⏸ button (+ title / logo) briefly after every play start or seekTo(...,true) -- even with controls=0 (measured ~0.3 s at this size).
 // So: (1) the iframe is taller than the picture and clipped (title/logo fall into the cropped margins), (2) taps never reach it (pointer-events:none),
-// (3) the video stays hidden behind the still picture until its overlay has faded: it is "pre-rolled" muted ~4.8 s before the sentence start
-// (during the last chunk repetition) and only revealed + unmuted when the play-head reaches the sentence start, (4) between repetitions it is
-// NOT paused: it just goes muted+hidden and is repositioned with seekTo(start,false), which does not re-trigger the overlay.
-const PRE=4.8, ICON_MS=4700;
-let yt=null,ytReady=false,poll=null,primed=false,vidWanted=false,trig=0,vw=null;
+// (3) while that overlay may be visible the still picture simply stays on top of the video -- but the SOUND never waits for it:
+// every repetition starts as fast as the player can seek (seekTo(start,true) + unmute the moment the play-head reaches the start),
+// and the picture switches to the live video only when ICON_MS have passed since playback resumed after the last seek.
+// The next video step is primed (hidden, muted, playing near its start) during the LAST repetition of the previous step, so its data is already loaded.
+// Between repetitions the player is never paused: it is muted at the end of the sentence and immediately seeked back (short gap, no loading wait).
+const REVEAL=false, ICON_MS=4400, LEAD=0.10, SEEKW=450;   // measured with real YouTube: after every seek/unmute the player's centre play/pause controls stay up for ~4.0-4.4 s (they auto-hide), so a live video could only be shown after that. The video is a slideshow of exactly the still pictures (pixel diff ~0), so REVEAL=false keeps the still on screen: no overlay/title/logo can ever show, and the SOUND never waits for anything
+let yt=null,ytReady=false,poll=null,primed=false,vidWanted=false,vw=null,vph="",vloadN=0,pulseT=0;
 (function(){const s=document.createElement("script");s.src="https://www.youtube.com/iframe_api";document.head.appendChild(s);})();
 window.onYouTubeIframeAPIReady=function(){
   yt=new YT.Player("ytPlayer",{width:"100%",height:"100%",videoId:VID,playerVars:{playsinline:1,rel:0,modestbranding:1,controls:0,disablekb:1,fs:0,iv_load_policy:3,cc_load_policy:0,start:Math.floor(S[cur].st)},
-    events:{onReady:()=>{ytReady=true;window.__ytReady=true;try{yt.mute()}catch(e){} const f=document.querySelector("#pic iframe"); if(f){f.tabIndex=-1;f.setAttribute("aria-hidden","true");f.style.pointerEvents="none"}},
+    events:{onReady:()=>{ytReady=true;window.__ytReady=true;try{yt.mute();if(!vidWanted&&!playing)yt.playVideo()}catch(e){}   /* muted warm-up: starts loading the video now, the state handler below pauses it again at once */ const f=document.querySelector("#pic iframe"); if(f){f.tabIndex=-1;f.setAttribute("aria-hidden","true");f.style.pointerEvents="none"}},
       onStateChange:e=>{ if(e.data===1&&!vidWanted) ytIdle(); },   // never let the video keep playing (or make sound) outside a video step
       onError:e=>{$("status").textContent="영상을 재생할 수 없어요 (YouTube 오류 "+e.data+")."}}});
 };
-function ytIdle(){ vidWanted=false; vw=null; clearInterval(poll); setVid(false); try{ if(ytReady){yt.mute();yt.pauseVideo();} }catch(e){} }
+function ytIdle(){ vidWanted=false; vw=null; vph=""; clearInterval(poll); setVid(false); try{ if(ytReady){yt.mute();yt.pauseVideo();} }catch(e){} }
 function ytMuted(){ try{ if(ytReady&&!yt.isMuted()) yt.mute(); }catch(e){} }
 function primeYt(){ if(primed||!ytReady) return; primed=true; try{yt.mute();yt.playVideo();setTimeout(()=>{if(!vidWanted) ytIdle()},500)}catch(e){} }
-function prewarm(i,rate){ // start the (hidden, muted) video ~PRE s before the sentence so YouTube's overlay has faded when we reveal it
+function prewarm(i,rate){ // hidden + muted: start playing just before the sentence so the data is loaded when the step begins
   if(!ytReady||(vw&&vw.i===i)) return; vidWanted=true; vw={i}; const s=S[i];
-  try{yt.mute();yt.setPlaybackRate(rate);trig=Date.now();yt.seekTo(Math.max(0,s.st-PRE*rate),true);yt.playVideo();}catch(e){}
+  try{yt.mute();yt.setPlaybackRate(rate);yt.seekTo(Math.max(0,s.st-0.6*rate),true);yt.playVideo();}catch(e){}
 }
-function maybePrewarm(){ // called at the start of the last item of step 1/2: the video step is next
-  const st=P.step; if(st>1||P.step>=4) return;
-  const lastItem = st===0 ? (P.u===wordsList.length-1&&P.r===cnts[0]-1) : (P.u===0&&P.r===cnts[1]-1);
-  if(!lastItem) return;
+function maybePrewarm(){ // called at the START of the last repetition of step 1/2 (the first word of step 1 is the last group): a video step is next
+  const st=P.step; if(st>1) return;
+  const last = st===0 ? (P.u===wordsList.length-1&&P.r===0) : (P.u===0&&P.r===cnts[1]-1);
+  if(!last) return;
   const k=nextStepIdx(st); if(k>=2) prewarm(cur,k===2?+opt.rate:1);
 }
-function playSeg(i,rate,tok){return new Promise(res=>{
+// ---- repetition UI (counter + dots + state text), video steps only
+function vidB2(){
+  const sp=P.step===2?`${opt.rate}배속`:"원래 속도";
+  const t=!playing?"":vph==="play"?"재생 중":vph==="next"?(P.r>0?"다음 반복…":"곧 시작…"):vph==="load"?`영상 불러오는 중… (${vloadN}초)`:"";
+  return t?`${t} · ${sp}`:`${sp} · 영상 소리`;
+}
+function renderPill(){
+  const el=$("rep"); if(!el) return; const vs=P.step===2||P.step===3;
+  el.classList.toggle("show",vs); if(!vs){ el.classList.remove("playing","pulse"); return; }
+  const n=cnts[P.step], dn=Math.min(P.r,n), c=Math.min(P.r+1,n);
+  const txt=!playing?"":vph==="play"?"재생 중":vph==="next"?(P.r>0?"다음 반복…":"곧 시작…"):vph==="load"?`불러오는 중… ${vloadN}초`:"";
+  let mid;
+  if(n<=10){ let d=""; for(let k=0;k<n;k++) d+=`<i class="${k<dn?"on":(k===dn&&playing?"cur":"")}"></i>`; mid=`<span class="rd">${d}</span>`; }
+  else mid=`<span class="bar"><u style="width:${dn/n*100}%"></u></span>`;
+  el.classList.toggle("playing",playing&&vph==="play");
+  el.setAttribute("aria-label",`${NAMES[P.step]} ${n}회 중 ${dn}회 끝`);
+  el.innerHTML=`<span class="rn"><b>${c}/${n}</b>회</span>${mid}${txt?`<span class="rp">${txt}</span>`:""}`;
+}
+function setPhase(p){ if(vph===p) return; vph=p; if(P.step===2||P.step===3){ $("b2").textContent=vidB2(); $("b2").classList.toggle("live",playing&&!!vph); renderPill(); } }
+function pulseRep(){ const el=$("rep"); if(!el) return; el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse"); clearTimeout(pulseT); pulseT=setTimeout(()=>el.classList.remove("pulse"),750); }
+// one repetition of the sentence. gapMs = pause before the sound starts again (measured from this call). Resolves exactly once.
+function playSeg(i,rate,tok,gapMs){return new Promise(res=>{
   if(tok!==runTok) return res();
-  const s=S[i]; let armed=false,done=false,w=null,seekAt=0,seekTries=0,lastPlay=0; const tAll=Date.now(); let tNote=0;
-  const finish=()=>{ if(done)return; done=true; clearInterval(poll); clearInterval(w); cancelFns.delete(finish); setVid(false); try{yt.mute()}catch(e){} res(); };   // NOT paused: hidden + muted, repositioned for the next repetition
+  gapMs=gapMs||0;
+  const s=S[i], t0=Date.now(), gapEnd=t0+gapMs, seekDue=t0+Math.max(0,gapMs-SEEKW);
+  let armed=false,done=false,w=null,seekAt=0,lastPlay=0,lastT=-1,lastMove=t0,reseekAt=0,p1At=0,lastAt=0,armAt=0;
+  const finish=()=>{ if(done)return; done=true; clearInterval(poll); clearInterval(w); cancelFns.delete(finish); setVid(false); try{yt.mute()}catch(e){} vph="next"; res(); };   // NOT paused: hidden + muted, repositioned for the next repetition
   cancelFns.add(finish); vidWanted=true;
+  const doSeek=(from)=>{ const now=Date.now(); try{ yt.mute(); yt.setPlaybackRate(rate); yt.seekTo(Math.max(0,s.st-LEAD*rate),true); }catch(e){} seekAt=now; lastMove=now; lastT=-1; lastAt=0; p1At=0; setVid(false);
+    try{ const ps=yt.getPlayerState(); if(ps!==1&&ps!==3){ yt.playVideo(); lastPlay=now; } }catch(e){} dbg({ev:"vseek",i,from,r:P.r}); };
   const begin=()=>{
-    try{ if(!vw||vw.i!==i) prewarm(i,rate); else yt.setPlaybackRate(rate); }catch(e){}
+    setPhase("next"); setVid(false);
     clearInterval(poll);
+    if(Date.now()>=seekDue) doSeek("start");   // inside the tap handler when possible (autoplay rules)
     poll=setInterval(()=>{ if(tok!==runTok||done){finish();return}
       let t=0,ps=-1; try{t=yt.getCurrentTime();ps=yt.getPlayerState()}catch(e){return}
-      const now=Date.now(), expired=now-trig>=ICON_MS;
+      const now=Date.now();
+      if(!seekAt){ if(now<seekDue) return; doSeek("start"); return; }
+      const moving=Math.abs(t-lastT)>0.001&&ps===1; if(moving) lastMove=now; if(ps===1&&lastT>=0&&lastAt&&Math.abs(t-(lastT+(now-lastAt)/1000*rate))>0.3) p1At=now; lastT=t; lastAt=now; if(ps===1&&!p1At&&now-seekAt>=150) p1At=now;   // playback has resumed after the seek (overlay may flash now)
       if(!armed){
-        if(ps===1&&expired&&t>=s.st-0.12&&t<=s.st+0.35&&(!seekAt||now-seekAt>=200)){armed=true;try{yt.setPlaybackRate(rate);yt.unMute()}catch(e){} setVid(true); if(tNote){$("status").textContent="";}}
-        else if(expired&&ps===1&&t>s.st+0.35){ // overshoot / next repetition: jump back (buffered) without re-triggering the overlay
-          if(!seekAt||now-seekAt>1500){ try{ if(seekTries++<2) yt.seekTo(s.st,false); else {trig=now;yt.seekTo(s.st,true);} }catch(e){} seekAt=now; } }
-        else if(ps!==1&&ps!==3&&(seekAt?now-seekAt>200:now-tAll>800)&&now-lastPlay>900){ try{ yt.mute(); yt.playVideo(); }catch(e){} lastPlay=now; }
-        if(!tNote&&now-tAll>900){tNote=1;$("status").textContent="영상 준비 중…";}
-        if(now-tAll>25000){$("status").textContent="영상이 시작되지 않았어요. ▶를 다시 눌러 주세요.";finish()}
+        const waited=now-Math.max(t0,gapEnd);
+        if(ps===1&&now>=gapEnd&&now-seekAt>=60&&t>=s.st-0.05&&t<=s.st+0.6){ armed=true; armAt=now; try{yt.setPlaybackRate(rate);yt.unMute()}catch(e){} setPhase("play"); pulseRep(); $("status").textContent=""; dbg({ev:"vstart",i,r:P.r,t}); }
+        else if(ps===1&&t>s.st+0.6&&now-seekAt>250){ doSeek("overshoot"); }          // gap was longer than seek+lead: go back
+        else if(ps!==1&&ps!==3&&now-seekAt>200&&now-lastPlay>700){ try{ yt.mute(); yt.playVideo(); }catch(e){} lastPlay=now; p1At=0; }
+        else if(now-lastMove>1600&&now-reseekAt>1600){ reseekAt=now; doSeek("stall"); }
+        if(waited>1400){ vloadN=Math.ceil(waited/1000); setPhase("load"); if(vph==="load"){ $("b2").textContent=vidB2(); renderPill(); } }
+        if(now-t0>12000){$("status").textContent="영상이 시작되지 않았어요. ▶를 다시 눌러 주세요.";finish()}
         return; }
-      if(t>=s.et||ps===0) finish(); },50);
+      // armed: audible. Show the live video only once YouTube's overlay can no longer be on screen.
+      setVid(REVEAL&&ps===1&&p1At>0&&now-Math.max(p1At,armAt)>=ICON_MS);
+      if(t>=s.et||ps===0){ finish(); return; }
+      if(now-lastMove>1500){ if(vph!=="load"){ vloadN=1; } else vloadN=Math.ceil((now-lastMove)/1000); setPhase("load"); $("b2").textContent=vidB2(); renderPill();
+        if(now-reseekAt>2500){ reseekAt=now; p1At=0; setVid(false); try{ yt.seekTo(Math.max(t,s.st-0.05),true); yt.playVideo(); }catch(e){} lastMove=now-1000; } }
+      else if(vph==="load") setPhase("play");
+    },40);
   };
   if(ytReady) begin();
   else{ $("status").textContent="영상 플레이어를 기다리는 중…"; w=setInterval(()=>{ if(tok!==runTok||done){clearInterval(w);return} if(ytReady){clearInterval(w);$("status").textContent="";begin()} },300); }
 })}
 
 // ---------- the 4-step engine ----------
-const gap=()=>+opt.gap*1000;
+const gap=()=>+opt.gap*1000, vgap=()=>Math.max(200,Math.min(900,+opt.gap*700));   // video steps: short pause between repetitions
 async function run(tok){
   const live=()=>playing&&tok===runTok;
   preload();
   while(live()){
     skipEmpty();
-    if(P.step>=4){ finishSentence(); if(!live()) return; await sleep(1400,tok); if(!live()) return; continue; }
+    if(P.step>=4){ finishSentence(); if(!live()) return; await sleep(500,tok); if(!live()) return; continue; }
     renderStep(); scrollIfNew();
     const st=P.step, n=cnts[st];
     if(st<2){ ytMuted(); maybePrewarm(); }
@@ -409,12 +464,12 @@ async function run(tok){
       hideCap();
       const items=chunkItems(cur), it=items[P.u]; dbg({ev:"item",step:1,u:P.u,r:P.r,url:it.url,text:it.text});
       await speak(it.url,tok); if(!live()) return;
-      P.u++; if(P.u>=items.length){P.u=0;P.r++; await sleep(gap()*1.3,tok); if(!live()) return; if(P.r>=n){P.step=2;P.r=0;P.u=0;await sleep(300,tok);}}
+      P.u++; if(P.u>=items.length){P.u=0;P.r++; await sleep(P.r>=n?150:gap()*1.3,tok); if(!live()) return; if(P.r>=n){P.step=2;P.r=0;P.u=0;}}
       else { await sleep(220,tok); if(!live()) return; }
     } else {
       hideCap(); dbg({ev:"item",step:st,r:P.r});
-      await playSeg(cur,st===2?+opt.rate:1,tok); if(!live()) return;
-      P.r++; if(P.r>=n){P.step=st+1;P.r=0;P.u=0; await sleep(600,tok);} else await sleep(gap()*1.2,tok);
+      await playSeg(cur,st===2?+opt.rate:1,tok,P.r>0?vgap():(st===3?250:0)); if(!live()) return;
+      P.r++; if(P.r>=n){P.step=st+1;P.r=0;P.u=0;} else renderStep();   // dots fill the moment a repetition has finished
     }
     if(!live()) return;
   }
