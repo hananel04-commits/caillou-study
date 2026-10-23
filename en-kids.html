@@ -50,10 +50,19 @@ body.squeeze .books,body.squeeze .top h1 small{display:none}
 .col.cur{background:var(--mark-soft);outline:2px solid var(--mark)}
 .col.say{background:var(--accent-soft)}
 .pic{position:relative;margin:0 auto;border-radius:14px;overflow:hidden;background:#000;width:200px;height:200px}
-.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;transition:opacity .15s}
-.pic.vid img{opacity:0;pointer-events:none}
-.pic .yt{position:absolute;inset:0;z-index:1}
-.pic .yt iframe,.pic .yt>div{width:100%;height:100%;border:0}
+.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
+.pic.vid img{opacity:0;pointer-events:none;transition:opacity .12s}
+/* YouTube iframe is taller than the picture: the square video is centred, YouTube's top title strip and bottom logo/bar fall in the clipped black margins (--bar) */
+.pic{--bar:110px}
+.pic .yt{position:absolute;left:0;right:0;top:calc(var(--bar) * -1);bottom:calc(var(--bar) * -1);z-index:1;pointer-events:none}
+.pic .yt iframe,.pic .yt>div{width:100%;height:100%;border:0;pointer-events:none}
+.pic .shield{position:absolute;inset:0;z-index:2;background:transparent}
+.pic.vid .shield{z-index:4}
+.unav{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.unav button{height:46px;border:2px solid var(--accent-soft);background:var(--accent-soft);color:var(--accent);border-radius:14px;font-weight:800;font-size:16px;padding:0 6px;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;min-width:0}
+.unav button:active{background:var(--accent);color:#fff}
+.unav button:disabled{opacity:.35}
+.unav .ar{font-size:18px;line-height:1}
 .cap{position:absolute;left:6px;right:6px;bottom:6px;z-index:3;background:rgba(255,255,255,.9);border-radius:12px;padding:6px 10px 7px;line-height:1.2;display:none;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.25)}
 .cap.show{display:block}
 .cap .cw{display:inline-block;max-width:100%;margin:0 4px;overflow-wrap:anywhere}
@@ -115,7 +124,8 @@ select{font:inherit;font-size:16px;min-height:44px;padding:6px 8px;border:1px so
     </div>
     <p class="ko" id="ko"></p>
     <p class="il" id="il"></p>
-    <div class="pic" id="pic"><div class="yt"><div id="ytPlayer"></div></div><img id="img" alt="" decoding="async"><span class="badge" id="badge"></span><div class="cap" id="cap"></div></div>
+    <div class="unav" id="unav"><button type="button" id="uprev"><span class="ar">⏮</span><span class="lb">이전 단어</span></button><button type="button" id="unext"><span class="lb">다음 단어</span><span class="ar">⏭</span></button></div>
+    <div class="pic" id="pic"><div class="yt"><div id="ytPlayer"></div></div><div class="shield"></div><img id="img" alt="" decoding="async"><span class="badge" id="badge"></span><div class="cap" id="cap"></div></div>
   </section>
 
   <details class="list" id="listBox"><summary id="listSum">문장 목록</summary><div class="rows" id="rows"></div></details>
@@ -159,21 +169,24 @@ let opt={rate:String(store.get("rate","0.75")),gap:String(store.get("gap","0.6")
 let done=new Set(store.get("done",[]));
 let cur=Math.min(S.length-1,Math.max(0,+store.get("cur",0)||0));
 let P={step:0,r:0,u:0};          // r = repetition being played (0-based), u = word / chunk index
-let playing=false, runTok=0, pend=null, wordsList=[];
+let playing=false, runTok=0, wordsList=[], showCur=false;
 function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 function norm(w){return String(w).toLowerCase().replace(/[’]/g,"'").replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu,"")}
 function bookOf(i){return S[i].b}
 
 // ---------- sentence structure ----------
-function sentWords(i){ // unique (or all) words in order: {k, ti} k=normalised word, ti=token index
+function wUrl(k){return "kids/w/"+W[k][2]+".mp3"}
+function cUrl(c){return "kids/c/"+c[1]+".mp3"}
+function sentWords(i){ // unique (or all) words in order. ONE item object feeds highlight + caption + audio: {k, ti(token index), url, han, mean}
   const out=[],seen=new Set(); let ti=0;
-  S[i].ch.forEach(c=>c[0].split(/\s+/).forEach(t=>{const k=norm(t); if(k&&!(opt.dedupe&&seen.has(k))){seen.add(k);out.push({k,ti});} ti++;}));
+  S[i].ch.forEach(c=>c[0].split(/\s+/).forEach(t=>{const k=norm(t); if(k&&W[k]&&!(opt.dedupe&&seen.has(k))){seen.add(k);out.push({k,ti,url:wUrl(k),han:W[k][0],mean:W[k][1]});} ti++;}));
   return out;
 }
+function chunkItems(i){return S[i].ch.map((c,ci)=>({ci,text:c[0],url:cUrl(c)}))}
 function units(step){ // number of units in one repetition
   if(step===0) return wordsList.length; if(step===1) return S[cur].ch.length; return 1;
 }
-function resetP(step){P={step:step||0,r:0,u:0}; wordsList=sentWords(cur); skipEmpty();}
+function resetP(step){P={step:step||0,r:0,u:0}; showCur=false; wordsList=sentWords(cur); skipEmpty();}
 function skipEmpty(){ while(P.step<4&&cnts[P.step]===0){P.step++;P.r=0;P.u=0;} }
 function totalUnits(){return [0,1,2,3].reduce((a,k)=>a+cnts[k]*(k===0?wordsList.length:k===1?S[cur].ch.length:1),0)}
 function doneUnits(){let d=0;for(let k=0;k<P.step&&k<4;k++) d+=cnts[k]*(k===0?wordsList.length:k===1?S[cur].ch.length:1);
@@ -212,17 +225,31 @@ function renderStep(){
   $("fill").style.width=(P.step>=4?100:tot?d/tot*100:0)+"%";
   $("play").textContent=playing?"⏸ 멈춤":(P.step>=4?"↻ 다시":(d>0?"▶ 이어서":"▶ 시작"));
   $("play").classList.toggle("on",playing);
-  document.querySelectorAll("#il .ch").forEach((e,i)=>e.classList.toggle("on",playing&&P.step===1&&i===P.u));
-  document.querySelectorAll("#il .col").forEach(e=>e.classList.toggle("cur",playing&&P.step===0&&wordsList[P.u]&&+e.dataset.t===wordsList[P.u].ti));
-  $("pic").classList.toggle("vid",playing&&(P.step===2||P.step===3));
+  const foc=playing||showCur;
+  document.querySelectorAll("#il .ch").forEach((e,i)=>e.classList.toggle("on",foc&&P.step===1&&i===P.u));
+  const wi=wordsList[P.u];
+  document.querySelectorAll("#il .col").forEach(e=>e.classList.toggle("cur",!!(foc&&P.step===0&&wi&&+e.dataset.t===wi.ti)));
+  if(!(playing&&(P.step===2||P.step===3))) setVid(false);   // still picture whenever the video is not actively playing
+  renderNav();
 }
+function prevStepIdx(){for(let k=P.step-1;k>=0;k--) if(cnts[k]>0) return k; return -1}
+function nextStepIdx(from){for(let k=from+1;k<4;k++) if(cnts[k]>0) return k; return -1}
+function renderNav(){
+  const st=P.step, a=$("uprev"), b=$("unext");
+  const L=(btn,txt,ar,left)=>{btn.querySelector(".lb").textContent=txt;btn.querySelector(".ar").textContent=ar;btn.setAttribute("aria-label",txt)};
+  if(st===0){L(a,"이전 단어","⏮");L(b,"다음 단어","⏭");a.disabled=b.disabled=false}
+  else if(st===1){L(a,"이전 끊어읽기","⏮");L(b,"다음 끊어읽기","⏭");a.disabled=b.disabled=false}
+  else if(st===2||st===3){L(a,"이전 단계","⏮");L(b,"다음 단계","⏭");a.disabled=prevStepIdx()<0;b.disabled=nextStepIdx(st)<0}
+  else {L(a,"이전 단어","⏮");L(b,"다음 단어","⏭");a.disabled=b.disabled=true}
+}
+function setVid(on){const p=$("pic"); if(p.classList.contains("vid")!==on) p.classList.toggle("vid",on)}
 function renderRows(){
   $("listSum").textContent=`문장 목록 · Book ${S[cur].b} · ${S.filter(x=>x.b===S[cur].b).length}문장`;
   $("rows").innerHTML=S.map((s,i)=>s.b!==S[cur].b?"":`<button type="button" data-i="${i}" class="${i===cur?"cur":""}"><span class="n">${s.n}</span><span class="t">${esc(s.en)}<span class="k">${esc(s.ko)}</span></span><span class="ok">${done.has(s.n)?"✓":""}</span></button>`).join("");
 }
-function showCap(k,sticky){
-  const w=W[k]; if(!w){$("cap").classList.remove("show");return}
-  $("cap").innerHTML=`<span class="cw"><b>${esc(k)}</b><i>${esc(w[0])}</i></span> <span class="cm">${esc(w[1])}</span>`; $("cap").classList.add("show");
+function showCap(it,sticky){
+  if(!it){$("cap").classList.remove("show");return}
+  $("cap").innerHTML=`<span class="cw"><b>${esc(it.k)}</b><i>${esc(it.han)}</i></span> <span class="cm">${esc(it.mean)}</span>`; $("cap").classList.add("show");
   clearTimeout(showCap.t); if(!sticky) showCap.t=setTimeout(()=>$("cap").classList.remove("show"),2800);
 }
 function hideCap(){clearTimeout(showCap.t);$("cap").classList.remove("show")}
@@ -275,68 +302,116 @@ function scrollIfNew(){ const k=cur+":"+P.step; if(k!==lastPos){lastPos=k;scroll
 addEventListener("resize",fit);
 if(window.ResizeObserver) new ResizeObserver(()=>{if(document.querySelector("header").offsetHeight!==fitHdr) fit();}).observe(document.querySelector("header"));
 
-// ---------- audio: one persistent <audio> (unlocked by the first Play tap) ----------
+// ---------- ONE playback controller ----------
+// Single persistent <audio> (unlocked by the first Play tap). Every async step carries the run-token it was started with;
+// cancelAll() bumps the token, resolves/clears every pending timer/promise and silences the audio, so a stale callback can never act.
 const A=new Audio(); A.preload="auto";
-function wait(ms){return new Promise(r=>{const t=setTimeout(fin,ms);function fin(){clearTimeout(t);pend=null;r()}pend=fin;})}
-function playUrl(url){return new Promise(r=>{let ok=false;const to=setTimeout(fin,7000);
-  function fin(){if(ok)return;ok=true;clearTimeout(to);A.onended=A.onerror=null;pend=null;r()}
-  pend=()=>{try{A.pause()}catch(e){}fin()}; A.onended=fin; A.onerror=()=>{$("status").textContent="소리 파일을 불러오지 못했어요.";fin()};
-  A.src=url; const p=A.play(); if(p&&p.catch) p.catch(()=>{$("status").textContent="소리를 켤 수 없어요. ▶ 버튼을 다시 눌러 주세요.";fin()}); })}
-function wUrl(k){return "kids/w/"+W[k][2]+".mp3"}
-function preload(){ // warm the cache for the sentence that is about to play
-  try{ wordsList.forEach(w=>{const a=new Audio();a.preload="auto";a.src=wUrl(w.k)}); S[cur].ch.forEach(c=>{const a=new Audio();a.preload="auto";a.src="kids/c/"+c[1]+".mp3"}); }catch(e){} }
+const cancelFns=new Set();
+const dbg=o=>{ if(window.__log) window.__log.push(o); };
+function killAudio(){ A.onended=A.onerror=null; try{A.pause()}catch(e){} try{A.currentTime=0}catch(e){} }
+function cancelAll(){ runTok++; const fs=[...cancelFns]; cancelFns.clear(); fs.forEach(f=>{try{f()}catch(e){}}); killAudio(); }
+function sleep(ms,tok){return new Promise(res=>{ if(tok!==runTok) return res(); let t; const f=()=>{clearTimeout(t);cancelFns.delete(f);res()}; t=setTimeout(f,ms); cancelFns.add(f); })}
+function speak(url,tok){return new Promise(res=>{
+  if(tok!==runTok) return res();
+  killAudio(); let to;
+  const fin=()=>{clearTimeout(to);cancelFns.delete(fin);A.onended=A.onerror=null;res()};
+  cancelFns.add(fin); to=setTimeout(fin,10000);
+  A.onended=()=>{ if(tok===runTok) fin(); };
+  A.onerror=()=>{ if(tok===runTok){ $("status").textContent="소리 파일을 불러오지 못했어요."; fin(); } };
+  dbg({ev:"speak",url}); A.src=url;
+  const p=A.play();
+  if(p&&p.catch) p.catch(err=>{ if(tok!==runTok) return; $("status").textContent="소리를 켤 수 없어요. ▶ 버튼을 다시 눌러 주세요."; fin(); if(err&&err.name==="NotAllowedError"&&playing) stop(); });
+})}
+const warmed=new Set();
+function warm(url){ if(warmed.has(url)||!window.fetch) return; warmed.add(url); try{fetch(url,{cache:"force-cache"}).catch(()=>{})}catch(e){} }
+function preload(){ wordsList.forEach(w=>warm(w.url)); chunkItems(cur).forEach(c=>warm(c.url)); } // cache warm-up only (no Audio objects, never plays)
 
 // ---------- YouTube player (slow / fast steps) ----------
-let yt=null,ytReady=false,poll=null,primed=false,segActive=false;
+// YouTube draws its own big centre ⏸ button (+ title / logo) for ~4.5 s after every PLAY START or seekTo(...,true) -- even with controls=0.
+// So: (1) the iframe is taller than the picture and clipped (title/logo fall into the cropped margins), (2) taps never reach it (pointer-events:none),
+// (3) the video stays hidden behind the still picture until its overlay has faded: it is "pre-rolled" muted ~4.8 s before the sentence start
+// (during the last chunk repetition) and only revealed + unmuted when the play-head reaches the sentence start, (4) between repetitions it is
+// NOT paused: it just goes muted+hidden and is repositioned with seekTo(start,false), which does not re-trigger the overlay.
+const PRE=4.8, ICON_MS=4700;
+let yt=null,ytReady=false,poll=null,primed=false,vidWanted=false,trig=0,vw=null;
 (function(){const s=document.createElement("script");s.src="https://www.youtube.com/iframe_api";document.head.appendChild(s);})();
 window.onYouTubeIframeAPIReady=function(){
   yt=new YT.Player("ytPlayer",{width:"100%",height:"100%",videoId:VID,playerVars:{playsinline:1,rel:0,modestbranding:1,controls:0,disablekb:1,fs:0,iv_load_policy:3,cc_load_policy:0,start:Math.floor(S[cur].st)},
-    events:{onReady:()=>{ytReady=true;window.__ytReady=true},onError:e=>{$("status").textContent="영상을 재생할 수 없어요 (YouTube 오류 "+e.data+")."}}});
+    events:{onReady:()=>{ytReady=true;window.__ytReady=true;try{yt.mute()}catch(e){} const f=document.querySelector("#pic iframe"); if(f){f.tabIndex=-1;f.setAttribute("aria-hidden","true");f.style.pointerEvents="none"}},
+      onStateChange:e=>{ if(e.data===1&&!vidWanted) ytIdle(); },   // never let the video keep playing (or make sound) outside a video step
+      onError:e=>{$("status").textContent="영상을 재생할 수 없어요 (YouTube 오류 "+e.data+")."}}});
 };
-function primeYt(){ if(primed||!ytReady) return; primed=true; try{yt.mute();yt.playVideo();setTimeout(()=>{if(!segActive){try{yt.pauseVideo();yt.unMute()}catch(e){}}},500)}catch(e){} }
-function playSeg(i,rate){return new Promise(res=>{
-  const s=S[i]; let armed=false,t0=Date.now(),fin=false; segActive=true;
-  function end(){if(fin)return;fin=true;segActive=false;clearInterval(poll);try{yt.pauseVideo()}catch(e){}pend=null;res()}
-  pend=end;
-  if(!ytReady){$("status").textContent="영상 플레이어를 기다리는 중…"; const w=setInterval(()=>{if(ytReady||fin){clearInterval(w);if(!fin){fin=true;segActive=false;pend=null;playSeg(i,rate).then(res)}}},300);pend=()=>{fin=true;clearInterval(w);segActive=false;pend=null;res()};return}
-  try{yt.unMute();yt.setPlaybackRate(rate);yt.seekTo(s.st,true);yt.playVideo();}catch(e){}
-  clearInterval(poll);
-  poll=setInterval(()=>{ let t=0;try{t=yt.getCurrentTime()}catch(e){return}
-    if(!armed){ if(t>=s.st-0.4&&t<s.et){armed=true;try{if(yt.getPlaybackRate()!==rate)yt.setPlaybackRate(rate)}catch(e){}}
-      else if(Date.now()-t0>600&&(t<s.st-1||t>s.et+0.5)){try{yt.seekTo(s.st,true);yt.playVideo()}catch(e){}t0=Date.now()}
-      if(Date.now()-t0>14000){$("status").textContent="영상이 시작되지 않았어요. ▶를 다시 눌러 주세요.";end()} return}
-    if(t>=s.et) end(); },50);
+function ytIdle(){ vidWanted=false; vw=null; clearInterval(poll); setVid(false); try{ if(ytReady){yt.mute();yt.pauseVideo();} }catch(e){} }
+function ytMuted(){ try{ if(ytReady&&!yt.isMuted()) yt.mute(); }catch(e){} }
+function primeYt(){ if(primed||!ytReady) return; primed=true; try{yt.mute();yt.playVideo();setTimeout(()=>{if(!vidWanted) ytIdle()},500)}catch(e){} }
+function prewarm(i,rate){ // start the (hidden, muted) video ~PRE s before the sentence so YouTube's overlay has faded when we reveal it
+  if(!ytReady||(vw&&vw.i===i)) return; vidWanted=true; vw={i}; const s=S[i];
+  try{yt.mute();yt.setPlaybackRate(rate);trig=Date.now();yt.seekTo(Math.max(0,s.st-PRE*rate),true);yt.playVideo();}catch(e){}
+}
+function maybePrewarm(){ // called at the start of the last item of step 1/2: the video step is next
+  const st=P.step; if(st>1||P.step>=4) return;
+  const lastItem = st===0 ? (P.u===wordsList.length-1&&P.r===cnts[0]-1) : (P.u===0&&P.r===cnts[1]-1);
+  if(!lastItem) return;
+  const k=nextStepIdx(st); if(k>=2) prewarm(cur,k===2?+opt.rate:1);
+}
+function playSeg(i,rate,tok){return new Promise(res=>{
+  if(tok!==runTok) return res();
+  const s=S[i]; let armed=false,done=false,w=null,seekAt=0,seekTries=0,lastPlay=0; const tAll=Date.now(); let tNote=0;
+  const finish=()=>{ if(done)return; done=true; clearInterval(poll); clearInterval(w); cancelFns.delete(finish); setVid(false); try{yt.mute()}catch(e){} res(); };   // NOT paused: hidden + muted, repositioned for the next repetition
+  cancelFns.add(finish); vidWanted=true;
+  const begin=()=>{
+    try{ if(!vw||vw.i!==i) prewarm(i,rate); else yt.setPlaybackRate(rate); }catch(e){}
+    clearInterval(poll);
+    poll=setInterval(()=>{ if(tok!==runTok||done){finish();return}
+      let t=0,ps=-1; try{t=yt.getCurrentTime();ps=yt.getPlayerState()}catch(e){return}
+      const now=Date.now(), expired=now-trig>=ICON_MS;
+      if(!armed){
+        if(ps===1&&expired&&t>=s.st-0.12&&t<=s.st+0.35&&(!seekAt||now-seekAt>=200)){armed=true;try{yt.setPlaybackRate(rate);yt.unMute()}catch(e){} setVid(true); if(tNote){$("status").textContent="";}}
+        else if(expired&&ps===1&&t>s.st+0.35){ // overshoot / next repetition: jump back (buffered) without re-triggering the overlay
+          if(!seekAt||now-seekAt>1500){ try{ if(seekTries++<2) yt.seekTo(s.st,false); else {trig=now;yt.seekTo(s.st,true);} }catch(e){} seekAt=now; } }
+        else if(ps!==1&&ps!==3&&(seekAt?now-seekAt>200:now-tAll>800)&&now-lastPlay>900){ try{ yt.mute(); yt.playVideo(); }catch(e){} lastPlay=now; }
+        if(!tNote&&now-tAll>900){tNote=1;$("status").textContent="영상 준비 중…";}
+        if(now-tAll>25000){$("status").textContent="영상이 시작되지 않았어요. ▶를 다시 눌러 주세요.";finish()}
+        return; }
+      if(t>=s.et||ps===0) finish(); },50);
+  };
+  if(ytReady) begin();
+  else{ $("status").textContent="영상 플레이어를 기다리는 중…"; w=setInterval(()=>{ if(tok!==runTok||done){clearInterval(w);return} if(ytReady){clearInterval(w);$("status").textContent="";begin()} },300); }
 })}
 
 // ---------- the 4-step engine ----------
 const gap=()=>+opt.gap*1000;
 async function run(tok){
+  const live=()=>playing&&tok===runTok;
   preload();
-  while(playing&&tok===runTok){
+  while(live()){
     skipEmpty();
-    if(P.step>=4){ finishSentence(); if(!playing||tok!==runTok) return; await wait(1400); if(!playing||tok!==runTok) return; continue; }
+    if(P.step>=4){ finishSentence(); if(!live()) return; await sleep(1400,tok); if(!live()) return; continue; }
     renderStep(); scrollIfNew();
     const st=P.step, n=cnts[st];
+    if(st<2){ ytMuted(); maybePrewarm(); }
     if(st===0){
-      const w=wordsList[P.u]; showCap(w.k,true);
-      await playUrl(wUrl(w.k)); if(!playing||tok!==runTok) return;
-      await wait(gap()*0.8); if(!playing||tok!==runTok) return;
-      P.r++; if(P.r>=n){P.r=0;P.u++; if(P.u>=wordsList.length){hideCap();P.step=1;P.u=0;P.r=0;await wait(500);} }
+      const it=wordsList[P.u]; if(!it){P.step=1;P.u=0;P.r=0;continue}
+      showCap(it,true); dbg({ev:"item",step:0,u:P.u,r:P.r,k:it.k,url:it.url});
+      await speak(it.url,tok); if(!live()) return;
+      await sleep(gap()*0.8,tok); if(!live()) return;
+      P.r++; if(P.r>=n){P.r=0;P.u++; if(P.u>=wordsList.length){hideCap();P.step=1;P.u=0;P.r=0;await sleep(500,tok);} }
     } else if(st===1){
       hideCap();
-      const c=S[cur].ch[P.u];
-      await playUrl("kids/c/"+c[1]+".mp3"); if(!playing||tok!==runTok) return;
-      P.u++; if(P.u>=S[cur].ch.length){P.u=0;P.r++; await wait(gap()*1.3); if(!playing||tok!==runTok) return; if(P.r>=n){P.step=2;P.r=0;P.u=0;await wait(300);}}
-      else { await wait(220); if(!playing||tok!==runTok) return; }
+      const items=chunkItems(cur), it=items[P.u]; dbg({ev:"item",step:1,u:P.u,r:P.r,url:it.url,text:it.text});
+      await speak(it.url,tok); if(!live()) return;
+      P.u++; if(P.u>=items.length){P.u=0;P.r++; await sleep(gap()*1.3,tok); if(!live()) return; if(P.r>=n){P.step=2;P.r=0;P.u=0;await sleep(300,tok);}}
+      else { await sleep(220,tok); if(!live()) return; }
     } else {
-      hideCap(); $("pic").classList.add("vid");
-      await playSeg(cur,st===2?+opt.rate:1); if(!playing||tok!==runTok) return;
-      P.r++; if(P.r>=n){P.step=st+1;P.r=0;P.u=0; await wait(600);} else await wait(gap()*1.2);
+      hideCap(); dbg({ev:"item",step:st,r:P.r});
+      await playSeg(cur,st===2?+opt.rate:1,tok); if(!live()) return;
+      P.r++; if(P.r>=n){P.step=st+1;P.r=0;P.u=0; await sleep(600,tok);} else await sleep(gap()*1.2,tok);
     }
-    if(!playing||tok!==runTok) return;
+    if(!live()) return;
   }
 }
 function finishSentence(){
+  ytIdle();
   done.add(S[cur].n); store.set("done",[...done]); renderRows(); renderBooksOnly();
   if(opt.auto&&cur<S.length-1){ cur++; store.set("cur",cur); resetP(0); const b=S[cur].b!==S[cur-1].b; render(); $("status").textContent=b?`Book ${S[cur].b} 시작!`:""; preload(); }
   else { playing=false; renderStep(); $("status").textContent=cur>=S.length-1?"마지막 문장까지 모두 끝났어요! 🎉":"이 문장을 모두 읽었어요."; }
@@ -344,22 +419,46 @@ function finishSentence(){
 function renderBooksOnly(){const t=$("books");const sl=t.scrollLeft;render_books_keep(sl)}
 function render_books_keep(sl){ $("books").innerHTML=BOOKS.map(b=>{const n=S.filter(x=>x.b===b.n),k=n.filter(x=>done.has(x.n)).length;return `<button type="button" data-b="${b.n}" aria-pressed="${b.n===S[cur].b}">Book ${b.n}<span class="c">${k===n.length?"✓":k+"/"+n.length}</span></button>`}).join(""); $("books").scrollLeft=sl; }
 function start(){ if(playing) return; if(P.step>=4) resetP(0); skipEmpty(); if(P.step>=4){$("status").textContent="설정에서 횟수를 1 이상으로 해 주세요.";return}
-  playing=true; $("status").textContent=""; primeYt(); renderStep(); lastPos=cur+":"+P.step; scrollCard(); run(++runTok); }
-function stop(){ playing=false; runTok++; if(pend) pend(); try{A.pause()}catch(e){} try{if(ytReady&&!segActive)yt.pauseVideo()}catch(e){} clearInterval(poll); segActive=false; hideCap(); renderStep(); }
+  cancelAll(); playing=true; $("status").textContent=""; primeYt(); renderStep(); lastPos=cur+":"+P.step; scrollCard(); run(++runTok); }
+function stop(){ playing=false; cancelAll(); ytIdle(); hideCap(); renderStep(); }
 function go(i,keepPlaying){ const was=playing; stop(); if(i<0||i>=S.length) return; cur=i; store.set("cur",cur); resetP(0); $("status").textContent=""; render(); history.replaceState(null,"","#"+S[cur].n); if(was||keepPlaying) start(); }
+function setStep(k){ const was=playing; stop(); P={step:k,r:0,u:0}; showCur=false; wordsList=sentWords(cur); render(); if(was) start(); }
 $("play").onclick=()=>playing?stop():start();
 $("prev").onclick=()=>go(cur-1,true);
 $("next").onclick=()=>go(cur+1,true);
-$("chips").addEventListener("click",e=>{const b=e.target.closest("button[data-s]");if(!b)return;const k=+b.dataset.s;if(cnts[k]===0){$("status").textContent="이 단계는 횟수가 0이에요 (⚙ 설정).";return}const was=playing;stop();P={step:k,r:0,u:0};wordsList=sentWords(cur);render();if(was)start();});
+$("chips").addEventListener("click",e=>{const b=e.target.closest("button[data-s]");if(!b)return;const k=+b.dataset.s;if(cnts[k]===0){$("status").textContent="이 단계는 횟수가 0이에요 (⚙ 설정).";return}setStep(k);});
 $("books").addEventListener("click",e=>{const b=e.target.closest("button[data-b]");if(!b)return;const i=S.findIndex(x=>x.b===+b.dataset.b);go(i,playing)});
 $("rows").addEventListener("click",e=>{const b=e.target.closest("button[data-i]");if(!b)return;go(+b.dataset.i,true)});
 
+// ---------- previous / next word (chunk) inside the current step ----------
+async function preview(tok){ // paused: hear the item we just jumped to, once
+  if(P.step===0){const it=wordsList[P.u]; if(!it) return; showCap(it,true); dbg({ev:"item",step:0,u:P.u,r:0,k:it.k,url:it.url,preview:1}); await speak(it.url,tok);}
+  else if(P.step===1){const it=chunkItems(cur)[P.u]; if(!it) return; hideCap(); dbg({ev:"item",step:1,u:P.u,r:0,url:it.url,text:it.text,preview:1}); await speak(it.url,tok);}
+}
+function navMove(dir){
+  if(P.step>=4) return;
+  const st=P.step; let np=null;
+  if(st===0||st===1){
+    const len=st===0?wordsList.length:S[cur].ch.length; let nu=P.u+dir;
+    if(nu<0) nu=0;
+    if(nu>=len){ const k=nextStepIdx(st); if(k>=0) np={step:k,r:0,u:0}; else nu=len-1; }
+    if(!np) np={step:st,r:0,u:nu};
+  } else { const k=dir<0?prevStepIdx():nextStepIdx(st); if(k<0) return; np={step:k,r:0,u:0}; }
+  const was=playing; cancelAll(); ytIdle(); hideCap(); $("status").textContent="";
+  P=np; showCur=true; renderStep();
+  if(was){ lastPos=cur+":"+P.step; scrollCard(); run(++runTok); }
+  else { preview(++runTok); }
+}
+$("uprev").onclick=()=>navMove(-1);
+$("unext").onclick=()=>navMove(1);
+
 // ---------- tap a word = hear it + see its meaning ----------
 function sayWord(k,el){
-  if(!W[k]) return; const was=playing; if(was) stop();
+  if(!W[k]) return; const was=playing; if(was) stop(); else cancelAll();
   document.querySelectorAll(".say").forEach(e=>e.classList.remove("say")); if(el) el.classList.add("say");
-  showCap(k,false); runTok++;
-  playUrl(wUrl(k)).then(()=>{if(el) el.classList.remove("say")});
+  const it={k,url:wUrl(k),han:W[k][0],mean:W[k][1]};
+  showCap(it,false); const tok=++runTok;
+  speak(it.url,tok).then(()=>{if(el) el.classList.remove("say")});
 }
 $("il").addEventListener("click",e=>{const c=e.target.closest(".col");if(c)sayWord(c.dataset.w,c)});
 $("il").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const c=e.target.closest(".col");if(c){e.preventDefault();sayWord(c.dataset.w,c)}});
