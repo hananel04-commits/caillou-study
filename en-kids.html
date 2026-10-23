@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:,">
+<title>어린이 영어 성경 이야기 · 단어→끊어→천천히→빠르게</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#F3F5F4;--surface:#fff;--fg:#1C2524;--muted:#5E6B69;--line:#D9E0DE;--accent:#0E7C74;--accent-soft:#DDF0EC;--mark:#F2B33D;--mark-soft:#FDF1D6;
+--en:#1b2a4a;--han:#d4570f;--f-en:"Lexend",system-ui,sans-serif;--f-ko:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-ko);font-size:16px;line-height:1.45;overflow-x:hidden}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding:max(6px,env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) 150px max(10px,env(safe-area-inset-left,0px));display:grid;gap:8px;min-width:0}
+.wrap>*{min-width:0}
+header{display:grid;gap:6px}
+.top{display:flex;align-items:center;gap:8px}
+.top h1{flex:1;margin:0;font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top h1 small{font-weight:500;color:var(--muted);font-size:13px;margin-left:6px}
+.ibtn{border:1px solid var(--line);background:var(--surface);color:var(--fg);min-width:44px;height:40px;border-radius:12px;font-size:20px;padding:0 10px}
+.books{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.books::-webkit-scrollbar{display:none}
+.books button{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;min-height:38px;padding:4px 12px;font-size:14px;font-weight:600}
+.books button .c{font-size:11px;opacity:.75;margin-left:4px;font-weight:500}
+.books button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+body.squeeze .books,body.squeeze .top h1 small{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px 10px 10px;display:grid;gap:7px;align-content:start}
+.steprow{display:flex;align-items:center;gap:8px}
+.chips{display:flex;gap:5px;flex:0 0 auto}
+.chip{width:36px;height:40px;border:2px solid var(--line);background:var(--bg);color:var(--muted);border-radius:12px;font-weight:700;font-size:16px;padding:0;font-family:var(--f-en)}
+.chip.done{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-soft)}
+.chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.chip.zero{opacity:.35}
+.banner{min-width:0;flex:1;line-height:1.2}
+.banner .b1{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.banner .b1 b{color:var(--accent);font-family:var(--f-en)}
+.banner .b2{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ko{margin:0;font-weight:800;line-height:1.3;color:#14171a;background:#fff1b8;border-radius:12px;padding:8px 12px;font-size:var(--kfs,26px);word-break:keep-all;overflow-wrap:anywhere}
+.hideko .ko{color:transparent;background:var(--line)}
+.il{margin:0;display:flex;flex-wrap:wrap;align-items:flex-start;gap:.35em .55em;font-size:var(--efs,28px);line-height:1.18}
+.ch{display:inline-flex;flex-wrap:wrap;gap:.3em .32em;max-width:100%;border-radius:10px;padding:1px 3px;margin:0 -3px}
+.ch.on{background:var(--mark-soft);box-shadow:0 0 0 2px var(--mark)}
+.col{display:inline-flex;flex-direction:column;align-items:center;max-width:100%;cursor:pointer;border-radius:8px;padding:1px 2px 2px;touch-action:manipulation}
+.col .ie{font-family:var(--f-en);font-weight:600;color:var(--en);overflow-wrap:anywhere}
+.col .ik{font-weight:700;color:var(--han);margin-top:1px;word-break:keep-all;overflow-wrap:anywhere}
+.nohan .col .ik{display:none}
+.col.cur{background:var(--mark-soft);outline:2px solid var(--mark)}
+.col.say{background:var(--accent-soft)}
+.pic{position:relative;margin:0 auto;border-radius:14px;overflow:hidden;background:#000;width:200px;height:200px}
+.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;transition:opacity .15s}
+.pic.vid img{opacity:0;pointer-events:none}
+.pic .yt{position:absolute;inset:0;z-index:1}
+.pic .yt iframe,.pic .yt>div{width:100%;height:100%;border:0}
+.cap{position:absolute;left:6px;right:6px;bottom:6px;z-index:3;background:rgba(255,255,255,.94);border-radius:12px;padding:5px 10px;font-size:18px;line-height:1.25;display:none;text-align:center}
+.cap.show{display:block}
+.cap b{font-family:var(--f-en);color:var(--en);margin-right:6px}
+.cap i{font-style:normal;font-weight:700;color:var(--han);margin-right:6px}
+.badge{position:absolute;left:8px;top:8px;z-index:3;background:rgba(0,0,0,.55);color:#fff;font-size:13px;border-radius:999px;padding:2px 10px;font-variant-numeric:tabular-nums}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);z-index:5;padding:8px max(10px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+.barin{max-width:560px;margin:0 auto;display:grid;gap:7px}
+.prog{display:flex;align-items:center;gap:10px;font-family:var(--f-en);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.track{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.track i{display:block;height:100%;width:0;background:var(--mark);transition:width .2s}
+.main{display:flex;gap:8px;align-items:center}
+.nav{flex:0 0 64px;height:56px;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:16px;font-size:26px;padding:0}
+.play{flex:1;min-width:0;height:56px;border:0;background:var(--accent);color:#fff;font-weight:800;font-size:20px;border-radius:16px}
+.play.on{background:#c0392b}
+.status{font-size:13px;color:var(--muted);min-height:1.2em;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+details.list{background:var(--surface);border:1px solid var(--line);border-radius:14px}
+details.list summary{cursor:pointer;padding:12px 14px;font-weight:700;min-height:48px}
+.rows{display:grid;max-height:360px;overflow:auto;border-top:1px solid var(--line)}
+.rows button{display:grid;grid-template-columns:38px 1fr 20px;gap:8px;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;color:var(--fg);padding:10px 12px;min-height:48px}
+.rows .n{font-family:var(--f-en);color:var(--muted);font-size:13px}
+.rows .t{font-family:var(--f-en);font-size:15px;min-width:0}
+.rows .k{display:block;font-family:var(--f-ko);font-size:13px;color:var(--muted)}
+.rows button.cur{background:var(--accent-soft)}
+.rows .ok{color:var(--accent);font-weight:700}
+.credit{font-size:12.5px;color:var(--muted);margin:0}
+.credit a{color:var(--accent)}
+/* settings modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:none;align-items:flex-end;justify-content:center}
+.modal.show{display:flex}
+.sheet{background:var(--surface);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:14px 14px calc(16px + env(safe-area-inset-bottom,0px));display:grid;gap:10px}
+.sheet h2{margin:0;font-size:18px;display:flex;justify-content:space-between;align-items:center}
+.srow{display:flex;align-items:center;gap:8px;justify-content:space-between;border-top:1px solid var(--line);padding-top:8px}
+.srow label{font-weight:700;font-size:16px;min-width:0}
+.srow label small{display:block;font-weight:400;font-size:12.5px;color:var(--muted)}
+.step{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.step button{width:46px;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-size:24px;font-weight:700;padding:0}
+.step output{min-width:34px;text-align:center;font-family:var(--f-en);font-weight:700;font-size:22px;font-variant-numeric:tabular-nums}
+select{font:inherit;font-size:16px;min-height:44px;padding:6px 8px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg)}
+.sw{width:56px;height:34px;border-radius:99px;border:0;background:var(--line);position:relative;flex:0 0 auto;padding:0}
+.sw::after{content:"";position:absolute;top:4px;left:4px;width:26px;height:26px;border-radius:50%;background:#fff;transition:left .15s}
+.sw[aria-pressed="true"]{background:var(--accent)}
+.sw[aria-pressed="true"]::after{left:26px}
+.sbtn{min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-weight:700;padding:0 14px}
+.sbtn.pri{background:var(--accent);color:#fff;border:0}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="top"><h1 id="ttl">어린이 영어 성경 이야기<small>구약 Book 1–10</small></h1><button class="ibtn" id="gear" type="button" aria-label="설정 (반복 횟수)">⚙️</button></div>
+    <div class="books" id="books" role="group" aria-label="Book"></div>
+  </header>
+
+  <section class="card" id="card" aria-live="polite">
+    <div class="steprow">
+      <div class="chips" id="chips"></div>
+      <div class="banner"><div class="b1" id="b1"></div><div class="b2" id="b2"></div></div>
+    </div>
+    <p class="ko" id="ko"></p>
+    <p class="il" id="il"></p>
+    <div class="pic" id="pic"><div class="yt"><div id="ytPlayer"></div></div><img id="img" alt="" decoding="async"><span class="badge" id="badge"></span><div class="cap" id="cap"></div></div>
+  </section>
+
+  <details class="list" id="listBox"><summary id="listSum">문장 목록</summary><div class="rows" id="rows"></div></details>
+  <p class="credit">영상: <a href="https://youtu.be/ED0AX-38VVI" target="_blank" rel="noopener">영어성경 스토리북 구약 Book 01-10 모아보기 · 땡큐잉글리쉬</a>. 이 페이지는 공식 영상을 YouTube 플레이어로 재생만 해요(영상·음원 파일은 올리지 않았어요). 그림은 영상 장면이에요. 단어·끊어 읽기 소리는 미리 만든 영어 음성(AI 음성) 파일이에요. 한글 발음은 영어 소리를 비슷하게 적은 거예요.</p>
+</div>
+
+<div class="bar"><div class="barin">
+  <div class="prog"><span id="cnt"></span><div class="track"><i id="fill"></i></div></div>
+  <div class="main">
+    <button class="nav" id="prev" type="button" aria-label="이전 문장">‹</button>
+    <button class="play" id="play" type="button">▶ 시작</button>
+    <button class="nav" id="next" type="button" aria-label="다음 문장">›</button>
+  </div>
+  <div class="status" id="status"></div>
+</div></div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="설정"><div class="sheet">
+  <h2>설정 <button class="ibtn" id="mclose" type="button" aria-label="닫기">✕</button></h2>
+  <div class="srow"><label>① 단어 읽기<small>단어 하나씩, 각각 몇 번</small></label><div class="step" data-k="0"><button type="button" data-d="-1" aria-label="줄이기">−</button><output></output><button type="button" data-d="1" aria-label="늘리기">＋</button></div></div>
+  <div class="srow"><label>② 끊어 읽기<small>문장을 끊어서, 처음부터 끝까지 몇 번</small></label><div class="step" data-k="1"><button type="button" data-d="-1" aria-label="줄이기">−</button><output></output><button type="button" data-d="1" aria-label="늘리기">＋</button></div></div>
+  <div class="srow"><label>③ 천천히 읽기<small>문장 전체, 몇 번</small></label><div class="step" data-k="2"><button type="button" data-d="-1" aria-label="줄이기">−</button><output></output><button type="button" data-d="1" aria-label="늘리기">＋</button></div></div>
+  <div class="srow"><label>④ 빠르게 읽기<small>문장 전체, 몇 번</small></label><div class="step" data-k="3"><button type="button" data-d="-1" aria-label="줄이기">−</button><output></output><button type="button" data-d="1" aria-label="늘리기">＋</button></div></div>
+  <div class="srow"><label>천천히 속도<small>③에서 영상 재생 속도</small></label><select id="rate"><option value="0.5">0.5배</option><option value="0.75">0.75배</option></select></div>
+  <div class="srow"><label>쉬는 시간<small>한 번 읽고 나서</small></label><select id="gap"><option value="0.3">짧게</option><option value="0.6">보통</option><option value="1.2">길게</option></select></div>
+  <div class="srow"><label>자동으로 다음 문장<small>4단계가 끝나면 이어서</small></label><button class="sw" id="auto" type="button" aria-pressed="true" aria-label="자동으로 다음 문장"></button></div>
+  <div class="srow"><label>같은 단어는 한 번만<small>한 문장에서 반복되는 단어</small></label><button class="sw" id="dedupe" type="button" aria-pressed="true" aria-label="같은 단어는 한 번만"></button></div>
+  <div class="srow"><label>한글 발음 보이기<small>영어 단어 아래 한글</small></label><button class="sw" id="han" type="button" aria-pressed="true" aria-label="한글 발음 보이기"></button></div>
+  <div class="srow"><label>한국어 뜻 가리기<small>눌러서 잠깐 보기</small></label><button class="sw" id="hideko" type="button" aria-pressed="false" aria-label="한국어 뜻 가리기"></button></div>
+  <div class="srow"><button class="sbtn" id="reset" type="button">기본값으로 (5·5·5·10)</button><button class="sbtn pri" id="mok" type="button">확인</button></div>
+</div></div>
+
+<script>
+const DATA={"video":{"id":"ED0AX-38VVI","title":"영어성경 스토리북 구약 Book 01-10 모아보기 | 성경만화 | 영어성경동화듣기 | 흘려듣기 | 땡큐잉글리쉬","channel":"땡큐잉글리쉬","dur":1401},"books":[{"n":1,"from":0},{"n":2,"from":201},{"n":3,"from":356},{"n":4,"from":487},{"n":5,"from":614},{"n":6,"from":736},{"n":7,"from":872},{"n":8,"from":1005},{"n":9,"from":1124},{"n":10,"from":1251}],"words":{"40":["포티","마흔, 40","40"],"a":["어","하나의","a"],"abel":["에이벌","아벨(사람 이름)","abel"],"abel's":["에이벌즈","아벨의","abel_s"],"aboard":["어보드","(배에) 타고","aboard"],"abraham":["에이브러햄","아브라함(사람 이름)","abraham"],"abraham's":["에이브러햄즈","아브라함의","abraham_s"],"adam":["애덤","아담(사람 이름)","adam"],"after":["애프터","~ 뒤에","after"],"again":["어겐","다시","again"],"all":["올","모든","all"],"also":["올소우","또한","also"],"and":["앤드","그리고","and"],"angels":["에인절스","천사들","angels"],"angry":["앵그리","화난","angry"],"animal":["애니멀","동물","animal"],"animals":["애니멀즈","동물들","animals"],"anymore":["에니모어","더 이상","anymore"],"are":["아","~이다, ~있다","are"],"ark":["아크","방주(큰 배)","ark"],"around":["어라운드","~쯤, 주위에","around"],"arrived":["어라이브드","도착했다","arrived"],"as":["애즈","~대로, ~처럼","as"],"asked":["애스크트","물었다","asked"],"at":["앳","~에서","at"],"ate":["에잇","먹었다","ate"],"away":["어웨이","멀리","away"],"baby":["베이비","아기","baby"],"back":["백","뒤로, 다시","back"],"bad":["배드","나쁜","bad"],"be":["비","~이다, ~되다","be"],"beautiful":["뷰티펄","아름다운","beautiful"],"became":["비케임","~이 되었다","became"],"because":["비커즈","왜냐하면","because"],"beginning":["비기닝","처음, 시작","beginning"],"beloved":["빌러비드","사랑하는","beloved"],"big":["빅","큰","big"],"birds":["버즈","새들","birds"],"birth":["버스","출산, 탄생","birth"],"birthright":["버스라이트","장자의 권리","birthright"],"bless":["블레스","복을 주다","bless"],"blessed":["블레스트","복을 주었다","blessed"],"blessing":["블레싱","축복","blessing"],"born":["본","태어난","born"],"bricks":["브릭스","벽돌들","bricks"],"brother":["브러더","형제, 형, 동생","brother"],"build":["빌드","짓다, 쌓다","build"],"but":["벗","하지만","but"],"cain":["케인","가인(사람 이름)","cain"],"called":["콜드","불렀다","called"],"came":["케임","왔다","came"],"camels":["캐멀스","낙타들","camels"],"can":["캔","~할 수 있다","can"],"can't":["캔트","~할 수 없다","can_t"],"canaan":["케이넌","가나안(땅 이름)","canaan"],"child":["차일드","아이","child"],"choose":["추즈","고르다","choose"],"city":["시티","도시","city"],"clothes":["클로우즈","옷","clothes"],"coldly":["코울들리","차갑게","coldly"],"couldn't":["쿠든트","~할 수 없었다","couldn_t"],"crying":["크라잉","우는, 울고 있는","crying"],"dark":["다크","어두운","dark"],"day":["데이","날, 낮","day"],"days":["데이즈","날들, 며칠","days"],"did":["디드","했다","did"],"die":["다이","죽다","die"],"do":["두","하다","do"],"don't":["도운트","~하지 않다","don_t"],"down":["다운","아래로","down"],"drove":["드로브","쫓아냈다","drove"],"each":["이치","각각, 서로","each"],"easily":["이질리","쉽게","easily"],"east":["이스트","동쪽","east"],"eat":["잇","먹다","eat"],"eden":["이든","에덴(동산 이름)","eden"],"empty":["엠프티","텅 빈","empty"],"end":["엔드","끝","end"],"esau":["이소","에서(사람 이름)","esau"],"esau's":["이소즈","에서의","esau_s"],"eve":["이브","하와(이브)","eve"],"even":["이븐","~조차, 심지어","even"],"evening":["이브닝","저녁","evening"],"every":["에브리","모든","every"],"everything":["에브리씽","모든 것","everything"],"except":["익셉트","~만 빼고","except"],"family":["패멀리","가족","family"],"farmed":["팜드","농사지었다","farmed"],"father":["파더","아버지","father"],"father's":["파더즈","아버지의","father_s"],"fifth":["피프스","다섯째","fifth"],"flood":["플러드","홍수","flood"],"for":["포","~을 위해, ~ 동안","for"],"found":["파운드","찾았다, 알았다","found"],"fourth":["포스","넷째","fourth"],"from":["프럼","~에서, ~부터","from"],"fruit":["프루트","열매, 과일","fruit"],"fruits":["프루츠","열매들, 과일들","fruits"],"full":["풀","가득 찬","full"],"garden":["가든","동산, 정원","garden"],"gave":["게이브","주었다","gave"],"get":["겟","얻다, 데려오다","get"],"gift":["기프트","선물","gift"],"girl":["걸","여자아이, 아가씨","girl"],"give":["기브","주다","give"],"gives":["기브즈","준다","gives"],"go":["고우","가다","go"],"god":["갓","하나님","god"],"god's":["갓즈","하나님의","god_s"],"good":["굿","좋은","good"],"got":["갓","되었다, 내렸다","got"],"grass":["그래스","풀","grass"],"great":["그레이트","위대한, 큰","great"],"grew":["그루","자랐다","grew"],"guest":["게스트","손님","guest"],"guests":["게스츠","손님들","guests"],"had":["해드","가졌다","had"],"happy":["해피","행복한","happy"],"hard":["하드","힘든","hard"],"have":["해브","가지다","have"],"he":["히","그","he"],"hear":["히어","듣다","hear"],"heaven":["헤븐","하늘, 천국","heaven"],"heavily":["헤빌리","세차게","heavily"],"help":["헬프","도움, 돕다","help"],"herded":["허디드","(양을) 쳤다","herded"],"here":["히어","여기","here"],"high":["하이","높은","high"],"him":["힘","그를, 그에게","him"],"his":["히즈","그의","his"],"home":["호움","집","home"],"hometown":["호움타운","고향","hometown"],"house":["하우스","집","house"],"hungry":["헝그리","배고픈","hungry"],"hunt":["헌트","사냥하다","hunt"],"hunting":["헌팅","사냥","hunting"],"hurting":["허팅","해치는","hurting"],"i":["아이","나","i"],"i'm":["아임","나는 ~이다","i_m"],"if":["이프","만약 ~라면","if"],"in":["인","~ 안에","in"],"into":["인투","~ 안으로","into"],"invited":["인바이티드","초대했다","invited"],"is":["이즈","~이다","is"],"isaac":["아이작","이삭(사람 이름)","isaac"],"isaac's":["아이작스","이삭의","isaac_s"],"it":["잇","그것","it"],"jacob":["제이컵","야곱(사람 이름)","jacob"],"judge":["저지","심판하다","judge"],"just":["저스트","딱, 바로","just"],"kept":["켑트","지켰다","kept"],"killed":["킬드","죽였다","killed"],"kind":["카인드","종류","kind"],"know":["노우","알다","know"],"laid":["레이드","눕혔다","laid"],"lamb":["램","어린양","lamb"],"land":["랜드","땅","land"],"large":["라지","큰, 넓은","large"],"last":["래스트","마지막","last"],"lastly":["래스틀리","마지막으로","lastly"],"leave":["리브","떠나다","leave"],"left":["레프트","떠났다","left"],"let":["렛","~하게 하다","let"],"let's":["렛츠","~하자","let_s"],"life":["라이프","생명, 생물","life"],"light":["라이트","빛","light"],"like":["라이크","~처럼, 좋아하다","like"],"liked":["라이크트","좋아했다","liked"],"live":["리브","살다","live"],"lived":["리브드","살았다","lived"],"living":["리빙","살아 있는, 사는","living"],"look":["룩","보다","look"],"looked":["룩트","보였다, 쳐다보았다","looked"],"lot":["랏","롯(사람 이름)","lot"],"lot's":["랏츠","롯의","lot_s"],"love":["러브","사랑하다","love"],"made":["메이드","만들었다","made"],"make":["메이크","만들다","make"],"man":["맨","남자, 사람","man"],"married":["매리드","결혼했다","married"],"me":["미","나를, 나에게","me"],"meal":["밀","식사, 음식","meal"],"moon":["문","달","moon"],"most":["모우스트","가장","most"],"mountain":["마운튼","산","mountain"],"moved":["무브드","옮겼다","moved"],"my":["마이","나의","my"],"name":["네임","이름","name"],"nation":["네이션","나라","nation"],"nephew":["네퓨","조카","nephew"],"never":["네버","절대 ~않다","never"],"next":["넥스트","다음","next"],"night":["나이트","밤","night"],"no":["노우","없는, 아니요","no"],"noah":["노아","노아(사람 이름)","noah"],"noah's":["노아즈","노아의","noah_s"],"nod":["노드","놋(땅 이름)","nod"],"not":["낫","~않다","not"],"nothing":["나씽","아무것도","nothing"],"now":["나우","이제, 지금","now"],"number":["넘버","수, 숫자","number"],"of":["어브","~의","of"],"off":["오프","떨어져, 길을 떠나","off"],"okay":["오우케이","좋아요","okay"],"old":["오울드","나이 든, 늙은","old"],"older":["오울더","더 나이 많은","older"],"on":["온","~ 위에","on"],"one":["원","하나","one"],"only":["온리","오직","only"],"other":["아더","다른","other"],"ourselves":["아워셀브즈","우리 자신","ourselves"],"out":["아웃","밖으로","out"],"outside":["아웃사이드","~ 밖에","outside"],"people":["피플","사람들","people"],"pillar":["필러","기둥","pillar"],"placed":["플레이스트","두었다","placed"],"plain":["플레인","평평한 땅, 평야","plain"],"planning":["플래닝","계획하는","planning"],"pleased":["플리즈드","기쁘게 했다","pleased"],"prayed":["프레이드","기도했다","prayed"],"prepare":["프리페어","준비하다","prepare"],"promise":["프라미스","약속","promise"],"promised":["프라미스트","약속했다","promised"],"rain":["레인","비","rain"],"rainbow":["레인보우","무지개","rainbow"],"rained":["레인드","비가 내렸다","rained"],"rebekah":["리베카","리브가(사람 이름)","rebekah"],"replied":["리플라이드","대답했다","replied"],"rested":["레스티드","쉬었다","rested"],"returned":["리턴드","돌아왔다","returned"],"run":["런","달리다","run"],"safely":["세이플리","안전하게","safely"],"said":["세드","말했다","said"],"salt":["솔트","소금","salt"],"sarah":["세라","사라(사람 이름)","sarah"],"saw":["소","보았다","saw"],"saying":["세잉","말하며","saying"],"sea":["씨","바다","sea"],"second":["세컨드","둘째","second"],"see":["씨","보다","see"],"servant":["서번트","종, 하인","servant"],"set":["셋","떠나다, 놓다","set"],"seventh":["세븐스","일곱째","seventh"],"she":["쉬","그녀","she"],"sheep":["쉽","양","sheep"],"sign":["싸인","표시","sign"],"sin":["씬","죄","sin"],"sixth":["씩스쓰","여섯째","sixth"],"sky":["스카이","하늘","sky"],"sleep":["슬립","자다","sleep"],"snake":["스네이크","뱀","snake"],"so":["소우","너무, 그래서","so"],"sodom":["서덤","소돔(도시 이름)","sodom"],"something":["썸씽","무언가","something"],"son":["썬","아들","son"],"sons":["썬즈","아들들","sons"],"space":["스페이스","공간","space"],"speaking":["스피킹","말하는","speaking"],"spent":["스펜트","보냈다","spent"],"split":["스플릿","나누었다","split"],"spread":["스프레드","흩어졌다","spread"],"stars":["스타즈","별들","stars"],"started":["스타티드","시작했다","started"],"stayed":["스테이드","머물렀다","stayed"],"staying":["스테잉","머무는","staying"],"stop":["스탑","멈추다","stop"],"sun":["썬","해","sun"],"take":["테이크","가지다, 데려가다","take"],"tempted":["템프티드","꾀었다","tempted"],"ten":["텐","열, 10","ten"],"tested":["테스티드","시험했다","tested"],"that":["댓","그, ~라는 것","that"],"the":["더","그","the"],"them":["뎀","그들을","them"],"then":["덴","그러자, 그때","then"],"there":["데어","거기에","there"],"they":["데이","그들은","they"],"they're":["데어","그들은 ~이다","they_re"],"thing":["씽","것, 일","thing"],"things":["씽즈","것들","things"],"third":["써드","셋째","third"],"this":["디스","이","this"],"three":["쓰리","셋, 3","three"],"tied":["타이드","묶었다","tied"],"time":["타임","때, 시간","time"],"to":["투","~에게, ~로","to"],"together":["투게더","함께","together"],"told":["토울드","말해 주었다","told"],"too":["투","~도, 또한","too"],"took":["툭","가져갔다, 받았다","took"],"tower":["타워","탑","tower"],"trees":["트리즈","나무들","trees"],"tricked":["트릭트","속였다","tricked"],"turned":["턴드","변했다","turned"],"twins":["트윈스","쌍둥이","twins"],"two":["투","둘, 2","two"],"understand":["언더스탠드","이해하다","understand"],"up":["업","위로","up"],"us":["어스","우리를","us"],"very":["베리","아주","very"],"voice":["보이스","목소리","voice"],"was":["워즈","~이었다","was"],"water":["워터","물","water"],"we":["위","우리는","we"],"we'll":["위일","우리가 ~할 거야","we_ll"],"wear":["웨어","입다","wear"],"well":["웰","우물, 잘","well"],"went":["웬트","갔다","went"],"were":["워","~이었다","were"],"where":["웨어","어디","where"],"who":["후","~하는 사람","who"],"wife":["와이프","아내","wife"],"will":["윌","~할 것이다","will"],"with":["위드","~와 함께","with"],"wood":["우드","나무, 장작","wood"],"word":["워드","말씀, 말","word"],"words":["워즈","말들","words"],"work":["워크","일, 일하다","work"],"world":["월드","세상","world"],"worshipped":["워쉬프트","예배했다","worshipped"],"year":["이어","해, 년","year"],"yes":["예스","네","yes"],"you":["유","너, 너희","you"],"young":["영","젊은","young"],"your":["유어","너의","your"]},"s":[{"n":1,"b":1,"en":"In the beginning, the world was empty and dark.","ch":[["In the beginning,","in_the_beginning"],["the world was empty","the_world_was_empty"],["and dark.","and_dark"]],"ko":"맨 처음에 세상은 텅 비어 있고 어두웠어요.","st":14.64,"et":19.85,"img":"s001.jpg"},{"n":2,"b":1,"en":"God said, “Let there be light!”","ch":[["God said,","god_said"],["“Let there be light!”","let_there_be_light"]],"ko":"하나님이 말씀하셨어요. “빛이 생겨라!”","st":24.18,"et":28.01,"img":"s002.jpg"},{"n":3,"b":1,"en":"On the second day, God split water from water.","ch":[["On the second day,","on_the_second_day"],["God split water from water.","god_split_water_from_water"]],"ko":"둘째 날, 하나님은 물과 물을 나누셨어요.","st":32.12,"et":38.19,"img":"s003.jpg"},{"n":4,"b":1,"en":"And called the space “sky.”","ch":[["And called the space","and_called_the_space"],["“sky.”","sky"]],"ko":"그리고 그 사이 공간을 “하늘”이라고 부르셨어요.","st":43.72,"et":47.23,"img":"s004.jpg"},{"n":5,"b":1,"en":"On the third day, God made the land and the sea.","ch":[["On the third day,","on_the_third_day"],["God made the land","god_made_the_land"],["and the sea.","and_the_sea"]],"ko":"셋째 날, 하나님은 땅과 바다를 만드셨어요.","st":54.14,"et":60.65,"img":"s005.jpg"},{"n":6,"b":1,"en":"And God made grass and trees.","ch":[["And God made","and_god_made"],["grass and trees.","grass_and_trees"]],"ko":"그리고 하나님은 풀과 나무를 만드셨어요.","st":67.26,"et":71.07,"img":"s006.jpg"},{"n":7,"b":1,"en":"On the fourth day, God made the day and the night.","ch":[["On the fourth day,","on_the_fourth_day"],["God made the day","god_made_the_day"],["and the night.","and_the_night"]],"ko":"넷째 날, 하나님은 낮과 밤을 만드셨어요.","st":74.42,"et":81.25,"img":"s007.jpg"},{"n":8,"b":1,"en":"And made the sun, moon, and stars.","ch":[["And made the sun,","and_made_the_sun"],["moon,","moon"],["and stars.","and_stars"]],"ko":"그리고 해와 달과 별들을 만드셨어요.","st":87.83,"et":92.27,"img":"s008.jpg"},{"n":9,"b":1,"en":"On the fifth day, God made sea life.","ch":[["On the fifth day,","on_the_fifth_day"],["God made sea life.","god_made_sea_life"]],"ko":"다섯째 날, 하나님은 바다 생물들을 만드셨어요.","st":99.22,"et":104.37,"img":"s009.jpg"},{"n":10,"b":1,"en":"He also made birds of every kind.","ch":[["He also made birds","he_also_made_birds"],["of every kind.","of_every_kind"]],"ko":"하나님은 온갖 종류의 새도 만드셨어요.","st":111.46,"et":115.75,"img":"s010.jpg"},{"n":11,"b":1,"en":"On the sixth day, God made every kind of animal.","ch":[["On the sixth day,","on_the_sixth_day"],["God made every kind","god_made_every_kind"],["of animal.","of_animal"]],"ko":"여섯째 날, 하나님은 온갖 종류의 동물을 만드셨어요.","st":123.68,"et":129.99,"img":"s011.jpg"},{"n":12,"b":1,"en":"Lastly, God made a man.","ch":[["Lastly,","lastly"],["God made a man.","god_made_a_man"]],"ko":"마지막으로 하나님은 사람을 만드셨어요.","st":139.34,"et":143.35,"img":"s012.jpg"},{"n":13,"b":1,"en":"“Let us make people like us!”","ch":[["“Let us make people","let_us_make_people"],["like us!”","like_us"]],"ko":"“우리를 닮은 사람들을 만들자!”","st":150.26,"et":153.99,"img":"s013.jpg"},{"n":14,"b":1,"en":"God blessed them.","ch":[["God blessed them.","god_blessed_them"]],"ko":"하나님은 그들에게 복을 주셨어요.","st":159.98,"et":162.75,"img":"s014.jpg"},{"n":15,"b":1,"en":"Everything looked good to God.","ch":[["Everything looked good","everything_looked_good"],["to God.","to_god"]],"ko":"모든 것이 하나님 보시기에 좋았어요.","st":172.58,"et":175.99,"img":"s015.jpg"},{"n":16,"b":1,"en":"On the seventh day, God rested from all his work.","ch":[["On the seventh day,","on_the_seventh_day"],["God rested","god_rested"],["from all his work.","from_all_his_work"]],"ko":"일곱째 날, 하나님은 모든 일을 마치고 쉬셨어요.","st":186.24,"et":192.53,"img":"s016.jpg"},{"n":17,"b":2,"en":"God made Adam and Eve.","ch":[["God made","god_made"],["Adam and Eve.","adam_and_eve"]],"ko":"하나님은 아담과 하와를 만드셨어요.","st":211.74,"et":214.93,"img":"s017.jpg"},{"n":18,"b":2,"en":"And he placed them in the garden of Eden.","ch":[["And he placed them","and_he_placed_them"],["in the garden of Eden.","in_the_garden_of_eden"]],"ko":"그리고 그들을 에덴동산에 두셨어요.","st":220.42,"et":225.21,"img":"s018.jpg"},{"n":19,"b":2,"en":"“Adam, you can eat all the fruits.","ch":[["“Adam,","adam"],["you can eat","you_can_eat"],["all the fruits.","all_the_fruits"]],"ko":"“아담아, 모든 과일을 먹어도 된단다.","st":233.12,"et":237.25,"img":"s019.jpg"},{"n":20,"b":2,"en":"Except for just one!","ch":[["Except","except"],["for just one!","for_just_one"]],"ko":"딱 하나만 빼고!","st":242.56,"et":245.85,"img":"s020.jpg"},{"n":21,"b":2,"en":"You will die if you eat that fruit.”","ch":[["You will die","you_will_die"],["if you eat","if_you_eat"],["that fruit.”","that_fruit"]],"ko":"그 열매를 먹으면 죽게 될 거야.”","st":249.12,"et":253.27,"img":"s021.jpg"},{"n":22,"b":2,"en":"Snake tempted Eve saying, “You will be like God if you eat that fruit!”","ch":[["Snake tempted Eve","snake_tempted_eve"],["saying,","saying"],["“You will be like God","you_will_be_like_god"],["if you eat that fruit!”","if_you_eat_that_fruit"]],"ko":"뱀이 하와를 꾀며 말했어요. “그 열매를 먹으면 하나님처럼 될 거야!”","st":260.82,"et":270.41,"img":"s022.jpg"},{"n":23,"b":2,"en":"At last, Eve ate the fruit and gave it to Adam too.","ch":[["At last,","at_last"],["Eve ate the fruit","eve_ate_the_fruit"],["and gave it","and_gave_it"],["to Adam too.","to_adam_too"]],"ko":"마침내 하와는 열매를 먹고 아담에게도 주었어요.","st":281.26,"et":287.79,"img":"s023.jpg"},{"n":24,"b":2,"en":"“Adam, where are you?","ch":[["“Adam,","adam"],["where are you?","where_are_you"]],"ko":"“아담아, 어디에 있니?","st":295.22,"et":298.19,"img":"s024.jpg"},{"n":25,"b":2,"en":"Did you eat the fruit I told you not to eat?”","ch":[["Did you eat the fruit","did_you_eat_the_fruit"],["I told you","i_told_you"],["not to eat?”","not_to_eat"]],"ko":"내가 먹지 말라고 한 열매를 먹었니?”","st":304.5,"et":309.87,"img":"s025.jpg"},{"n":26,"b":2,"en":"Adam said, “Eve gave it to me.”","ch":[["Adam said,","adam_said"],["“Eve gave it","eve_gave_it"],["to me.”","to_me"]],"ko":"아담이 말했어요. “하와가 저에게 줬어요.”","st":317.1,"et":321.93,"img":"s026.jpg"},{"n":27,"b":2,"en":"Eve said, “The snake tricked me.”","ch":[["Eve said,","eve_said"],["“The snake","the_snake"],["tricked me.”","tricked_me"]],"ko":"하와가 말했어요. “뱀이 저를 속였어요.”","st":325.6,"et":329.85,"img":"s027.jpg"},{"n":28,"b":2,"en":"God drove them out of the garden.","ch":[["God drove them out","god_drove_them_out"],["of the garden.","of_the_garden"]],"ko":"하나님은 그들을 동산 밖으로 내보내셨어요.","st":335.94,"et":341.33,"img":"s028.jpg"},{"n":29,"b":3,"en":"Adam and Eve had two sons.","ch":[["Adam and Eve","adam_and_eve"],["had two sons.","had_two_sons"]],"ko":"아담과 하와에게는 아들이 둘 있었어요.","st":366.46,"et":369.6,"img":"s029.jpg"},{"n":30,"b":3,"en":"Cain farmed, and Abel herded sheep.","ch":[["Cain farmed,","cain_farmed"],["and Abel herded sheep.","and_abel_herded_sheep"]],"ko":"가인은 농사를 짓고, 아벨은 양을 쳤어요.","st":374.38,"et":378.29,"img":"s030.jpg"},{"n":31,"b":3,"en":"Each of them gave a gift to God.","ch":[["Each of them","each_of_them"],["gave a gift","gave_a_gift"],["to God.","to_god"]],"ko":"둘은 각자 하나님께 선물을 드렸어요.","st":386.14,"et":389.99,"img":"s031.jpg"},{"n":32,"b":3,"en":"But God only took Abel’s gift.","ch":[["But God","but_god"],["only took Abel’s gift.","only_took_abel_s_gift"]],"ko":"하지만 하나님은 아벨의 선물만 받으셨어요.","st":395.66,"et":399.73,"img":"s032.jpg"},{"n":33,"b":3,"en":"Cain was so angry that he killed his brother.","ch":[["Cain was so angry","cain_was_so_angry"],["that he killed","that_he_killed"],["his brother.","his_brother"]],"ko":"가인은 너무 화가 나서 동생을 죽이고 말았어요.","st":403.12,"et":408.65,"img":"s033.jpg"},{"n":34,"b":3,"en":"“Cain, where is your brother?” God asked.","ch":[["“Cain,","cain"],["where is your brother?”","where_is_your_brother"],["God asked.","god_asked"]],"ko":"“가인아, 네 동생은 어디에 있니?” 하나님이 물으셨어요.","st":414.53,"et":419.11,"img":"s034.jpg"},{"n":35,"b":3,"en":"“I don’t know,” Cain replied coldly.","ch":[["“I don’t know,”","i_don_t_know"],["Cain replied","cain_replied"],["coldly.","coldly"]],"ko":"“몰라요.” 가인이 차갑게 대답했어요.","st":425.88,"et":430.09,"img":"s035.jpg"},{"n":36,"b":3,"en":"“I can hear your brother crying.","ch":[["“I can hear","i_can_hear"],["your brother crying.","your_brother_crying"]],"ko":"“네 동생이 우는 소리가 들린단다.","st":430.86,"et":437.71,"img":"s036.jpg"},{"n":37,"b":3,"en":"From now, you will have no fruit even if you work.”","ch":[["From now,","from_now"],["you will have no fruit","you_will_have_no_fruit"],["even if you work.”","even_if_you_work"]],"ko":"이제부터 네가 일해도 열매를 얻지 못할 거야.”","st":443.76,"et":450.48,"img":"s037.jpg"},{"n":38,"b":3,"en":"Cain left his family.","ch":[["Cain left","cain_left"],["his family.","his_family"]],"ko":"가인은 가족을 떠났어요.","st":454.71,"et":457.31,"img":"s038.jpg"},{"n":39,"b":3,"en":"And lived in the land of Nod, east of Eden.","ch":[["And lived","and_lived"],["in the land of Nod,","in_the_land_of_nod"],["east of Eden.","east_of_eden"]],"ko":"그리고 에덴 동쪽 놋 땅에서 살았어요.","st":461.76,"et":466.49,"img":"s039.jpg"},{"n":40,"b":3,"en":"God kept people from hurting Cain.","ch":[["God kept people","god_kept_people"],["from hurting Cain.","from_hurting_cain"]],"ko":"하나님은 사람들이 가인을 해치지 못하게 지켜 주셨어요.","st":473.0,"et":477.37,"img":"s040.jpg"},{"n":41,"b":4,"en":"The beautiful world was full of sin.","ch":[["The beautiful world","the_beautiful_world"],["was full of sin.","was_full_of_sin"]],"ko":"아름다웠던 세상은 죄로 가득 찼어요.","st":497.0,"et":501.35,"img":"s041.jpg"},{"n":42,"b":4,"en":"But Noah pleased God.","ch":[["But Noah","but_noah"],["pleased God.","pleased_god"]],"ko":"하지만 노아는 하나님을 기쁘게 했어요.","st":506.92,"et":510.13,"img":"s042.jpg"},{"n":43,"b":4,"en":"“Noah, I will judge the world with rain.","ch":[["“Noah,","noah"],["I will judge the world","i_will_judge_the_world"],["with rain.","with_rain"]],"ko":"“노아야, 내가 비로 세상을 심판할 거란다.","st":514.14,"et":519.11,"img":"s043.jpg"},{"n":44,"b":4,"en":"Build a big ark.","ch":[["Build a big ark.","build_a_big_ark"]],"ko":"커다란 방주를 만들어라.","st":521.28,"et":526.14,"img":"s044.jpg"},{"n":45,"b":4,"en":"And get your family and animals aboard.”","ch":[["And get your family","and_get_your_family"],["and animals","and_animals"],["aboard.”","aboard"]],"ko":"그리고 가족과 동물들을 배에 태워라.”","st":530.88,"et":535.0,"img":"s045.jpg"},{"n":46,"b":4,"en":"Noah did as God told him.","ch":[["Noah did","noah_did"],["as God told him.","as_god_told_him"]],"ko":"노아는 하나님이 말씀하신 대로 했어요.","st":539.19,"et":542.71,"img":"s046.jpg"},{"n":47,"b":4,"en":"It rained heavily for 40 days.","ch":[["It rained heavily","it_rained_heavily"],["for 40 days.","for_40_days"]],"ko":"비가 40일 동안 세차게 내렸어요.","st":549.0,"et":553.11,"img":"s047.jpg"},{"n":48,"b":4,"en":"They got off the ark after a year.","ch":[["They got off the ark","they_got_off_the_ark"],["after a year.","after_a_year"]],"ko":"일 년 뒤에 그들은 방주에서 내렸어요.","st":561.52,"et":565.47,"img":"s048.jpg"},{"n":49,"b":4,"en":"Noah worshipped God.","ch":[["Noah","noah"],["worshipped God.","worshipped_god"]],"ko":"노아는 하나님께 예배를 드렸어요.","st":570.9,"et":573.37,"img":"s049.jpg"},{"n":50,"b":4,"en":"God gave Noah the word of promise.","ch":[["God gave Noah","god_gave_noah"],["the word of promise.","the_word_of_promise"]],"ko":"하나님은 노아에게 약속의 말씀을 주셨어요.","st":579.98,"et":583.91,"img":"s050.jpg"},{"n":51,"b":4,"en":"“I will never again judge all living things with a flood.”","ch":[["“I will never again","i_will_never_again"],["judge all living things","judge_all_living_things"],["with a flood.”","with_a_flood"]],"ko":"“다시는 홍수로 모든 생물을 심판하지 않겠다.”","st":589.08,"et":595.53,"img":"s051.jpg"},{"n":52,"b":4,"en":"God gave a rainbow as a sign of promise.","ch":[["God gave a rainbow","god_gave_a_rainbow"],["as a sign","as_a_sign"],["of promise.","of_promise"]],"ko":"하나님은 약속의 표시로 무지개를 주셨어요.","st":600.46,"et":605.13,"img":"s052.jpg"},{"n":53,"b":5,"en":"The number of Noah’s sons became very large.","ch":[["The number of Noah’s sons","the_number_of_noah_s_sons"],["became very large.","became_very_large"]],"ko":"노아의 자손이 아주 많아졌어요.","st":624.3,"et":629.77,"img":"s053.jpg"},{"n":54,"b":5,"en":"So people moved east.","ch":[["So people","so_people"],["moved east.","moved_east"]],"ko":"그래서 사람들은 동쪽으로 옮겨 갔어요.","st":631.96,"et":635.15,"img":"s054.jpg"},{"n":55,"b":5,"en":"People saw a large plain and stayed there.","ch":[["People saw a large plain","people_saw_a_large_plain"],["and stayed there.","and_stayed_there"]],"ko":"사람들은 넓은 평지를 발견하고 그곳에 머물렀어요.","st":640.86,"et":645.37,"img":"s055.jpg"},{"n":56,"b":5,"en":"“Let’s build a high tower and live here!","ch":[["“Let’s build","let_s_build"],["a high tower","a_high_tower"],["and live here!","and_live_here"]],"ko":"“높은 탑을 쌓고 여기서 살자!","st":650.4,"et":654.77,"img":"s056.jpg"},{"n":57,"b":5,"en":"We’ll make a name for ourselves.”","ch":[["We’ll make a name","we_ll_make_a_name"],["for ourselves.”","for_ourselves"]],"ko":"우리 이름을 널리 알리자.”","st":659.18,"et":662.47,"img":"s057.jpg"},{"n":58,"b":5,"en":"“Okay! Let’s make bricks together.”","ch":[["“Okay!","okay"],["Let’s make bricks","let_s_make_bricks"],["together.”","together"]],"ko":"“좋아! 같이 벽돌을 만들자.”","st":667.32,"et":671.09,"img":"s058.jpg"},{"n":59,"b":5,"en":"God came down to see the tower.","ch":[["God came down","god_came_down"],["to see the tower.","to_see_the_tower"]],"ko":"하나님이 탑을 보러 내려오셨어요.","st":676.5,"et":680.37,"img":"s059.jpg"},{"n":60,"b":5,"en":"“They’re planning a bad thing.","ch":[["“They’re planning","they_re_planning"],["a bad thing.","a_bad_thing"]],"ko":"“저들이 나쁜 일을 꾸미고 있구나.","st":683.92,"et":687.19,"img":"s060.jpg"},{"n":61,"b":5,"en":"I will not let them understand each other.”","ch":[["I will not let them","i_will_not_let_them"],["understand each other.”","understand_each_other"]],"ko":"서로 말이 통하지 않게 하겠다.”","st":689.84,"et":694.07,"img":"s061.jpg"},{"n":62,"b":5,"en":"Then, people started speaking in other words.","ch":[["Then,","then"],["people started speaking","people_started_speaking"],["in other words.","in_other_words"]],"ko":"그러자 사람들이 서로 다른 말을 하기 시작했어요.","st":702.02,"et":707.11,"img":"s062.jpg"},{"n":63,"b":5,"en":"“We can’t build a tower anymore!”","ch":[["“We can’t build","we_can_t_build"],["a tower","a_tower"],["anymore!”","anymore"]],"ko":"“우리는 더 이상 탑을 쌓을 수 없어!”","st":713.11,"et":717.47,"img":"s063.jpg"},{"n":64,"b":5,"en":"In the end, they spread here and there.","ch":[["In the end,","in_the_end"],["they spread","they_spread"],["here and there.","here_and_there"]],"ko":"결국 그들은 여기저기로 흩어졌어요.","st":723.3,"et":728.45,"img":"s064.jpg"},{"n":65,"b":6,"en":"One day, God came to Abraham.","ch":[["One day,","one_day"],["God came to Abraham.","god_came_to_abraham"]],"ko":"어느 날, 하나님이 아브라함을 찾아오셨어요.","st":746.23,"et":750.33,"img":"s065.jpg"},{"n":66,"b":6,"en":"“Leave your father’s house.","ch":[["“Leave","leave"],["your father’s house.","your_father_s_house"]],"ko":"“네 아버지의 집을 떠나라.","st":754.88,"et":757.81,"img":"s066.jpg"},{"n":67,"b":6,"en":"You will make a great nation.”","ch":[["You will make","you_will_make"],["a great nation.”","a_great_nation"]],"ko":"너는 큰 나라를 이룰 거란다.”","st":761.72,"et":766.57,"img":"s067.jpg"},{"n":68,"b":6,"en":"Abraham went to Canaan with his wife Sarah.","ch":[["Abraham went to Canaan","abraham_went_to_canaan"],["with his wife Sarah.","with_his_wife_sarah"]],"ko":"아브라함은 아내 사라와 함께 가나안으로 갔어요.","st":771.66,"et":775.83,"img":"s068.jpg"},{"n":69,"b":6,"en":"Abraham said, “I don’t have a child.”","ch":[["Abraham said,","abraham_said"],["“I don’t have","i_don_t_have"],["a child.”","a_child"]],"ko":"아브라함이 말했어요. “저는 아이가 없어요.”","st":784.14,"et":789.65,"img":"s069.jpg"},{"n":70,"b":6,"en":"“I will give you a son,” God promised.","ch":[["“I will give you","i_will_give_you"],["a son,”","a_son"],["God promised.","god_promised"]],"ko":"“내가 너에게 아들을 주겠다.” 하나님이 약속하셨어요.","st":797.84,"et":802.61,"img":"s070.jpg"},{"n":71,"b":6,"en":"Three guests came to Abraham and said,","ch":[["Three guests","three_guests"],["came to Abraham","came_to_abraham"],["and said,","and_said"]],"ko":"손님 세 명이 아브라함에게 와서 말했어요.","st":808.26,"et":812.41,"img":"s071.jpg"},{"n":72,"b":6,"en":"“You will have a son around this time next year.”","ch":[["“You will have a son","you_will_have_a_son"],["around this time","around_this_time"],["next year.”","next_year"]],"ko":"“내년 이맘때쯤 아들을 얻게 될 거예요.”","st":812.94,"et":818.05,"img":"s072.jpg"},{"n":73,"b":6,"en":"Sarah couldn’t have a baby.","ch":[["Sarah","sarah"],["couldn’t have a baby.","couldn_t_have_a_baby"]],"ko":"사라는 아기를 가질 수 없었어요.","st":823.94,"et":827.03,"img":"s073.jpg"},{"n":74,"b":6,"en":"But the guest said, “There is nothing that God can’t do.”","ch":[["But the guest said,","but_the_guest_said"],["“There is nothing","there_is_nothing"],["that God can’t do.”","that_god_can_t_do"]],"ko":"하지만 손님이 말했어요. “하나님이 못 하시는 일은 없어요.”","st":829.36,"et":835.45,"img":"s074.jpg"},{"n":75,"b":6,"en":"God blessed Sarah and Isaac was born.","ch":[["God blessed Sarah","god_blessed_sarah"],["and Isaac was born.","and_isaac_was_born"]],"ko":"하나님이 사라에게 복을 주셔서 이삭이 태어났어요.","st":841.64,"et":846.95,"img":"s075.jpg"},{"n":76,"b":6,"en":"Abraham and Sarah were very happy.","ch":[["Abraham and Sarah","abraham_and_sarah"],["were very happy.","were_very_happy"]],"ko":"아브라함과 사라는 아주 행복했어요.","st":856.88,"et":860.37,"img":"s076.jpg"},{"n":77,"b":7,"en":"God tested Abraham.","ch":[["God tested Abraham.","god_tested_abraham"]],"ko":"하나님이 아브라함을 시험하셨어요.","st":884.64,"et":887.19,"img":"s077.jpg"},{"n":78,"b":7,"en":"“Abraham, give me your beloved son.”","ch":[["“Abraham,","abraham"],["give me","give_me"],["your beloved son.”","your_beloved_son"]],"ko":"“아브라함아, 네가 사랑하는 아들을 내게 다오.”","st":893.06,"et":897.35,"img":"s078.jpg"},{"n":79,"b":7,"en":"Abraham set off with Isaac.","ch":[["Abraham set off","abraham_set_off"],["with Isaac.","with_isaac"]],"ko":"아브라함은 이삭과 함께 길을 나섰어요.","st":904.86,"et":907.97,"img":"s079.jpg"},{"n":80,"b":7,"en":"And arrived at the mountain.","ch":[["And arrived","and_arrived"],["at the mountain.","at_the_mountain"]],"ko":"그리고 산에 도착했어요.","st":915.18,"et":918.55,"img":"s080.jpg"},{"n":81,"b":7,"en":"“Isaac, take wood, and let’s go up.”","ch":[["“Isaac,","isaac"],["take wood,","take_wood"],["and let’s go up.”","and_let_s_go_up"]],"ko":"“이삭아, 나무를 들고 올라가자.”","st":924.0,"et":928.31,"img":"s081.jpg"},{"n":82,"b":7,"en":"“Yes father, but where is the lamb for God?”","ch":[["“Yes father,","yes_father"],["but where is the lamb","but_where_is_the_lamb"],["for God?”","for_god"]],"ko":"“네, 아버지. 그런데 하나님께 드릴 어린양은 어디 있어요?”","st":935.34,"et":940.17,"img":"s082.jpg"},{"n":83,"b":7,"en":"“God will prepare.”","ch":[["“God","god"],["will prepare.”","will_prepare"]],"ko":"“하나님이 준비해 주실 거란다.”","st":944.2,"et":947.41,"img":"s083.jpg"},{"n":84,"b":7,"en":"But Abraham tied Isaac.","ch":[["But Abraham","but_abraham"],["tied Isaac.","tied_isaac"]],"ko":"그런데 아브라함은 이삭을 묶었어요.","st":951.8,"et":955.85,"img":"s084.jpg"},{"n":85,"b":7,"en":"And laid Isaac on the wood.","ch":[["And laid Isaac","and_laid_isaac"],["on the wood.","on_the_wood"]],"ko":"그리고 이삭을 나무 위에 눕혔어요.","st":956.0,"et":963.19,"img":"s085.jpg"},{"n":86,"b":7,"en":"A voice from heaven said, “Abraham, stop!","ch":[["A voice from heaven said,","a_voice_from_heaven_said"],["“Abraham,","abraham"],["stop!","stop"]],"ko":"하늘에서 목소리가 말했어요. “아브라함아, 멈춰라!","st":966.9,"et":972.41,"img":"s086.jpg"},{"n":87,"b":7,"en":"Now, I know that you love me the most.”","ch":[["Now,","now"],["I know","i_know"],["that you love me the most.”","that_you_love_me_the_most"]],"ko":"이제 네가 나를 가장 사랑하는 걸 알겠다.”","st":975.54,"et":980.25,"img":"s087.jpg"},{"n":88,"b":7,"en":"Abraham returned home safely with Isaac.","ch":[["Abraham returned home","abraham_returned_home"],["safely","safely"],["with Isaac.","with_isaac"]],"ko":"아브라함은 이삭과 함께 무사히 집으로 돌아왔어요.","st":990.52,"et":994.97,"img":"s088.jpg"},{"n":89,"b":8,"en":"Sodom was a city full of sin.","ch":[["Sodom was a city","sodom_was_a_city"],["full of sin.","full_of_sin"]],"ko":"소돔은 죄로 가득 찬 도시였어요.","st":1015.32,"et":1018.87,"img":"s089.jpg"},{"n":90,"b":8,"en":"Abraham’s nephew, Lot, lived there.","ch":[["Abraham’s nephew,","abraham_s_nephew"],["Lot,","lot"],["lived there.","lived_there"]],"ko":"아브라함의 조카 롯이 그곳에 살았어요.","st":1024.88,"et":1028.79,"img":"s090.jpg"},{"n":91,"b":8,"en":"Lot had a hard time living with bad people.","ch":[["Lot had a hard time","lot_had_a_hard_time"],["living with bad people.","living_with_bad_people"]],"ko":"롯은 나쁜 사람들과 사는 것이 힘들었어요.","st":1031.46,"et":1035.95,"img":"s091.jpg"},{"n":92,"b":8,"en":"Two angels arrived in Sodom in the evening.","ch":[["Two angels","two_angels"],["arrived in Sodom","arrived_in_sodom"],["in the evening.","in_the_evening"]],"ko":"천사 두 명이 저녁에 소돔에 도착했어요.","st":1044.18,"et":1048.53,"img":"s092.jpg"},{"n":93,"b":8,"en":"“Sleep at my house,” Lot invited them.","ch":[["“Sleep","sleep"],["at my house,”","at_my_house"],["Lot invited them.","lot_invited_them"]],"ko":"“우리 집에서 주무세요.” 롯이 그들을 초대했어요.","st":1050.86,"et":1055.65,"img":"s093.jpg"},{"n":94,"b":8,"en":"The angels spent the night safely.","ch":[["The angels","the_angels"],["spent the night","spent_the_night"],["safely.","safely"]],"ko":"천사들은 안전하게 밤을 보냈어요.","st":1058.93,"et":1062.77,"img":"s094.jpg"},{"n":95,"b":8,"en":"They said to Lot, “Leave here now!","ch":[["They said to Lot,","they_said_to_lot"],["“Leave","leave"],["here now!","here_now"]],"ko":"그들이 롯에게 말했어요. “지금 당장 여기를 떠나세요!","st":1070.64,"et":1075.91,"img":"s095.jpg"},{"n":96,"b":8,"en":"God will judge this city.”","ch":[["God will judge","god_will_judge"],["this city.”","this_city"]],"ko":"하나님이 이 도시를 심판하실 거예요.”","st":1083.28,"et":1086.43,"img":"s096.jpg"},{"n":97,"b":8,"en":"Angels took Lot and his family out of the city and said,","ch":[["Angels took Lot","angels_took_lot"],["and his family","and_his_family"],["out of the city","out_of_the_city"],["and said,","and_said"]],"ko":"천사들은 롯과 가족을 도시 밖으로 데리고 나가 말했어요.","st":1093.6,"et":1099.03,"img":"s097.jpg"},{"n":98,"b":8,"en":"“Don’t look back and run away!”","ch":[["“Don’t look back","don_t_look_back"],["and run away!”","and_run_away"]],"ko":"“뒤돌아보지 말고 도망치세요!”","st":1101.66,"et":1104.95,"img":"s098.jpg"},{"n":99,"b":8,"en":"But Lot’s wife looked back.","ch":[["But","but"],["Lot’s wife","lot_s_wife"],["looked back.","looked_back"]],"ko":"하지만 롯의 아내는 뒤를 돌아보고 말았어요.","st":1108.14,"et":1111.83,"img":"s099.jpg"},{"n":100,"b":8,"en":"She turned into a pillar of salt.","ch":[["She turned into","she_turned_into"],["a pillar of salt.","a_pillar_of_salt"]],"ko":"그녀는 소금 기둥으로 변했어요.","st":1112.76,"et":1116.83,"img":"s100.jpg"},{"n":101,"b":9,"en":"Isaac grew up and became a young man.","ch":[["Isaac grew up","isaac_grew_up"],["and became","and_became"],["a young man.","a_young_man"]],"ko":"이삭은 자라서 젊은 청년이 되었어요.","st":1135.44,"et":1139.59,"img":"s101.jpg"},{"n":102,"b":9,"en":"Abraham called his servant.","ch":[["Abraham","abraham"],["called his servant.","called_his_servant"]],"ko":"아브라함은 자기 종을 불렀어요.","st":1143.88,"et":1146.59,"img":"s102.jpg"},{"n":103,"b":9,"en":"“Go to my hometown and take Isaac’s wife.”","ch":[["“Go","go"],["to my hometown","to_my_hometown"],["and take Isaac’s wife.”","and_take_isaac_s_wife"]],"ko":"“내 고향에 가서 이삭의 아내를 데려오너라.”","st":1149.0,"et":1154.37,"img":"s103.jpg"},{"n":104,"b":9,"en":"The servant left with ten camels.","ch":[["The servant","the_servant"],["left","left"],["with ten camels.","with_ten_camels"]],"ko":"종은 낙타 열 마리를 데리고 떠났어요.","st":1161.48,"et":1165.33,"img":"s104.jpg"},{"n":105,"b":9,"en":"He arrived at a well outside a city.","ch":[["He arrived","he_arrived"],["at a well","at_a_well"],["outside a city.","outside_a_city"]],"ko":"그는 도시 밖 우물가에 도착했어요.","st":1170.62,"et":1175.01,"img":"s105.jpg"},{"n":106,"b":9,"en":"And he prayed, “God, help me.","ch":[["And he prayed,","and_he_prayed"],["“God,","god"],["help me.","help_me"]],"ko":"그리고 그는 기도했어요. “하나님, 저를 도와주세요.","st":1178.3,"et":1183.49,"img":"s106.jpg"},{"n":107,"b":9,"en":"I will choose a girl who gives water to camels.”","ch":[["I will choose a girl","i_will_choose_a_girl"],["who gives water","who_gives_water"],["to camels.”","to_camels"]],"ko":"낙타에게 물을 주는 아가씨를 고르겠어요.”","st":1188.76,"et":1193.91,"img":"s107.jpg"},{"n":108,"b":9,"en":"Just then, Rebekah came to the well.","ch":[["Just then,","just_then"],["Rebekah","rebekah"],["came to the well.","came_to_the_well"]],"ko":"바로 그때, 리브가가 우물에 왔어요.","st":1199.78,"et":1204.25,"img":"s108.jpg"},{"n":109,"b":9,"en":"Rebekah gave water to the servant and said,","ch":[["Rebekah gave water","rebekah_gave_water"],["to the servant","to_the_servant"],["and said,","and_said"]],"ko":"리브가는 종에게 물을 주고 말했어요.","st":1208.67,"et":1212.91,"img":"s109.jpg"},{"n":110,"b":9,"en":"“I will water the camels too!”","ch":[["“I will water","i_will_water"],["the camels too!”","the_camels_too"]],"ko":"“제가 낙타들에게도 물을 줄게요!”","st":1213.64,"et":1216.95,"img":"s110.jpg"},{"n":111,"b":9,"en":"He returned to Abraham with Rebekah.","ch":[["He returned","he_returned"],["to Abraham","to_abraham"],["with Rebekah.","with_rebekah"]],"ko":"그는 리브가와 함께 아브라함에게 돌아왔어요.","st":1223.37,"et":1227.5,"img":"s111.jpg"},{"n":112,"b":9,"en":"With God’s help, Isaac married Rebekah.","ch":[["With God’s help,","with_god_s_help"],["Isaac married Rebekah.","isaac_married_rebekah"]],"ko":"하나님의 도우심으로 이삭은 리브가와 결혼했어요.","st":1235.14,"et":1239.71,"img":"s112.jpg"},{"n":113,"b":10,"en":"Rebekah gave birth to twins.","ch":[["Rebekah","rebekah"],["gave birth","gave_birth"],["to twins.","to_twins"]],"ko":"리브가는 쌍둥이를 낳았어요.","st":1263.75,"et":1267.29,"img":"s113.jpg"},{"n":114,"b":10,"en":"Older brother Esau liked hunting.","ch":[["Older brother Esau","older_brother_esau"],["liked hunting.","liked_hunting"]],"ko":"형 에서는 사냥을 좋아했어요.","st":1279.42,"et":1282.95,"img":"s114.jpg"},{"n":115,"b":10,"en":"And Jacob liked staying home.","ch":[["And Jacob","and_jacob"],["liked staying home.","liked_staying_home"]],"ko":"그리고 야곱은 집에 있는 것을 좋아했어요.","st":1289.9,"et":1293.29,"img":"s115.jpg"},{"n":116,"b":10,"en":"Esau said, “Jacob, I’m hungry. Give me something to eat.”","ch":[["Esau said,","esau_said"],["“Jacob,","jacob"],["I’m hungry.","i_m_hungry"],["Give me something","give_me_something"],["to eat.”","to_eat"]],"ko":"에서가 말했어요. “야곱, 나 배고파. 먹을 것 좀 줘.”","st":1302.65,"et":1309.09,"img":"s116.jpg"},{"n":117,"b":10,"en":"“I will if you let me be your older brother!”","ch":[["“I will","i_will"],["if you let me","if_you_let_me"],["be your older brother!”","be_your_older_brother"]],"ko":"“줄게. 대신 내가 형이 되게 해 줘!”","st":1310.84,"et":1316.01,"img":"s117.jpg"},{"n":118,"b":10,"en":"Esau gave his birthright so easily.","ch":[["Esau gave","esau_gave"],["his birthright","his_birthright"],["so easily.","so_easily"]],"ko":"에서는 장자의 권리를 너무 쉽게 내주었어요.","st":1321.85,"et":1325.75,"img":"s118.jpg"},{"n":119,"b":10,"en":"Isaac couldn’t see well because he was old.","ch":[["Isaac couldn’t see well","isaac_couldn_t_see_well"],["because he was old.","because_he_was_old"]],"ko":"이삭은 나이가 들어서 눈이 잘 보이지 않았어요.","st":1332.94,"et":1337.29,"img":"s119.jpg"},{"n":120,"b":10,"en":"He called Esau, “Hunt and make a meal.","ch":[["He called Esau,","he_called_esau"],["“Hunt","hunt"],["and make a meal.","and_make_a_meal"]],"ko":"이삭이 에서를 불렀어요. “사냥해서 음식을 만들어 오너라.","st":1340.54,"et":1345.59,"img":"s120.jpg"},{"n":121,"b":10,"en":"I will bless you after I eat.”","ch":[["I will bless you","i_will_bless_you"],["after I eat.”","after_i_eat"]],"ko":"먹고 나서 너를 축복해 주마.”","st":1346.26,"et":1350.23,"img":"s121.jpg"},{"n":122,"b":10,"en":"Rebekah called Jacob and said,","ch":[["Rebekah","rebekah"],["called Jacob","called_jacob"],["and said,","and_said"]],"ko":"리브가는 야곱을 불러 말했어요.","st":1360.33,"et":1363.91,"img":"s122.jpg"},{"n":123,"b":10,"en":"“Wear Esau’s clothes and take the blessing.”","ch":[["“Wear Esau’s clothes","wear_esau_s_clothes"],["and take","and_take"],["the blessing.”","the_blessing"]],"ko":"“에서의 옷을 입고 축복을 받으렴.”","st":1366.24,"et":1370.11,"img":"s123.jpg"},{"n":124,"b":10,"en":"Esau found out that Jacob was blessed and got very angry.","ch":[["Esau found out","esau_found_out"],["that Jacob was blessed","that_jacob_was_blessed"],["and got very angry.","and_got_very_angry"]],"ko":"에서는 야곱이 축복받은 것을 알고 몹시 화가 났어요.","st":1378.22,"et":1384.33,"img":"s124.jpg"}]};
+const KP="enKids_";
+const $=id=>document.getElementById(id);
+const S=DATA.s, W=DATA.words, BOOKS=DATA.books, VID=DATA.video.id;
+const store={get(k,d){try{const v=localStorage.getItem(KP+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(KP+k,JSON.stringify(v))}catch(e){}}};
+const DEF=[5,5,5,10], NAMES=["단어 읽기","끊어 읽기","천천히 읽기","빠르게 읽기"];
+let cnts=store.get("cnt",DEF).map(Number); if(cnts.length!==4||cnts.some(x=>!(x>=0&&x<=30))) cnts=DEF.slice();
+let opt={rate:String(store.get("rate","0.75")),gap:String(store.get("gap","0.6")),auto:store.get("auto",true),dedupe:store.get("dedupe",true),han:store.get("han",true),hideko:store.get("hideko",false)};
+let done=new Set(store.get("done",[]));
+let cur=Math.min(S.length-1,Math.max(0,+store.get("cur",0)||0));
+let P={step:0,r:0,u:0};          // r = repetition being played (0-based), u = word / chunk index
+let playing=false, runTok=0, pend=null, wordsList=[];
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function norm(w){return String(w).toLowerCase().replace(/[’]/g,"'").replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu,"")}
+function bookOf(i){return S[i].b}
+
+// ---------- sentence structure ----------
+function sentWords(i){ // unique (or all) words in order: {k, ti} k=normalised word, ti=token index
+  const out=[],seen=new Set(); let ti=0;
+  S[i].ch.forEach(c=>c[0].split(/\s+/).forEach(t=>{const k=norm(t); if(k&&!(opt.dedupe&&seen.has(k))){seen.add(k);out.push({k,ti});} ti++;}));
+  return out;
+}
+function units(step){ // number of units in one repetition
+  if(step===0) return wordsList.length; if(step===1) return S[cur].ch.length; return 1;
+}
+function resetP(step){P={step:step||0,r:0,u:0}; wordsList=sentWords(cur); skipEmpty();}
+function skipEmpty(){ while(P.step<4&&cnts[P.step]===0){P.step++;P.r=0;P.u=0;} }
+function totalUnits(){return [0,1,2,3].reduce((a,k)=>a+cnts[k]*(k===0?wordsList.length:k===1?S[cur].ch.length:1),0)}
+function doneUnits(){let d=0;for(let k=0;k<P.step&&k<4;k++) d+=cnts[k]*(k===0?wordsList.length:k===1?S[cur].ch.length:1);
+  if(P.step<4){ if(P.step===0) d+=P.u*cnts[0]+P.r; else if(P.step===1) d+=P.r*S[cur].ch.length+P.u; else d+=P.r;} return d}
+
+// ---------- rendering ----------
+function render(){
+  const s=S[cur];
+  $("books").innerHTML=BOOKS.map(b=>{const n=S.filter(x=>x.b===b.n),k=n.filter(x=>done.has(x.n)).length;return `<button type="button" data-b="${b.n}" aria-pressed="${b.n===s.b}">Book ${b.n}<span class="c">${k===n.length?"✓":k+"/"+n.length}</span></button>`}).join("");
+  const on=$("books").querySelector('[aria-pressed="true"]'); if(on){const T=$("books");T.scrollLeft=Math.max(0,on.offsetLeft-T.offsetLeft-10)}
+  $("ko").textContent=s.ko;
+  let ti=0;
+  $("il").innerHTML=s.ch.map((c,ci)=>`<span class="ch" data-c="${ci}">`+c[0].split(/\s+/).map(t=>{const k=norm(t),h=(W[k]||["",""])[0];return `<span class="col" role="button" tabindex="0" data-w="${esc(k)}" data-t="${ti++}"><span class="ie">${esc(t)}</span><span class="ik">${esc(h)}</span></span>`}).join("")+`</span>`).join("");
+  $("img").src="kids/img/"+s.img; $("img").alt=s.ko;
+  $("badge").textContent=`${s.n} / ${S.length}`;
+  $("card").classList.toggle("hideko",!!opt.hideko);
+  $("card").classList.toggle("nohan",!opt.han);
+  renderRows(); renderStep(); fit();
+}
+function renderStep(){
+  const n=cnts;
+  $("chips").innerHTML=["①","②","③","④"].map((t,k)=>`<button type="button" class="chip ${P.step===k?"on":P.step>k?"done":""} ${n[k]===0?"zero":""}" data-s="${k}" aria-label="${NAMES[k]} ${n[k]}번">${P.step>k&&n[k]>0?"✓":t}</button>`).join("");
+  let b1,b2="";
+  if(P.step>=4){ b1=`<b>끝!</b> 4단계 완료 ✓`; b2="다음 문장으로 가 볼까요?"; }
+  else{
+    const rep=Math.min(P.r+1,n[P.step]);
+    b1=`${NAMES[P.step]} <b>${rep}/${n[P.step]}</b>`;
+    if(P.step===0){const w=wordsList[Math.min(P.u,wordsList.length-1)]; b2=`단어 ${Math.min(P.u+1,wordsList.length)}/${wordsList.length} · ${w?w.k:""}`}
+    else if(P.step===1) b2=`끊어서 · ${Math.min(P.u+1,S[cur].ch.length)}/${S[cur].ch.length} 덩어리`;
+    else if(P.step===2) b2=`${opt.rate}배속 · 영상 소리`;
+    else b2="원래 속도 · 영상 소리";
+  }
+  $("b1").innerHTML=b1; $("b2").textContent=b2;
+  const tot=totalUnits(), d=doneUnits();
+  $("cnt").textContent=`문장 ${cur+1}/${S.length}`;
+  $("fill").style.width=(P.step>=4?100:tot?d/tot*100:0)+"%";
+  $("play").textContent=playing?"⏸ 멈춤":(P.step>=4?"↻ 다시":(d>0?"▶ 이어서":"▶ 시작"));
+  $("play").classList.toggle("on",playing);
+  document.querySelectorAll("#il .ch").forEach((e,i)=>e.classList.toggle("on",playing&&P.step===1&&i===P.u));
+  document.querySelectorAll("#il .col").forEach(e=>e.classList.toggle("cur",playing&&P.step===0&&wordsList[P.u]&&+e.dataset.t===wordsList[P.u].ti));
+  $("pic").classList.toggle("vid",playing&&(P.step===2||P.step===3));
+}
+function renderRows(){
+  $("listSum").textContent=`문장 목록 · Book ${S[cur].b} · ${S.filter(x=>x.b===S[cur].b).length}문장`;
+  $("rows").innerHTML=S.map((s,i)=>s.b!==S[cur].b?"":`<button type="button" data-i="${i}" class="${i===cur?"cur":""}"><span class="n">${s.n}</span><span class="t">${esc(s.en)}<span class="k">${esc(s.ko)}</span></span><span class="ok">${done.has(s.n)?"✓":""}</span></button>`).join("");
+}
+function showCap(k,sticky){
+  const w=W[k]; if(!w){$("cap").classList.remove("show");return}
+  $("cap").innerHTML=`<b>${esc(k)}</b><i>${esc(w[0])}</i>${esc(w[1])}`; $("cap").classList.add("show");
+  clearTimeout(showCap.t); if(!sticky) showCap.t=setTimeout(()=>$("cap").classList.remove("show"),2800);
+}
+function hideCap(){clearTimeout(showCap.t);$("cap").classList.remove("show")}
+
+// ---------- fit: big Korean meaning on top, English (+Hangul) below, picture gets the rest ----------
+let fitHdr=-1;
+function fit(){
+  const card=$("card"),bar=document.querySelector(".bar"),il=$("il"),ko=$("ko"),pic=$("pic"),B=document.body;
+  if(!card.offsetParent) return;
+  const W0=innerWidth, vw=Math.min(W0,560);
+  const limit=()=>innerHeight-bar.getBoundingClientRect().height-10;
+  B.classList.remove("squeeze"); card.classList.remove("nohan"); if(!opt.han) card.classList.add("nohan");
+  const kBase=Math.round(Math.min(28,Math.max(22,vw*0.068))), eBase=Math.round(Math.min(32,Math.max(24,vw*0.076)));
+  let kf=kBase, ef=eBase; const setK=()=>card.style.setProperty("--kfs",kf+"px"), setE=()=>card.style.setProperty("--efs",ef+"px");
+  setK(); setE(); pic.style.width=pic.style.height="200px";
+  const MINP=200;
+  const need=()=>pic.getBoundingClientRect().top+MINP>limit();
+  const wide=()=>{const R=il.getBoundingClientRect();return [...il.querySelectorAll(".col")].some(c=>c.getBoundingClientRect().right>R.right+0.5)||document.documentElement.scrollWidth>W0};
+  let guard=0;
+  // 1) shrink English (with Hangul) down to 22px
+  while((need()||wide())&&ef>22&&guard++<80){ef--;setE();}
+  // 2) squeeze header
+  if(need()||wide()){B.classList.add("squeeze");}
+  while((need()||wide())&&ef>20&&guard++<120){ef--;setE();}
+  // 3) shrink the Korean meaning a little (keep it big)
+  while(need()&&kf>22&&guard++<160){kf--;setK();}
+  // 4) still too tall: drop the Hangul pronunciation and re-grow/shrink the English
+  if(need()||wide()){
+    card.classList.add("nohan"); kf=Math.min(kBase,26); setK(); ef=Math.min(eBase,28); setE();
+    while((need()||wide())&&ef>16&&guard++<260){ef--;setE();}
+    while(need()&&kf>20&&guard++<300){kf--;setK();}
+  }
+  const top=pic.getBoundingClientRect().top;
+  const cw=card.clientWidth-20;
+  const side=Math.max(MINP,Math.min(cw,Math.floor(limit()-top-2)));
+  pic.style.width=pic.style.height=side+"px";
+  card.dataset.fit=`k${kf} e${ef}${card.classList.contains("nohan")&&opt.han?" nohan":""}${B.classList.contains("squeeze")?" squeeze":""} pic${side}`;
+  fitHdr=document.querySelector("header").offsetHeight;
+}
+addEventListener("resize",fit);
+if(window.ResizeObserver) new ResizeObserver(()=>{if(document.querySelector("header").offsetHeight!==fitHdr) fit();}).observe(document.querySelector("header"));
+
+// ---------- audio: one persistent <audio> (unlocked by the first Play tap) ----------
+const A=new Audio(); A.preload="auto";
+function wait(ms){return new Promise(r=>{const t=setTimeout(fin,ms);function fin(){clearTimeout(t);pend=null;r()}pend=fin;})}
+function playUrl(url){return new Promise(r=>{let ok=false;const to=setTimeout(fin,7000);
+  function fin(){if(ok)return;ok=true;clearTimeout(to);A.onended=A.onerror=null;pend=null;r()}
+  pend=()=>{try{A.pause()}catch(e){}fin()}; A.onended=fin; A.onerror=()=>{$("status").textContent="소리 파일을 불러오지 못했어요.";fin()};
+  A.src=url; const p=A.play(); if(p&&p.catch) p.catch(()=>{$("status").textContent="소리를 켤 수 없어요. ▶ 버튼을 다시 눌러 주세요.";fin()}); })}
+function wUrl(k){return "kids/w/"+W[k][2]+".mp3"}
+function preload(){ // warm the cache for the sentence that is about to play
+  try{ wordsList.forEach(w=>{const a=new Audio();a.preload="auto";a.src=wUrl(w.k)}); S[cur].ch.forEach(c=>{const a=new Audio();a.preload="auto";a.src="kids/c/"+c[1]+".mp3"}); }catch(e){} }
+
+// ---------- YouTube player (slow / fast steps) ----------
+let yt=null,ytReady=false,poll=null,primed=false,segActive=false;
+(function(){const s=document.createElement("script");s.src="https://www.youtube.com/iframe_api";document.head.appendChild(s);})();
+window.onYouTubeIframeAPIReady=function(){
+  yt=new YT.Player("ytPlayer",{width:"100%",height:"100%",videoId:VID,playerVars:{playsinline:1,rel:0,modestbranding:1,controls:0,disablekb:1,fs:0,iv_load_policy:3,cc_load_policy:0,start:Math.floor(S[cur].st)},
+    events:{onReady:()=>{ytReady=true;window.__ytReady=true},onError:e=>{$("status").textContent="영상을 재생할 수 없어요 (YouTube 오류 "+e.data+")."}}});
+};
+function primeYt(){ if(primed||!ytReady) return; primed=true; try{yt.mute();yt.playVideo();setTimeout(()=>{if(!segActive){try{yt.pauseVideo();yt.unMute()}catch(e){}}},500)}catch(e){} }
+function playSeg(i,rate){return new Promise(res=>{
+  const s=S[i]; let armed=false,t0=Date.now(),fin=false; segActive=true;
+  function end(){if(fin)return;fin=true;segActive=false;clearInterval(poll);try{yt.pauseVideo()}catch(e){}pend=null;res()}
+  pend=end;
+  if(!ytReady){$("status").textContent="영상 플레이어를 기다리는 중…"; const w=setInterval(()=>{if(ytReady||fin){clearInterval(w);if(!fin){fin=true;segActive=false;pend=null;playSeg(i,rate).then(res)}}},300);pend=()=>{fin=true;clearInterval(w);segActive=false;pend=null;res()};return}
+  try{yt.unMute();yt.setPlaybackRate(rate);yt.seekTo(s.st,true);yt.playVideo();}catch(e){}
+  clearInterval(poll);
+  poll=setInterval(()=>{ let t=0;try{t=yt.getCurrentTime()}catch(e){return}
+    if(!armed){ if(t>=s.st-0.4&&t<s.et){armed=true;try{if(yt.getPlaybackRate()!==rate)yt.setPlaybackRate(rate)}catch(e){}}
+      else if(Date.now()-t0>600&&(t<s.st-1||t>s.et+0.5)){try{yt.seekTo(s.st,true);yt.playVideo()}catch(e){}t0=Date.now()}
+      if(Date.now()-t0>14000){$("status").textContent="영상이 시작되지 않았어요. ▶를 다시 눌러 주세요.";end()} return}
+    if(t>=s.et) end(); },50);
+})}
+
+// ---------- the 4-step engine ----------
+const gap=()=>+opt.gap*1000;
+async function run(tok){
+  preload();
+  while(playing&&tok===runTok){
+    skipEmpty();
+    if(P.step>=4){ finishSentence(); if(!playing||tok!==runTok) return; await wait(1400); if(!playing||tok!==runTok) return; continue; }
+    renderStep();
+    const st=P.step, n=cnts[st];
+    if(st===0){
+      const w=wordsList[P.u]; showCap(w.k,true);
+      await playUrl(wUrl(w.k)); if(!playing||tok!==runTok) return;
+      await wait(gap()*0.8); if(!playing||tok!==runTok) return;
+      P.r++; if(P.r>=n){P.r=0;P.u++; if(P.u>=wordsList.length){hideCap();P.step=1;P.u=0;P.r=0;await wait(500);} }
+    } else if(st===1){
+      hideCap();
+      const c=S[cur].ch[P.u];
+      await playUrl("kids/c/"+c[1]+".mp3"); if(!playing||tok!==runTok) return;
+      P.u++; if(P.u>=S[cur].ch.length){P.u=0;P.r++; await wait(gap()*1.3); if(!playing||tok!==runTok) return; if(P.r>=n){P.step=2;P.r=0;P.u=0;await wait(300);}}
+      else { await wait(220); if(!playing||tok!==runTok) return; }
+    } else {
+      hideCap(); $("pic").classList.add("vid");
+      await playSeg(cur,st===2?+opt.rate:1); if(!playing||tok!==runTok) return;
+      P.r++; if(P.r>=n){P.step=st+1;P.r=0;P.u=0; await wait(600);} else await wait(gap()*1.2);
+    }
+    if(!playing||tok!==runTok) return;
+  }
+}
+function finishSentence(){
+  done.add(S[cur].n); store.set("done",[...done]); renderRows(); renderBooksOnly();
+  if(opt.auto&&cur<S.length-1){ cur++; store.set("cur",cur); resetP(0); const b=S[cur].b!==S[cur-1].b; render(); $("status").textContent=b?`Book ${S[cur].b} 시작!`:""; preload(); }
+  else { playing=false; renderStep(); $("status").textContent=cur>=S.length-1?"마지막 문장까지 모두 끝났어요! 🎉":"이 문장을 모두 읽었어요."; }
+}
+function renderBooksOnly(){const t=$("books");const sl=t.scrollLeft;render_books_keep(sl)}
+function render_books_keep(sl){ $("books").innerHTML=BOOKS.map(b=>{const n=S.filter(x=>x.b===b.n),k=n.filter(x=>done.has(x.n)).length;return `<button type="button" data-b="${b.n}" aria-pressed="${b.n===S[cur].b}">Book ${b.n}<span class="c">${k===n.length?"✓":k+"/"+n.length}</span></button>`}).join(""); $("books").scrollLeft=sl; }
+function start(){ if(playing) return; if(P.step>=4) resetP(0); skipEmpty(); if(P.step>=4){$("status").textContent="설정에서 횟수를 1 이상으로 해 주세요.";return}
+  playing=true; $("status").textContent=""; primeYt(); renderStep(); run(++runTok); }
+function stop(){ playing=false; runTok++; if(pend) pend(); try{A.pause()}catch(e){} try{if(ytReady&&!segActive)yt.pauseVideo()}catch(e){} clearInterval(poll); segActive=false; hideCap(); renderStep(); }
+function go(i,keepPlaying){ const was=playing; stop(); if(i<0||i>=S.length) return; cur=i; store.set("cur",cur); resetP(0); $("status").textContent=""; render(); history.replaceState(null,"","#"+S[cur].n); if(was||keepPlaying) start(); }
+$("play").onclick=()=>playing?stop():start();
+$("prev").onclick=()=>go(cur-1,true);
+$("next").onclick=()=>go(cur+1,true);
+$("chips").addEventListener("click",e=>{const b=e.target.closest("button[data-s]");if(!b)return;const k=+b.dataset.s;if(cnts[k]===0){$("status").textContent="이 단계는 횟수가 0이에요 (⚙ 설정).";return}const was=playing;stop();P={step:k,r:0,u:0};wordsList=sentWords(cur);render();if(was)start();});
+$("books").addEventListener("click",e=>{const b=e.target.closest("button[data-b]");if(!b)return;const i=S.findIndex(x=>x.b===+b.dataset.b);go(i,playing)});
+$("rows").addEventListener("click",e=>{const b=e.target.closest("button[data-i]");if(!b)return;go(+b.dataset.i,true);scrollTo({top:0,behavior:"smooth"})});
+
+// ---------- tap a word = hear it + see its meaning ----------
+function sayWord(k,el){
+  if(!W[k]) return; const was=playing; if(was) stop();
+  document.querySelectorAll(".say").forEach(e=>e.classList.remove("say")); if(el) el.classList.add("say");
+  showCap(k,false); runTok++;
+  playUrl(wUrl(k)).then(()=>{if(el) el.classList.remove("say")});
+}
+$("il").addEventListener("click",e=>{const c=e.target.closest(".col");if(c)sayWord(c.dataset.w,c)});
+$("il").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const c=e.target.closest(".col");if(c){e.preventDefault();sayWord(c.dataset.w,c)}});
+$("ko").onclick=()=>{const c=$("card");if(c.classList.contains("hideko")){c.classList.remove("hideko");setTimeout(()=>{if(opt.hideko)c.classList.add("hideko")},2500)}};
+
+// ---------- settings ----------
+function saveOpt(){store.set("rate",opt.rate);store.set("gap",opt.gap);store.set("auto",opt.auto);store.set("dedupe",opt.dedupe);store.set("han",opt.han);store.set("hideko",opt.hideko);store.set("cnt",cnts)}
+function syncSettings(){
+  document.querySelectorAll(".step").forEach(s=>{s.querySelector("output").textContent=cnts[+s.dataset.k]});
+  $("rate").value=opt.rate; $("gap").value=opt.gap;
+  [["auto","auto"],["dedupe","dedupe"],["han","han"],["hideko","hideko"]].forEach(([id,k])=>$(id).setAttribute("aria-pressed",String(!!opt[k])));
+}
+document.querySelectorAll(".step").forEach(s=>s.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const k=+s.dataset.k;cnts[k]=Math.max(0,Math.min(30,cnts[k]+ +b.dataset.d));syncSettings();saveOpt();}));
+["auto","dedupe","han","hideko"].forEach(id=>$(id).onclick=()=>{opt[id]=!opt[id];syncSettings();saveOpt();});
+$("rate").onchange=()=>{opt.rate=$("rate").value;saveOpt()}; $("gap").onchange=()=>{opt.gap=$("gap").value;saveOpt()};
+$("reset").onclick=()=>{cnts=DEF.slice();syncSettings();saveOpt()};
+function openSet(){ $("modal").dataset.was=playing?"1":""; stop(); syncSettings(); $("modal").classList.add("show"); }
+function closeSet(){ $("modal").classList.remove("show"); const keep=P.step; resetP(0); render(); }
+$("gear").onclick=openSet; $("mclose").onclick=closeSet; $("mok").onclick=closeSet;
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))closeSet()});
+
+// ---------- init ----------
+(function(){ const h=location.hash.replace("#",""); if(/^\d{1,3}$/.test(h)){const i=S.findIndex(s=>s.n===+h); if(i>=0) cur=i;} })();
+syncSettings(); resetP(0); render();
+window.__app={get cur(){return cur},get P(){return P},get playing(){return playing}};
+</script>
+</html>
