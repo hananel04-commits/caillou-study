@@ -16,8 +16,13 @@ header p{margin:4px 0 0;font-size:14px;opacity:.95}
 .top{position:sticky;top:0;z-index:20;background:var(--bg);padding:8px 10px 6px;box-shadow:0 3px 8px rgba(0,0,0,.08)}
 .vwrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
 .vwrap iframe,#ytPlayer{position:absolute;inset:0;width:100%;height:100%}
-.cover{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(20,40,20,.92);color:#fff;text-align:center;padding:10px;font-size:20px;font-weight:700;cursor:pointer}
+.still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;background:#000;transition:none}
+.still.off{opacity:0;transition:opacity .12s linear}
+.cover{position:absolute;inset:0;z-index:3;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(0,0,0,.5);color:#fff;text-align:center;padding:10px;font-size:20px;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.6);pointer-events:none}
 .cover.show{display:flex}
+.cover .go{display:inline-block;background:var(--red);color:#fff;border-radius:999px;padding:12px 28px;font-size:26px;box-shadow:0 3px 10px rgba(0,0,0,.35)}
+.shield{position:absolute;inset:0;z-index:4;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.shield.pass{pointer-events:none}
 .cover small{display:block;font-size:15px;font-weight:400;margin-top:6px;opacity:.9}
 .now{margin-top:8px;background:#fff;border:3px solid var(--green);border-radius:14px;padding:8px 12px;min-height:92px}
 .now .meta{display:flex;justify-content:space-between;align-items:center;font-size:15px;color:#555;gap:6px}
@@ -72,7 +77,9 @@ footer a{color:#2e7d32}
 <div class="top">
   <div class="vwrap">
     <div id="ytPlayer"></div>
-    <div class="cover" id="cover"></div>
+    <img class="still" id="still" src="xmas-song/frames/01.webp?v=202610242351" alt="">
+    <div class="cover show" id="cover"><span class="go">▶ 시작</span></div>
+    <div class="shield" id="shield" role="button" aria-label="재생 / 멈추기"></div>
   </div>
   <div class="now" aria-live="polite">
     <div class="meta"><span class="num" id="nowNum">소절을 눌러 보세요 👇</span><span class="cnt" id="nowCnt"></span></div>
@@ -101,12 +108,7 @@ footer a{color:#2e7d32}
       <button class="chip" data-v="10">10번</button>
       <button class="chip" data-v="inf" aria-label="계속 반복">∞</button>
     </div></div>
-  <div class="row"><div class="lab">⏸️ 반복 사이 쉬는 시간</div>
-    <div class="chips" id="restChips">
-      <button class="chip" data-v="0">없음</button>
-      <button class="chip" data-v="1000">1초</button>
-      <button class="chip" data-v="2000">2초</button>
-    </div></div>
+  <div class="hint" style="margin:2px 0 10px">⏳ 반복과 반복 사이에는 <b>약 5초</b> 동안 화면이 멈추고 준비 시간이 있어요. (유튜브 버튼이 안 보이게 하려고요)</div>
   <div class="row">
     <button class="tog" id="rangeTog"><span class="box" id="rangeBox"></span><span>🔗 이어서 묶어 반복 (2소절 이상)</span></button>
     <div class="hint" id="rangeHint"></div>
@@ -129,7 +131,7 @@ footer a{color:#2e7d32}
   설정은 이 휴대폰에 저장돼요. <a href="./">← 처음 화면</a>
 </footer>
 
-<script src="xmas-song/loop.js?v=202610242317"></script>
+<script src="xmas-song/loop.js?v=202610242351"></script>
 <script>
 "use strict";
 var VIDEO_ID = "2yG-sxHrE0I";
@@ -138,14 +140,14 @@ var LINES = [{"g": "1절","t": "지금부터 내가 해주는 얘기","s": 1.3,"
 
 var $ = function (id) { return document.getElementById(id); };
 var KEY = "xmasSong.v1";
-var cfg = { speed: 1, rep: 3, rest: 1000, range: false, sel: 0, rs: null, re: null };
+var cfg = { speed: 1, rep: 3, range: false, sel: 0, rs: null, re: null };
 try { var saved = JSON.parse(localStorage.getItem(KEY) || "null"); if (saved) for (var k in saved) if (k in cfg) cfg[k] = saved[k]; } catch (e) {}
 if (!(cfg.sel >= 0 && cfg.sel < LINES.length)) cfg.sel = 0;
 function save() { try { localStorage.setItem(KEY, JSON.stringify(cfg)); } catch (e) {} }
 function repTarget() { return cfg.rep === "inf" ? Infinity : Number(cfg.rep); }
 
-var looper = XmasLoop.create({ restMs: cfg.rest });
-var player = null, ready = false, pending = null, curIdx = -1, timer = null, coverTimer = null;
+var looper = XmasLoop.create({ speed: Number(cfg.speed) });
+var player = null, ready = false, pending = null, curIdx = -1, timer = null;
 
 // ---------- 화면 그리기 ----------
 function fmt(t) { var m = Math.floor(t / 60), s = Math.floor(t % 60); return m + ":" + (s < 10 ? "0" : "") + s; }
@@ -163,6 +165,8 @@ function range() {
   if (cfg.range && cfg.rs != null) return [cfg.rs, cfg.rs];
   return [cfg.sel, cfg.sel];
 }
+function isLoopMode(m) { return m === "loop" || (m === "prep" && looper.state().next === "loop"); }
+function isAllMode(m) { return m === "all" || (m === "prep" && looper.state().next === "all"); }
 function paint() {
   var r = range();
   LINES.forEach(function (L, i) {
@@ -171,7 +175,7 @@ function paint() {
     el.classList.toggle("rs", cfg.range && (i === cfg.rs || i === cfg.re));
     el.classList.toggle("cur", i === curIdx);
   });
-  [["speedChips", String(cfg.speed)], ["repChips", String(cfg.rep)], ["restChips", String(cfg.rest)]].forEach(function (p) {
+  [["speedChips", String(cfg.speed)], ["repChips", String(cfg.rep)]].forEach(function (p) {
     Array.prototype.forEach.call($(p[0]).children, function (b) { b.classList.toggle("on", b.dataset.v === p[1]); });
   });
   $("rangeTog").classList.toggle("on", cfg.range);
@@ -183,43 +187,67 @@ function paint() {
     else h = "✅ " + (r[0] + 1) + "번 ~ " + (r[1] + 1) + "번 소절을 이어서 반복해요. (다시 누르면 새로 고를 수 있어요)";
   }
   $("rangeHint").textContent = h;
-  var st = looper.state(), playing = st.mode === "loop" || st.mode === "rest" || st.mode === "all";
-  $("bPlay").textContent = playing && st.mode !== "all" ? "⏸ 멈추기" : "▶ 반복 듣기";
-  $("bPlay").classList.toggle("stop", playing && st.mode !== "all");
-  $("bAll").textContent = st.mode === "all" ? "⏸ 전체 듣기 멈추기" : "🎵 전체 듣기 (처음부터 끝까지)";
-  $("bAll").classList.toggle("on", st.mode === "all");
+  var m = looper.state().mode, lp = isLoopMode(m), al = isAllMode(m);
+  $("bPlay").textContent = lp ? "⏸ 멈추기" : "▶ 반복 듣기";
+  $("bPlay").classList.toggle("stop", lp);
+  $("bAll").textContent = al ? "⏸ 전체 듣기 멈추기" : "🎵 전체 듣기 (처음부터 끝까지)";
+  $("bAll").classList.toggle("on", al);
   showNow();
 }
 function showNow() {
-  var st = looper.state(), r = range(), i = curIdx >= 0 ? curIdx : r[0];
-  if (st.mode !== "all" && st.mode !== "idle") i = Math.max(r[0], Math.min(r[1], curIdx >= 0 ? curIdx : r[0]));
-  if (st.mode === "idle" || st.mode === "done") i = r[0];
+  var st = looper.state(), m = st.mode, r = range(), i;
+  if (isAllMode(m)) i = curIdx >= 0 ? curIdx : 0;
+  else if (m === "loop") i = Math.max(r[0], Math.min(r[1], curIdx >= 0 ? curIdx : r[0]));
+  else i = r[0];
   var label = r[0] === r[1] ? (r[0] + 1) + "번 소절" : (r[0] + 1) + "~" + (r[1] + 1) + "번 소절";
-  if (st.mode === "all") label = curIdx >= 0 ? "전체 듣기 · " + (curIdx + 1) + "번" : "전체 듣기 · 전주";
+  if (isAllMode(m)) label = "전체 듣기 · " + (i + 1) + "번";
   else if (r[0] !== r[1]) label += " · 지금 " + (i + 1) + "번";
   $("nowNum").textContent = label + " · " + LINES[i].g;
-  $("nowTxt").textContent = st.mode === "all" && curIdx < 0 ? "🎶 곧 노래가 시작돼요…" : LINES[i].t;
-  $("nowCnt").textContent = (st.mode === "loop" || st.mode === "rest" || st.mode === "done") ? "반복 " + XmasLoop.counterText(st.count, st.target) : "";
+  $("nowTxt").textContent = LINES[i].t;
+  $("nowCnt").textContent = (isLoopMode(m) || m === "done") ? "반복 " + XmasLoop.counterText(st.count, st.target) : "";
 }
 function toast(msg, ms) {
   var t = $("toast"); t.textContent = msg; t.classList.add("show");
   clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove("show"); }, ms || 2500);
 }
-function cover(html, ms) {
-  var c = $("cover"); c.innerHTML = html; c.classList.add("show");
-  clearTimeout(coverTimer); if (ms) coverTimer = setTimeout(function () { c.classList.remove("show"); }, ms);
+function cover(html) { var c = $("cover"); if (c.innerHTML !== html) c.innerHTML = html; c.classList.add("show"); }
+function uncover() { $("cover").classList.remove("show"); }
+
+// ---------- 가림막: 유튜브 화면은 '진짜로 재생 중이고 버튼이 사라진 뒤'에만 보여 줌 ----------
+// 휴대폰 유튜브는 재생 시작·위치 이동·버퍼링 뒤 약 4초 동안 제목/버튼을 띄움 → 그동안은 정지 사진으로 덮음
+var CTRL_MS = 4300;        // 마지막으로 '재생 중'이 된 뒤 이만큼 지나야 걷음
+var lastPS = -1, playingSince = 0, veiled = true, needTap = false;
+function pad2(n) { return (n < 10 ? "0" : "") + n; }
+function frameSrc(i) { return "xmas-song/frames/" + pad2(i + 1) + ".webp?v=202610242351"; }
+function veil(i) {
+  var im = $("still"), src = frameSrc(i);
+  if (im.getAttribute("src") !== src) im.setAttribute("src", src);
+  im.classList.remove("off"); veiled = true;
 }
-function uncover() { clearTimeout(coverTimer); $("cover").classList.remove("show"); }
+function reveal() { veiled = false; $("still").classList.add("off"); }
+function idleCover() {
+  var r = range(); veil(r[0]);
+  cover('<span class="go">▶ 시작</span><small>' + (r[0] === r[1] ? (r[0] + 1) + "번 소절" : (r[0] + 1) + "~" + (r[1] + 1) + "번 소절") + ' 반복 듣기</small>');
+}
+function preloadFrames() { for (var i = -1; i < LINES.length; i++) { var im = new Image(); im.src = frameSrc(i); } }
+function prepCover(t) {
+  var st = looper.state(), left = Math.ceil(looper.prepLeft(t) - 0.15);
+  var head = st.next === "all" ? "🎵 전체 듣기 준비" : (st.count > 1 ? "🔁 다음: 반복 " + XmasLoop.counterText(st.count, st.target) : "🎬 준비");
+  cover(head + '<small>' + (left >= 1 && left <= 9 ? "곧 시작해요 · " + left : "곧 시작해요") + '</small>');
+}
 
 // ---------- YouTube ----------
 function doActions(acts) {
   acts.forEach(function (a) {
     if (!player || !ready) return;
-    if (a.type === "seek") player.seekTo(a.t, true);
-    else if (a.type === "play") { player.playVideo(); uncover(); watchStart(); }
+    if (a.type === "seek") { player.seekTo(a.t, true); playingSince = 0; lastPS = -2; }
+    else if (a.type === "play") { player.playVideo(); watchStart(); }
     else if (a.type === "pause") player.pauseVideo();
-    else if (a.type === "rest") cover("⏸️ 잠깐 쉬어요<small>다음: 반복 " + XmasLoop.counterText(looper.state().count, looper.state().target) + "</small>");
-    else if (a.type === "finished") { cover("🎉 잘했어요!<small>여기를 누르면 한 번 더 들어요</small>"); toast("반복 끝! 다음 소절도 해 볼까요? 👍"); }
+    else if (a.type === "mute") player.mute();
+    else if (a.type === "unmute") player.unMute();
+    else if (a.type === "rate") player.setPlaybackRate(a.r);
+    else if (a.type === "go") uncover();
+    else if (a.type === "finished") { cover("🎉 잘했어요!<small>영상을 누르면 한 번 더 들어요</small>"); toast("반복 끝! 다음 소절도 해 볼까요? 👍"); }
   });
   paint();
 }
@@ -229,56 +257,81 @@ function watchStart() {
   startWatch = setTimeout(function () {
     var s = player && player.getPlayerState ? player.getPlayerState() : -1;
     var m = looper.state().mode;
-    if ((m === "loop" || m === "all") && s !== 1 && s !== 3) toast("영상이 멈춰 있으면 영상 가운데 ▶를 한 번 눌러 주세요.", 4000);
-  }, 2500);
+    if (m !== "idle" && m !== "done" && s !== 1 && s !== 3) askTap();
+  }, 3000);
 }
+// 휴대폰이 자동 재생을 막은 경우: 이번 한 번만 유튜브의 ▶를 직접 누르게 함
+function askTap() {
+  needTap = true; uncover(); reveal(); $("shield").classList.add("pass");
+  toast("처음 한 번만 영상 가운데 ▶를 눌러 주세요.", 6000);
+}
+function endTap() { needTap = false; $("shield").classList.remove("pass"); }
 function startLoop() {
-  if (!ready) { pending = startLoop; toast("영상을 불러오는 중이에요… 잠깐만요!"); return; }
+  if (!ready) { pending = startLoop; cover("⏳ 영상을 불러오는 중이에요…<small>잠깐만요!</small>"); return; }
   var r = range();
-  player.setPlaybackRate(Number(cfg.speed));
-  looper.setRest(cfg.rest);
-  curIdx = r[0];
-  doActions(looper.begin(LINES[r[0]].s, LINES[r[1]].e, repTarget(), Date.now()));
+  curIdx = r[0]; veil(r[0]);
+  doActions(looper.begin(LINES[r[0]].s, LINES[r[1]].e, repTarget(), Date.now(), Number(cfg.speed)));
+  prepCover(player.getCurrentTime());
 }
-function stopAll() { doActions(looper.stop()); uncover(); }
+function startAll() {
+  if (!ready) { pending = startAll; cover("⏳ 영상을 불러오는 중이에요…<small>잠깐만요!</small>"); return; }
+  curIdx = 0; veil(0);
+  doActions(looper.playAll(LINES[0].s, Date.now(), Number(cfg.speed)));
+  prepCover(player.getCurrentTime());
+}
+function stopAll() { if (needTap) endTap(); doActions(looper.stop()); curIdx = -1; idleCover(); paint(); }
 function poll() {
   if (!ready) return;
   var t = player.getCurrentTime ? player.getCurrentTime() : 0;
   var ps = player.getPlayerState ? player.getPlayerState() : -1;
-  var acts = looper.tick(t, Date.now(), ps === 1);
-  var st = looper.state();
+  var now = Date.now();
+  if (ps === 1 && lastPS !== 1) playingSince = now;   // 재생이 (다시) 시작된 순간
+  if (ps !== 1) playingSince = 0;
+  lastPS = ps;
+  var acts = looper.tick(t, now, ps === 1);
+  var st = looper.state(), m = st.mode;
+  // 지금 소절 (화면 표시용)
   var i = XmasLoop.lineAt(LINES, t);
-  if (st.mode === "loop" || st.mode === "rest") { var r = range(); if (i < r[0]) i = r[0]; if (i > r[1]) i = r[1]; }
-  if (st.mode === "all" && ps === 0) { looper.stop(); i = -1; toast("끝까지 다 들었어요! 🎄"); paint(); }
+  if (m === "prep") i = XmasLoop.lineAt(LINES, st.start);
+  if (isLoopMode(m)) { var r = range(); if (i < r[0]) i = r[0]; if (i > r[1]) i = r[1]; }
+  if (m === "all" && ps === 0) { doActions(looper.stop()); curIdx = -1; idleCover(); toast("끝까지 다 들었어요! 🎄"); paint(); return; }
   if (i !== curIdx) {
     curIdx = i; paint();
-    if (st.mode === "all" && i >= 0) { var el = $("ln" + i); if (el && el.scrollIntoView) el.scrollIntoView({ block: "center", behavior: "smooth" }); }
+    if (m === "all" && i >= 0) { var el = $("ln" + i); if (el && el.scrollIntoView) el.scrollIntoView({ block: "center", behavior: "smooth" }); }
   }
   if (acts.length) doActions(acts);
+  m = looper.state().mode;
+  if (needTap) { if (ps === 1) endTap(); else return; }
+  // 가림막 규칙
+  if (m === "loop" || m === "all") {
+    if (ps === 1 && playingSince && now - playingSince >= CTRL_MS) { if (veiled) reveal(); }
+    else if (!veiled) veil(Math.max(0, XmasLoop.lineAt(LINES, t)));  // 버퍼링 등: 다시 덮음
+  } else if (m === "prep") {
+    if (!veiled) veil(XmasLoop.lineAt(LINES, st.start));
+    prepCover(t);
+  }
 }
 function onState(e) {
-  var st = looper.state();
-  // 사용자가 영상 자체를 눌러 멈췄을 때 버튼 모양을 맞춰 줌
-  if (e.data === 2 && (st.mode === "loop" || st.mode === "all")) {
-    setTimeout(function () {
-      if (player.getPlayerState() === 2 && (looper.state().mode === "loop" || looper.state().mode === "all")) { looper.stop(); paint(); }
-    }, 600);
-  }
-  if (e.data === 1) uncover();
+  // 재생 중이 아닌 순간에는 즉시 덮음 (폴링 50ms를 기다리지 않음)
+  if (e.data !== 1) { playingSince = 0; lastPS = e.data; }
+  else if (lastPS !== 1) { playingSince = Date.now(); lastPS = 1; }
+  if (e.data !== 1 && !needTap && !veiled) veil(Math.max(0, XmasLoop.lineAt(LINES, player.getCurrentTime())));
 }
 window.onYouTubeIframeAPIReady = function () {
   player = new YT.Player("ytPlayer", {
     videoId: VIDEO_ID,
-    playerVars: { playsinline: 1, rel: 0, modestbranding: 1, controls: 1, fs: 0, iv_load_policy: 3, disablekb: 1, origin: location.origin },
+    playerVars: { playsinline: 1, rel: 0, modestbranding: 1, controls: 0, fs: 0, iv_load_policy: 3, disablekb: 1, cc_load_policy: 0, autoplay: 0, origin: location.origin },
     events: {
       onReady: function () {
         ready = true;
-        try { player.setPlaybackRate(Number(cfg.speed)); } catch (e) {}
+        try { player.getIframe().setAttribute("tabindex", "-1"); } catch (e) {}
         timer = setInterval(poll, 50);
+        preloadFrames();
+        if (looper.state().mode === "idle") idleCover();
         if (pending) { var p = pending; pending = null; p(); }
       },
       onStateChange: onState,
-      onError: function () { cover("😢 영상을 열 수 없어요<small>인터넷을 확인하고 새로고침 해 주세요</small>"); }
+      onError: function () { veil(range()[0]); cover("😢 영상을 열 수 없어요<small>인터넷을 확인하고 새로고침 해 주세요</small>"); }
     }
   });
 };
@@ -293,15 +346,13 @@ $("list").addEventListener("click", function (e) {
   var b = e.target.closest(".line"); if (!b) return;
   var i = Number(b.dataset.i);
   if (cfg.range) {
-    if (cfg.rs == null || cfg.re != null) { cfg.rs = i; cfg.re = null; cfg.sel = i; save(); stopAll(); paint(); return; }
+    if (cfg.rs == null || cfg.re != null) { cfg.rs = i; cfg.re = null; cfg.sel = i; save(); stopAll(); return; }
     cfg.re = i; if (cfg.re === cfg.rs) { cfg.re = null; paint(); return; }
   } else cfg.sel = i;
   save(); startLoop();
 });
 $("bPlay").addEventListener("click", function () {
-  var m = looper.state().mode;
-  if (m === "loop" || m === "rest") stopAll();
-  else startLoop();
+  if (isLoopMode(looper.state().mode)) stopAll(); else startLoop();
 });
 function step(d) {
   if (cfg.range && cfg.rs != null && cfg.re != null) {
@@ -318,30 +369,26 @@ function step(d) {
 $("bPrev").addEventListener("click", function () { step(-1); });
 $("bNext").addEventListener("click", function () { step(1); });
 $("bAll").addEventListener("click", function () {
-  if (looper.state().mode === "all") { stopAll(); return; }
-  if (!ready) { pending = function () { $("bAll").click(); }; toast("영상을 불러오는 중이에요… 잠깐만요!"); return; }
-  player.setPlaybackRate(Number(cfg.speed));
-  curIdx = -1; doActions(looper.playAll(Date.now()));
+  if (isAllMode(looper.state().mode)) stopAll(); else startAll();
 });
-$("cover").addEventListener("click", function () {
+// 영상 위를 누르면 유튜브 대신 우리 가림막이 받음: 재생 중이면 멈추고, 멈춰 있으면 반복 시작
+$("shield").addEventListener("click", function () {
   var m = looper.state().mode;
-  if (m === "done") startLoop(); else if (m === "rest") { /* 쉬는 중엔 그대로 */ } else uncover();
+  if (m === "idle" || m === "done") startLoop(); else stopAll();
 });
 function chips(id, key, conv) {
   $(id).addEventListener("click", function (e) {
     var b = e.target.closest(".chip"); if (!b) return;
     cfg[key] = conv(b.dataset.v); save();
-    if (key === "speed" && ready) player.setPlaybackRate(Number(cfg.speed));
-    if (key === "rest") looper.setRest(cfg.rest);
+    if (key === "speed" && ready) doActions(looper.setSpeed(Number(cfg.speed)));
     if (key === "rep") looper.setTarget(repTarget());
     paint();
   });
 }
 chips("speedChips", "speed", Number);
 chips("repChips", "rep", function (v) { return v === "inf" ? "inf" : Number(v); });
-chips("restChips", "rest", Number);
 $("rangeTog").addEventListener("click", function () {
-  cfg.range = !cfg.range; cfg.rs = null; cfg.re = null; save(); stopAll(); paint();
+  cfg.range = !cfg.range; cfg.rs = null; cfg.re = null; save(); stopAll();
 });
 buildList(); paint();
 </script>
