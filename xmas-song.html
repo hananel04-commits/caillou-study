@@ -77,7 +77,7 @@ footer a{color:#2e7d32}
 <div class="top">
   <div class="vwrap">
     <div id="ytPlayer"></div>
-    <img class="still" id="still" src="xmas-song/frames/01.webp?v=202610242351" alt="">
+    <img class="still" id="still" src="xmas-song/frames/01.webp?v=202610242355" alt="">
     <div class="cover show" id="cover"><span class="go">▶ 시작</span></div>
     <div class="shield" id="shield" role="button" aria-label="재생 / 멈추기"></div>
   </div>
@@ -131,7 +131,7 @@ footer a{color:#2e7d32}
   설정은 이 휴대폰에 저장돼요. <a href="./">← 처음 화면</a>
 </footer>
 
-<script src="xmas-song/loop.js?v=202610242351"></script>
+<script src="xmas-song/loop.js?v=202610242355"></script>
 <script>
 "use strict";
 var VIDEO_ID = "2yG-sxHrE0I";
@@ -218,7 +218,7 @@ function uncover() { $("cover").classList.remove("show"); }
 var CTRL_MS = 4300;        // 마지막으로 '재생 중'이 된 뒤 이만큼 지나야 걷음
 var lastPS = -1, playingSince = 0, veiled = true, needTap = false;
 function pad2(n) { return (n < 10 ? "0" : "") + n; }
-function frameSrc(i) { return "xmas-song/frames/" + pad2(i + 1) + ".webp?v=202610242351"; }
+function frameSrc(i) { return "xmas-song/frames/" + pad2(i + 1) + ".webp?v=202610242355"; }
 function veil(i) {
   var im = $("still"), src = frameSrc(i);
   if (im.getAttribute("src") !== src) im.setAttribute("src", src);
@@ -242,7 +242,7 @@ function doActions(acts) {
     if (!player || !ready) return;
     if (a.type === "seek") { player.seekTo(a.t, true); playingSince = 0; lastPS = -2; }
     else if (a.type === "play") { player.playVideo(); watchStart(); }
-    else if (a.type === "pause") player.pauseVideo();
+    else if (a.type === "pause") { veil(Math.max(0, XmasLoop.lineAt(LINES, looper.state().start + 0.01))); player.pauseVideo(); }
     else if (a.type === "mute") player.mute();
     else if (a.type === "unmute") player.unMute();
     else if (a.type === "rate") player.setPlaybackRate(a.r);
