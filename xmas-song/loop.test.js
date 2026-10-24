@@ -1,4 +1,5 @@
-// node xmas-song/loop.test.js — 반복/카운터/준비(prep) 로직 시뮬레이션 테스트
+// node xmas-song/loop.test.js — 두 보기 방식의 반복/카운터 로직 테스트
+//   ✨ 깨끗한 화면(loop.js: 준비 prep 방식) + ⚡ 바로 시작(loop-quick.js: 440c19d 방식, loop-quick.test.js)
 const assert = require("assert");
 const X = require("./loop.js");
 const LINES = require("./lines.json");
@@ -151,4 +152,16 @@ const types = (log, ty) => log.filter((a) => a.type === ty);
   LINES.forEach((L, i) => assert.strictEqual(X.lineAt(LINES, (L.s + L.e) / 2), i));
   ok("가사 " + LINES.length + "소절: 시간 순서·겹침 없음·lineAt·준비 위치");
 }
-console.log(`\n모두 통과: ${n}개 테스트`);
+console.log(`\n✨ 깨끗한 화면: 모두 통과 ${n}개 테스트`);
+
+console.log("\n⚡ 바로 시작 (loop-quick.js)");
+require("./loop-quick.test.js");
+
+// 두 엔진이 같은 가사 데이터·소절 찾기·카운터 문구를 씀
+{
+  const Q = require("./loop-quick.js");
+  assert.strictEqual(Q.counterText(2, 3), X.counterText(2, 3));
+  assert.strictEqual(Q.counterText(4, Infinity), X.counterText(4, Infinity));
+  LINES.forEach((L) => assert.strictEqual(Q.lineAt(LINES, L.s + 0.1), X.lineAt(LINES, L.s + 0.1)));
+  console.log("✓ 두 방식의 카운터 문구·소절 찾기 일치");
+}
