@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:,">
+<title>어린이 영어 성경 이야기 (신약) · 단어→끊어→천천히→빠르게</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#F3F5F4;--surface:#fff;--fg:#1C2524;--muted:#5E6B69;--line:#D9E0DE;--accent:#0E7C74;--accent-soft:#DDF0EC;--mark:#F2B33D;--mark-soft:#FDF1D6;
+--en:#1b2a4a;--han:#d4570f;--f-en:"Lexend",system-ui,sans-serif;--f-ko:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-ko);font-size:16px;line-height:1.45;overflow-x:hidden}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding:max(6px,env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) 150px max(10px,env(safe-area-inset-left,0px));display:grid;align-content:start;gap:8px;min-width:0}
+.wrap>*{min-width:0}
+header{display:grid;gap:6px}
+.top{display:flex;align-items:center;gap:8px}
+.top h1{flex:1;margin:0;font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top h1 small{font-weight:500;color:var(--muted);font-size:13px;margin-left:6px}
+.ibtn{border:1px solid var(--line);background:var(--surface);color:var(--fg);min-width:44px;height:40px;border-radius:12px;font-size:20px;padding:0 10px}
+.books{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.books::-webkit-scrollbar{display:none}
+.books button{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;min-height:38px;padding:4px 12px;font-size:14px;font-weight:600}
+.books button .c{font-size:11px;opacity:.75;margin-left:4px;font-weight:500}
+.books button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+body.squeeze .books,body.squeeze .top h1 small{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px 10px 10px;display:grid;gap:7px;align-content:start}
+.where{display:flex;align-items:baseline;justify-content:space-between;gap:8px;line-height:1.2;white-space:nowrap}
+.where b{font-size:18px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis}
+.where span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;flex:0 0 auto}
+.steprow{display:flex;align-items:center;gap:8px}
+.chips{display:flex;gap:5px;flex:0 0 auto}
+.chip{width:36px;height:40px;border:2px solid var(--line);background:var(--bg);color:var(--muted);border-radius:12px;font-weight:700;font-size:16px;padding:0;font-family:var(--f-en)}
+.chip.done{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-soft)}
+.chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.chip.zero{opacity:.35}
+.banner{min-width:0;flex:1;line-height:1.2}
+.banner .b1{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.banner .b1 b{color:var(--accent);font-family:var(--f-en)}
+.banner .b2{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ko{margin:0;font-weight:800;line-height:1.3;color:#14171a;background:#fff1b8;border-radius:12px;padding:8px 12px;font-size:var(--kfs,26px);word-break:keep-all;overflow-wrap:anywhere}
+.hideko .ko{color:transparent;background:var(--line)}
+.il{margin:0;display:flex;flex-wrap:wrap;align-items:flex-start;gap:.35em .55em;font-size:var(--efs,28px);line-height:1.18}
+.ch{display:inline-flex;flex-wrap:wrap;gap:.3em .32em;max-width:100%;border-radius:10px;padding:1px 3px;margin:0 -3px}
+.ch.on{background:var(--mark-soft);box-shadow:0 0 0 2px var(--mark)}
+.col{display:inline-flex;flex-direction:column;align-items:center;max-width:100%;cursor:pointer;border-radius:8px;padding:1px 2px 2px;touch-action:manipulation}
+.col .ie{font-family:var(--f-en);font-weight:600;color:var(--en);overflow-wrap:anywhere}
+.col .ik{font-weight:700;color:var(--han);margin-top:1px;word-break:keep-all;overflow-wrap:anywhere}
+.nohan .col .ik{display:none}
+.col.cur{background:var(--mark-soft);outline:2px solid var(--mark)}
+.col.say{background:var(--accent-soft)}
+.pic{position:relative;margin:0 auto;border-radius:14px;overflow:hidden;background:#000;width:100%;aspect-ratio:1/1}
+.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
+.pic.vid img{opacity:0;pointer-events:none;transition:opacity .12s}
+/* YouTube iframe is taller than the picture: the square video is centred, YouTube's top title strip and bottom logo/bar fall in the clipped black margins (--bar) */
+.pic{--bar:110px}
+.pic .yt{position:absolute;left:0;right:0;top:calc(var(--bar) * -1);bottom:calc(var(--bar) * -1);z-index:1;pointer-events:none}
+.pic .yt iframe,.pic .yt>div{width:100%;height:100%;border:0;pointer-events:none}
+.pic .shield{position:absolute;inset:0;z-index:2;background:transparent}
+.pic.vid .shield{z-index:4}
+.rep{position:absolute;left:6px;right:6px;bottom:6px;z-index:5;display:none;align-items:center;gap:8px;background:rgba(255,255,255,.93);border-radius:12px;padding:5px 10px;box-shadow:0 1px 6px rgba(0,0,0,.28);pointer-events:none;min-width:0}
+.rep.show{display:flex}
+.rep .rn{font-weight:800;font-size:19px;font-variant-numeric:tabular-nums;color:#14171a;white-space:nowrap}
+.rep .rn b{color:var(--accent);font-family:var(--f-en)}
+.rep .rd{display:flex;align-items:center;gap:4px;flex:1;min-width:0;justify-content:center}
+.rep .rd i{width:14px;height:14px;border-radius:50%;border:2px solid var(--accent);box-sizing:border-box;background:#fff;flex:none}
+.rep .rd i.on{background:var(--accent)}
+.rep .rd i.cur{background:var(--accent-soft)}
+.rep.playing .rd i.cur{animation:dotp 1s ease-in-out infinite}
+.rep .bar{flex:1;height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.rep .bar u{display:block;height:100%;background:var(--accent);text-decoration:none}
+.rep .rp{font-weight:800;font-size:14px;color:var(--accent);white-space:nowrap;max-width:46%;overflow:hidden;text-overflow:ellipsis}
+.rep.pulse{animation:repflash .7s ease-out}
+@keyframes repflash{0%{background:var(--accent);transform:scale(1.04)}100%{background:rgba(255,255,255,.93);transform:scale(1)}}
+@keyframes dotp{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+.rep.pulse .rn,.rep.pulse .rp{animation:repflashtx .7s ease-out}
+@keyframes repflashtx{0%{color:#fff}100%{}}
+@media (prefers-reduced-motion:reduce){.rep.pulse,.rep.pulse .rn,.rep.pulse .rp,.rep.playing .rd i.cur{animation:none}}
+.banner .b2.live{font-size:15px;font-weight:800;color:var(--accent)}
+.unav{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.unav button{height:46px;border:2px solid var(--accent-soft);background:var(--accent-soft);color:var(--accent);border-radius:14px;font-weight:800;font-size:16px;padding:0 6px;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;min-width:0}
+.unav button:active{background:var(--accent);color:#fff}
+.unav button:disabled{opacity:.35}
+.unav .ar{font-size:18px;line-height:1}
+.cap{position:absolute;left:6px;right:6px;bottom:6px;z-index:3;background:rgba(255,255,255,.9);border-radius:12px;padding:6px 10px 7px;line-height:1.2;display:none;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+.cap.show{display:block}
+.cap .cw{display:inline-block;max-width:100%;margin:0 4px;overflow-wrap:anywhere}
+.cap b{font-family:var(--f-en);font-weight:700;color:var(--en);font-size:min(28px,7.2vw);margin-right:8px}
+.cap i{font-style:normal;font-weight:800;color:var(--han);font-size:min(27px,6.9vw)}
+.cap .cm{display:inline-block;max-width:100%;margin:0 4px;font-weight:700;color:var(--en);font-size:min(25px,6.4vw);word-break:keep-all;overflow-wrap:anywhere}
+.badge{position:absolute;right:8px;top:8px;z-index:3;background:rgba(0,0,0,.55);color:#fff;font-size:13px;border-radius:999px;padding:2px 10px;font-variant-numeric:tabular-nums}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);z-index:5;padding:8px max(10px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+.barin{max-width:560px;margin:0 auto;display:grid;gap:7px}
+.prog{display:flex;align-items:center;gap:10px;font-family:var(--f-en);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.track{flex:1;min-width:24px;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.track i{display:block;height:100%;width:0;background:var(--mark);transition:width .2s}
+.main{display:flex;gap:8px;align-items:center}
+.nav{flex:0 0 64px;height:56px;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:16px;font-size:26px;padding:0}
+.play{flex:1;min-width:0;height:56px;border:0;background:var(--accent);color:#fff;font-weight:800;font-size:20px;border-radius:16px}
+.play.on{background:#c0392b}
+.status{font-size:13px;color:var(--muted);min-height:1.2em;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+details.list{background:var(--surface);border:1px solid var(--line);border-radius:14px}
+details.list summary{cursor:pointer;padding:12px 14px;font-weight:700;min-height:48px}
+.rows{display:grid;max-height:360px;overflow:auto;border-top:1px solid var(--line)}
+.rows button{display:grid;grid-template-columns:38px 1fr 20px;gap:8px;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;color:var(--fg);padding:10px 12px;min-height:48px}
+.rows .n{font-family:var(--f-en);color:var(--muted);font-size:13px}
+.rows .t{font-family:var(--f-en);font-size:15px;min-width:0}
+.rows .k{display:block;font-family:var(--f-ko);font-size:13px;color:var(--muted)}
+.rows button.cur{background:var(--accent-soft)}
+.rows .ok{color:var(--accent);font-weight:700}
+.credit{font-size:12.5px;color:var(--muted);margin:0}
+.credit a{color:var(--accent)}
+/* settings modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:none;align-items:flex-end;justify-content:center}
+.modal.show{display:flex}
+.sheet{background:var(--surface);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:14px 14px calc(16px + env(safe-area-inset-bottom,0px));display:grid;gap:10px}
+.sheet h2{margin:0;font-size:18px;display:flex;justify-content:space-between;align-items:center}
+.srow{display:flex;align-items:center;gap:8px;justify-content:space-between;border-top:1px solid var(--line);padding-top:8px}
+.srow label{font-weight:700;font-size:16px;min-width:0}
+.srow label small{display:block;font-weight:400;font-size:12.5px;color:var(--muted)}
+.step{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.step button{width:46px;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-size:24px;font-weight:700;padding:0}
+.step output{min-width:34px;text-align:center;font-family:var(--f-en);font-weight:700;font-size:22px;font-variant-numeric:tabular-nums}
+select{font:inherit;font-size:16px;min-height:44px;padding:6px 8px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg)}
+.sw{width:56px;height:34px;border-radius:99px;border:0;background:var(--line);position:relative;flex:0 0 auto;padding:0}
+.sw::after{content:"";position:absolute;top:4px;left:4px;width:26px;height:26px;border-radius:50%;background:#fff;transition:left .15s}
+.sw[aria-pressed="true"]{background:var(--accent)}
+.sw[aria-pressed="true"]::after{left:26px}
+.sbtn{min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-weight:700;padding:0 14px}
+.sbtn.pri{background:var(--accent);color:#fff;border:0}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="top"><h1 id="ttl">어린이 영어 성경 이야기<small>신약 Book 1–10</small></h1><button class="ibtn" id="gear" type="button" aria-label="설정 (반복 횟수)">⚙️</button></div>
+    <div class="books" id="books" role="group" aria-label="Book"></div>
+  </header>
+
+  <section class="card" id="card" aria-live="polite">
+    <div class="where" id="where"><b id="wb"></b><span id="wg"></span></div>
+    <div class="steprow">
+      <div class="chips" id="chips"></div>
+      <div class="banner"><div class="b1" id="b1"></div><div class="b2" id="b2"></div></div>
+    </div>
+    <p class="ko" id="ko"></p>
+    <p class="il" id="il"></p>
+    <div class="unav" id="unav"><button type="button" id="uprev"><span class="ar">⏮</span><span class="lb">이전 단어</span></button><button type="button" id="unext"><span class="lb">다음 단어</span><span class="ar">⏭</span></button></div>
+    <div class="pic" id="pic"><div class="yt"><div id="ytPlayer"></div></div><div class="shield"></div><img id="img" alt="" decoding="async"><span class="badge" id="badge"></span><div class="cap" id="cap"></div><div class="rep" id="rep" aria-live="off"></div></div>
+  </section>
+
+  <details class="list" id="listBox"><summary id="listSum">문장 목록</summary><div class="rows" id="rows"></div></details>
+  <p class="credit">영상: <a href="https://youtu.be/R5OKIRIUmTE" target="_blank" rel="noopener">영어성경 스토리북 신약 Book 01-10 모아보기 · 땡큐잉글리쉬</a>. 이 페이지는 공식 영상을 YouTube 플레이어로 재생만 해요(영상·음원 파일은 올리지 않았어요). 그림은 영상 장면이에요. 단어·끊어 읽기 소리는 미리 만든 영어 음성(AI 음성) 파일이에요. 한글 발음은 영어 소리를 비슷하게 적은 거예요.</p>
+</div>
+
+<div class="bar"><div class="barin">
+  <div class="prog"><span id="cnt"></span><div class="track"><i id="fill"></i></div></div>
+  <div class="main">
+    <button class="nav" id="prev" type="button" aria-label="이전 문장">‹</button>
+    <button class="play" id="play" type="button">▶ 시작</button>
+    <button class="nav" id="next" type="button" aria-label="다음 문장">›</button>
+  </div>
+  <div class="status" id="status"></div>
+</div></div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="설정"><div class="sheet">
+  <h2>설정 <button class="ibtn" id="mclose" type="button" aria-label="닫기">✕</button></h2>
+  <div class="srow"><label>① 단어 읽기<small>단어 하나씩, 각각 몇 번</small></label><div class="step" data-k="0"><button type="button" data-d="-1" aria-label="줄이기">−</button><output></output><button type="button" data-d="1" aria-label="늘리기">＋</button></div></div>
+  <div class="srow"><label>② 끊어 읽기<small>문장을 끊어서, 처음부터 끝까지 몇 번</small></label><div class="step" data-k="1"><button type="button" data-d="-1" aria-label="줄이기">−</button><output></output><button type="button" data-d="1" aria-label="늘리기">＋</button></div></div>
+  <div class="srow"><label>③ 천천히 읽기<small>문장 전체, 몇 번</small></label><div class="step" data-k="2"><button type="button" data-d="-1" aria-label="줄이기">−</button><output></output><button type="button" data-d="1" aria-label="늘리기">＋</button></div></div>
+  <div class="srow"><label>④ 빠르게 읽기<small>문장 전체, 몇 번</small></label><div class="step" data-k="3"><button type="button" data-d="-1" aria-label="줄이기">−</button><output></output><button type="button" data-d="1" aria-label="늘리기">＋</button></div></div>
+  <div class="srow"><label>천천히 속도<small>③에서 영상 재생 속도</small></label><select id="rate"><option value="0.5">0.5배</option><option value="0.75">0.75배</option></select></div>
+  <div class="srow"><label>쉬는 시간<small>한 번 읽고 나서</small></label><select id="gap"><option value="0.3">짧게</option><option value="0.6">보통</option><option value="1.2">길게</option></select></div>
+  <div class="srow"><label>자동으로 다음 문장<small>4단계가 끝나면 이어서</small></label><button class="sw" id="auto" type="button" aria-pressed="true" aria-label="자동으로 다음 문장"></button></div>
+  <div class="srow"><label>같은 단어는 한 번만<small>한 문장에서 반복되는 단어</small></label><button class="sw" id="dedupe" type="button" aria-pressed="true" aria-label="같은 단어는 한 번만"></button></div>
+  <div class="srow"><label>한글 발음 보이기<small>영어 단어 아래 한글</small></label><button class="sw" id="han" type="button" aria-pressed="true" aria-label="한글 발음 보이기"></button></div>
+  <div class="srow"><label>한국어 뜻 가리기<small>눌러서 잠깐 보기</small></label><button class="sw" id="hideko" type="button" aria-pressed="false" aria-label="한국어 뜻 가리기"></button></div>
+  <div class="srow"><button class="sbtn" id="reset" type="button">기본값으로 (5·5·5·10)</button><button class="sbtn pri" id="mok" type="button">확인</button></div>
+</div></div>
+
+<script>
+const DATA={"video":{"id":"R5OKIRIUmTE","title":"영어성경 스토리북 신약 Book 01-10 모아보기 | 성경만화 | 영어성경동화듣기 | 흘려듣기 | 땡큐잉글리쉬","channel":"땡큐잉글리쉬","dur":1142},"books":[{"n":1,"from":0},{"n":2,"from":108},{"n":3,"from":204},{"n":4,"from":318},{"n":5,"from":441},{"n":6,"from":551},{"n":7,"from":669},{"n":8,"from":775},{"n":9,"from":889},{"n":10,"from":997}],"words":{"12":["트웰브","열둘, 12","12"],"about":["어바웃","~에 대해","about"],"afraid":["어프레이드","두려워하는","afraid"],"after":["애프터","~ 뒤에(look after: 돌보다)","after"],"all":["올","모든","all"],"also":["올소우","또한","also"],"amazed":["어메이즈드","깜짝 놀란","amazed"],"am":["앰","~이다(I am)","am"],"and":["앤드","그리고","and"],"angels":["에인절스","천사들","angels"],"angel":["에인절","천사","angel"],"another":["어나더","또 다른","another"],"answered":["앤써드","대답했다","answered"],"answers":["앤써즈","대답들","answers"],"an":["언","하나의(모음 앞)","an"],"appeared":["어피어드","나타났다","appeared"],"are":["아","~이다, ~있다","are"],"asked":["애스크트","물었다","asked"],"asking":["애스킹","묻고 있는","asking"],"ate":["에잇","먹었다","ate"],"at":["앳","~에서","at"],"away":["어웨이","멀리","away"],"a":["어","하나의","a"],"baby":["베이비","아기","baby"],"back":["백","뒤로, 다시","back"],"bad":["배드","나쁜","bad"],"baptist":["뱁티스트","세례자(John the Baptist: 세례 요한)","baptist"],"baptized":["뱁타이즈드","세례를 주었다, 세례를 받은","baptized"],"baptize":["뱁타이즈","세례를 주다","baptize"],"been":["빈","~이었다(been)","been"],"believe":["빌리브","믿다","believe"],"bethlehem":["베들리헴","베들레헴(마을 이름)","bethlehem"],"be":["비","~이다, ~되다","be"],"big":["빅","큰","big"],"blanket":["블랭킷","담요","blanket"],"born":["본","태어난","born"],"bowed":["바우드","절했다, 엎드렸다","bowed"],"bow":["바우","절하다, 엎드리다","bow"],"boy":["보이","소년","boy"],"bread":["브레드","빵","bread"],"bright":["브라이트","밝은","bright"],"bring":["브링","가져오다","bring"],"but":["벗","하지만","but"],"by":["바이","~에 의해, ~로","by"],"camels":["캐멀스","낙타들","camels"],"camel":["캐멀","낙타","camel"],"came":["케임","왔다","came"],"can":["캔","~할 수 있다","can"],"clothes":["클로우즈","옷","clothes"],"come":["컴","오다","come"],"coming":["커밍","오고 있는","coming"],"couldn't":["쿠든트","~할 수 없었다","couldn_t"],"days":["데이즈","날들, 며칠","days"],"day":["데이","날, 낮","day"],"defeated":["디피티드","이겼다, 물리쳤다","defeated"],"desert":["데저트","광야, 사막","desert"],"didn't":["디든트","~하지 않았다","didn_t"],"died":["다이드","죽었다","died"],"does":["더즈","하다(does not: ~하지 않다)","does"],"don't":["도운트","~하지 않다","don_t"],"dove":["더브","비둘기","dove"],"down":["다운","아래로","down"],"do":["두","하다","do"],"dream":["드림","꿈","dream"],"east":["이스트","동쪽","east"],"egypt":["이집트","이집트(나라 이름)","egypt"],"everything":["에브리씽","모든 것","everything"],"everywhere":["에브리웨어","모든 곳에","everywhere"],"every":["에브리","모든","every"],"eyes":["아이즈","눈들","eyes"],"family":["패멀리","가족","family"],"far":["파","먼","far"],"festival":["페스티벌","축제, 명절","festival"],"finally":["파이널리","마침내","finally"],"find":["파인드","찾다","find"],"follow":["팔로우","따라가다","follow"],"food":["푸드","음식","food"],"forty":["포티","마흔, 40","forty"],"for":["포","~을 위해, ~ 동안","for"],"found":["파운드","찾았다, 발견했다","found"],"friends":["프렌즈","친구들","friends"],"from":["프럼","~에서, ~부터","from"],"gave":["게이브","주었다","gave"],"getting":["게팅","점점 ~해지는","getting"],"get":["겟","얻다(get away: 물러가다)","get"],"gifts":["기프츠","선물들","gifts"],"give":["기브","주다","give"],"god's":["갓즈","하나님의","god_s"],"god":["갓","하나님","god"],"good":["굿","좋은","good"],"go":["고우","가다","go"],"great":["그레이트","위대한, 큰","great"],"grew":["그루","자랐다","grew"],"hair":["헤어","털, 머리카락","hair"],"happy":["해피","행복한","happy"],"has":["해즈","가지고 있다, ~했다","has"],"have":["해브","가지다","have"],"he's":["히즈","그는 ~이다","he_s"],"heard":["허드","들었다","heard"],"heavens":["헤븐즈","하늘","heavens"],"heaven":["헤븐","하늘, 천국","heaven"],"height":["하이트","키","height"],"hello":["헬로우","안녕하세요","hello"],"here":["히어","여기","here"],"herod":["헤러드","헤롯(왕 이름)","herod"],"her":["허","그녀의, 그녀를","her"],"he":["히","그","he"],"him":["힘","그를, 그에게","him"],"his":["히즈","그의","his"],"holy":["호울리","거룩한","holy"],"home":["호움","집","home"],"honey":["허니","꿀","honey"],"house":["하우스","집","house"],"how":["하우","어떻게","how"],"hungry":["헝그리","배고픈","hungry"],"hurried":["허리드","서둘러 갔다","hurried"],"i'm":["아임","나는 ~이다","i_m"],"if":["이프","만약 ~라면","if"],"impossible":["임파서블","불가능한","impossible"],"innkeeper":["인키퍼","여관 주인","innkeeper"],"into":["인투","~ 안으로","into"],"in":["인","~ 안에","in"],"is":["이즈","~이다","is"],"it":["잇","그것","it"],"i":["아이","나","i"],"jerusalem":["저루설럼","예루살렘(도시 이름)","jerusalem"],"jesus":["지저스","예수님","jesus"],"john":["존","요한(사람 이름)","john"],"jordan":["조든","요단(강 이름)","jordan"],"joseph":["조우지프","요셉(사람 이름)","joseph"],"journey":["저니","여행, 여정","journey"],"jump":["점프","뛰다","jump"],"kept":["켑트","지켰다","kept"],"kill":["킬","죽이다","kill"],"king":["킹","왕","king"],"know":["노우","알다","know"],"later":["레이터","나중에","later"],"led":["레드","이끌었다","led"],"left":["레프트","떠났다","left"],"let's":["렛츠","~하자","let_s"],"lift":["리프트","들어 올리다","lift"],"light":["라이트","빛","light"],"like":["라이크","~처럼, 좋아하다","like"],"listened":["리슨드","귀 기울여 들었다","listened"],"listening":["리스닝","듣고 있는","listening"],"live":["리브","살다","live"],"locusts":["로우커스츠","메뚜기들","locusts"],"long":["롱","긴","long"],"looked":["룩트","보았다(look for: 찾다)","looked"],"looking":["루킹","보고 있는","looking"],"look":["룩","보다","look"],"loved":["러브드","사랑했다","loved"],"love":["러브","사랑하다","love"],"lying":["라잉","누워 있는","lying"],"made":["메이드","만들었다, 만든","made"],"manger":["메인저","구유(여물통)","manger"],"many":["매니","많은","many"],"man":["맨","남자, 사람","man"],"married":["매리드","결혼했다","married"],"mary":["메어리","마리아(사람 이름)","mary"],"may":["메이","~하기를 바라다, ~해도 된다","may"],"men":["멘","남자들, 사람들","men"],"me":["미","나를, 나에게","me"],"more":["모어","더","more"],"must":["머스트","꼭 ~해야 한다","must"],"my":["마이","나의","my"],"name":["네임","이름","name"],"news":["뉴즈","소식","news"],"new":["뉴","새로운","new"],"night":["나이트","밤","night"],"nothing":["나씽","아무것도","nothing"],"not":["낫","~않다","not"],"no":["노우","없는, 아니요","no"],"off":["오프","떨어져(jump off: 뛰어내리다)","off"],"of":["어브","~의","of"],"oh":["오우","아!, 오!","oh"],"old":["오울드","나이 든, 늙은","old"],"one":["원","하나","one"],"only":["온리","오직","only"],"on":["온","~ 위에","on"],"opened":["오우펀드","열렸다","opened"],"over":["오우버","~ 위에, 저쪽에","over"],"packed":["팩트","꽉 찬","packed"],"passover":["패스오우버","유월절","passover"],"people":["피플","사람들","people"],"placed":["플레이스트","두었다","placed"],"place":["플레이스","곳, 장소","place"],"pleased":["플리즈드","기뻐하는","pleased"],"probably":["프라버블리","아마","probably"],"questions":["퀘스천즈","질문들","questions"],"ran":["랜","달렸다","ran"],"return":["리턴","돌아오다","return"],"river":["리버","강","river"],"rode":["로우드","탔다","rode"],"rooms":["룸즈","방들","rooms"],"room":["룸","방","room"],"safe":["세이프","안전한","safe"],"said":["세드","말했다","said"],"sang":["쌩","노래했다","sang"],"satan":["세이튼","사탄","satan"],"savior":["세이비어","구원자","savior"],"saw":["소","보았다","saw"],"seen":["씬","본(see의 과거분사)","seen"],"sheep":["쉽","양","sheep"],"shepherds":["셰퍼즈","목자들","shepherds"],"she":["쉬","그녀","she"],"should":["슈드","~해야 한다","should"],"shouted":["샤우티드","외쳤다","shouted"],"showed":["쇼우드","보여 주었다","showed"],"sins":["씬즈","죄들","sins"],"sitting":["씨팅","앉아 있는","sitting"],"sky":["스카이","하늘","sky"],"some":["썸","몇몇의, 어떤","some"],"son":["썬","아들","son"],"soon":["쑨","곧","soon"],"sorry":["쏘리","미안한","sorry"],"so":["소우","너무, 그래서","so"],"spirit":["스피릿","영(Holy Spirit: 성령)","spirit"],"stable":["스테이블","마구간","stable"],"star":["스타","별","star"],"stay":["스테이","머물다","stay"],"stone":["스토운","돌","stone"],"stopped":["스탑트","멈췄다","stopped"],"suddenly":["써든리","갑자기","suddenly"],"take":["테이크","가지다, 데려가다","take"],"teachers":["티처즈","선생님들","teachers"],"temple":["템플","성전","temple"],"test":["테스트","시험하다","test"],"that":["댓","그, ~라는 것","that"],"their":["데어","그들의","their"],"them":["뎀","그들을","them"],"then":["덴","그러자, 그때","then"],"there":["데어","거기에","there"],"these":["디즈","이(것)들","these"],"they":["데이","그들은","they"],"the":["더","그","the"],"this":["디스","이","this"],"time":["타임","때, 시간","time"],"today":["투데이","오늘","today"],"told":["토울드","말해 주었다","told"],"took":["툭","데려갔다, 가져갔다","took"],"too":["투","~도, 또한","too"],"to":["투","~에게, ~로","to"],"true":["트루","사실인, 진짜의","true"],"turn":["턴","바꾸다(turn A into B: A를 B로 바꾸다)","turn"],"twelve":["트웰브","열둘, 12","twelve"],"upset":["업셋","화가 난, 속상한","upset"],"up":["업","위로","up"],"very":["베리","아주","very"],"village":["빌리지","마을","village"],"voice":["보이스","목소리","voice"],"wanted":["원티드","원했다","wanted"],"wants":["원츠","원하다","wants"],"was":["워즈","~이었다","was"],"water":["워터","물","water"],"way":["웨이","길","way"],"went":["웬트","갔다","went"],"were":["워","~이었다","were"],"we":["위","우리는","we"],"what":["왓","무엇, 뭐라고","what"],"when":["웬","~할 때","when"],"where":["웨어","어디","where"],"who":["후","누구","who"],"wild":["와일드","야생의","wild"],"will":["윌","~할 것이다","will"],"wisdom":["위즈덤","지혜","wisdom"],"wise":["와이즈","지혜로운","wise"],"with":["위드","~와 함께","with"],"wonderful":["원더펄","멋진","wonderful"],"words":["워즈","말들","words"],"word":["워드","말씀, 말","word"],"wore":["워","입었다","wore"],"world":["월드","세상","world"],"worried":["워리드","걱정하는","worried"],"worshiped":["워십트","경배했다","worshiped"],"worship":["워십","경배하다","worship"],"would":["우드","~할 것이다","would"],"wrapped":["랩트","감쌌다","wrapped"],"years":["이어즈","해, 년(나이)","years"],"yet":["옛","아직","yet"],"your":["유어","너의","your"],"you":["유","너, 너희","you"]},"s":[{"n":1,"b":1,"en":"One day, an angel came to Mary.","ch":[["One day,","one_day"],["an angel came to Mary.","an_angel_came_to_mary"]],"ko":"어느 날, 천사가 마리아에게 찾아왔어요.","st":13.68,"et":17.85,"img":"s001.jpg"},{"n":2,"b":1,"en":"Mary couldn’t believe her eyes.","ch":[["Mary couldn’t believe","mary_couldn_t_believe"],["her eyes.","her_eyes"]],"ko":"마리아는 자기 눈을 믿을 수 없었어요.","st":23.36,"et":27.43,"img":"s002.jpg"},{"n":3,"b":1,"en":"The angel said, “Don’t be afraid.","ch":[["The angel said,","the_angel_said"],["“Don’t be afraid.","don_t_be_afraid"]],"ko":"천사가 말했어요. “두려워하지 마라.","st":29.13,"et":33.15,"img":"s003.jpg"},{"n":4,"b":1,"en":"I bring you good news.","ch":[["I bring you","i_bring_you"],["good news.","good_news"]],"ko":"내가 너에게 기쁜 소식을 가져왔단다.","st":35.12,"et":37.93,"img":"s004.jpg"},{"n":5,"b":1,"en":"You will have a son.","ch":[["You will have","you_will_have"],["a son.","a_son"]],"ko":"너는 아들을 낳게 될 거야.","st":38.6,"et":41.13,"img":"s005.jpg"},{"n":6,"b":1,"en":"You must name him Jesus.","ch":[["You must name him","you_must_name_him"],["Jesus.","jesus"]],"ko":"아기의 이름을 예수라고 지어야 해.","st":46.87,"et":50.31,"img":"s006.jpg"},{"n":7,"b":1,"en":"He is the Son of God.”","ch":[["He is","he_is"],["the Son of God.”","the_son_of_god"]],"ko":"그는 하나님의 아들이란다.”","st":55.13,"et":59.11,"img":"s007.jpg"},{"n":8,"b":1,"en":"Mary asked, “How can I have a baby?","ch":[["Mary asked,","mary_asked"],["“How can I","how_can_i"],["have a baby?","have_a_baby"]],"ko":"마리아가 물었어요. “제가 어떻게 아기를 가질 수 있나요?","st":62.3,"et":66.73,"img":"s008.jpg"},{"n":9,"b":1,"en":"I’m not married yet.”","ch":[["I’m not married","i_m_not_married"],["yet.”","yet"]],"ko":"저는 아직 결혼하지 않았어요.”","st":68.87,"et":71.59,"img":"s009.jpg"},{"n":10,"b":1,"en":"The angel answered, “Nothing is impossible with God.”","ch":[["The angel answered,","the_angel_answered"],["“Nothing is impossible","nothing_is_impossible"],["with God.”","with_god"]],"ko":"천사가 대답했어요. “하나님께는 불가능한 일이 없단다.”","st":76.61,"et":81.85,"img":"s010.jpg"},{"n":11,"b":1,"en":"Mary said, “May everything you have said come true.”","ch":[["Mary said,","mary_said"],["“May everything","may_everything"],["you have said","you_have_said"],["come true.”","come_true"]],"ko":"마리아가 말했어요. “말씀하신 대로 모두 이루어지기를 바랍니다.”","st":84.65,"et":90.75,"img":"s011.jpg"},{"n":12,"b":1,"en":"And then the angel left her.","ch":[["And then","and_then"],["the angel left her.","the_angel_left_her"]],"ko":"그러고 나서 천사는 마리아를 떠났어요.","st":93.92,"et":97.45,"img":"s012.jpg"},{"n":13,"b":2,"en":"Joseph went to Bethlehem with Mary.","ch":[["Joseph went to Bethlehem","joseph_went_to_bethlehem"],["with Mary.","with_mary"]],"ko":"요셉은 마리아와 함께 베들레헴에 갔어요.","st":118.22,"et":121.15,"img":"s013.jpg"},{"n":14,"b":2,"en":"“The baby is coming,” Mary said.","ch":[["“The baby is coming,”","the_baby_is_coming"],["Mary said.","mary_said"]],"ko":"“아기가 나오려고 해요.” 마리아가 말했어요.","st":123.91,"et":127.73,"img":"s014.jpg"},{"n":15,"b":2,"en":"“Let’s look for a place to stay,” Joseph said.","ch":[["“Let’s look for","let_s_look_for"],["a place to stay,”","a_place_to_stay"],["Joseph said.","joseph_said"]],"ko":"“머물 곳을 찾아봅시다.” 요셉이 말했어요.","st":128.52,"et":132.99,"img":"s015.jpg"},{"n":16,"b":2,"en":"“Hello, do you have a room?”","ch":[["“Hello,","hello"],["do you have a room?”","do_you_have_a_room"]],"ko":"“안녕하세요, 방이 있나요?”","st":135.68,"et":140.23,"img":"s016.jpg"},{"n":17,"b":2,"en":"“I’m sorry. We don’t have a room.”","ch":[["“I’m sorry.","i_m_sorry"],["We don’t have a room.”","we_don_t_have_a_room"]],"ko":"“죄송해요. 방이 없어요.”","st":142.39,"et":145.77,"img":"s017.jpg"},{"n":18,"b":2,"en":"“There is no room.”","ch":[["“There is no room.”","there_is_no_room"]],"ko":"“빈방이 없어요.”","st":147.29,"et":149.77,"img":"s018.jpg"},{"n":19,"b":2,"en":"“No more rooms.”","ch":[["“No more rooms.”","no_more_rooms"]],"ko":"“방이 더는 없어요.”","st":152.03,"et":154.39,"img":"s019.jpg"},{"n":20,"b":2,"en":"Every place was packed with people.","ch":[["Every place","every_place"],["was packed with people.","was_packed_with_people"]],"ko":"가는 곳마다 사람들로 꽉 차 있었어요.","st":157.29,"et":160.79,"img":"s020.jpg"},{"n":21,"b":2,"en":"“You can stay in the stable,” an innkeeper said.","ch":[["“You can stay","you_can_stay"],["in the stable,”","in_the_stable"],["an innkeeper said.","an_innkeeper_said"]],"ko":"“마구간에서 지내도 돼요.” 여관 주인이 말했어요.","st":164.07,"et":169.13,"img":"s021.jpg"},{"n":22,"b":2,"en":"Soon the baby was born!","ch":[["Soon","soon"],["the baby was born!","the_baby_was_born"]],"ko":"곧 아기가 태어났어요!","st":176.76,"et":179.51,"img":"s022.jpg"},{"n":23,"b":2,"en":"Mary wrapped him up in a blanket.","ch":[["Mary wrapped him up","mary_wrapped_him_up"],["in a blanket.","in_a_blanket"]],"ko":"마리아는 아기를 담요로 감쌌어요.","st":183.1,"et":186.75,"img":"s023.jpg"},{"n":24,"b":2,"en":"Then, she placed him in a manger.","ch":[["Then,","then"],["she placed him","she_placed_him"],["in a manger.","in_a_manger"]],"ko":"그리고 아기를 구유에 눕혔어요.","st":192.36,"et":196.49,"img":"s024.jpg"},{"n":25,"b":3,"en":"The shepherds were looking after their sheep.","ch":[["The shepherds","the_shepherds"],["were looking after","were_looking_after"],["their sheep.","their_sheep"]],"ko":"목자들이 양을 돌보고 있었어요.","st":213.88,"et":217.83,"img":"s025.jpg"},{"n":26,"b":3,"en":"Suddenly, there was a bright light.","ch":[["Suddenly,","suddenly"],["there was a bright light.","there_was_a_bright_light"]],"ko":"갑자기 밝은 빛이 비쳤어요.","st":222.86,"et":226.37,"img":"s026.jpg"},{"n":27,"b":3,"en":"An angel appeared and said,","ch":[["An angel appeared","an_angel_appeared"],["and said,","and_said"]],"ko":"천사가 나타나 말했어요.","st":229.93,"et":233.15,"img":"s027.jpg"},{"n":28,"b":3,"en":"“Don’t be afraid.","ch":[["“Don’t be afraid.","don_t_be_afraid"]],"ko":"“두려워하지 마라.","st":237.27,"et":239.17,"img":"s028.jpg"},{"n":29,"b":3,"en":"I bring you good news.","ch":[["I bring you","i_bring_you"],["good news.","good_news"]],"ko":"내가 너희에게 기쁜 소식을 가져왔단다.","st":240.63,"et":243.57,"img":"s029.jpg"},{"n":30,"b":3,"en":"Today, the Son of God has been born in Bethlehem.","ch":[["Today,","today"],["the Son of God","the_son_of_god"],["has been born","has_been_born"],["in Bethlehem.","in_bethlehem"]],"ko":"오늘 베들레헴에서 하나님의 아들이 태어나셨단다.","st":247.09,"et":252.01,"img":"s030.jpg"},{"n":31,"b":3,"en":"You will find him in a manger.”","ch":[["You will find him","you_will_find_him"],["in a manger.”","in_a_manger"]],"ko":"너희는 구유에 누운 아기를 보게 될 거야.”","st":256.83,"et":261.07,"img":"s031.jpg"},{"n":32,"b":3,"en":"Suddenly, many angels appeared in the sky.","ch":[["Suddenly,","suddenly"],["many angels appeared","many_angels_appeared"],["in the sky.","in_the_sky"]],"ko":"갑자기 하늘에 많은 천사들이 나타났어요.","st":265.37,"et":269.95,"img":"s032.jpg"},{"n":33,"b":3,"en":"And they sang to God.","ch":[["And they sang","and_they_sang"],["to God.","to_god"]],"ko":"그리고 하나님께 노래했어요.","st":278.76,"et":281.95,"img":"s033.jpg"},{"n":34,"b":3,"en":"“Let’s go to Bethlehem and find the baby.”","ch":[["“Let’s go to Bethlehem","let_s_go_to_bethlehem"],["and find the baby.”","and_find_the_baby"]],"ko":"“베들레헴에 가서 아기를 찾아보자.”","st":287.16,"et":291.07,"img":"s034.jpg"},{"n":35,"b":3,"en":"The shepherds ran to the village.","ch":[["The shepherds ran","the_shepherds_ran"],["to the village.","to_the_village"]],"ko":"목자들은 마을로 달려갔어요.","st":294.04,"et":297.29,"img":"s035.jpg"},{"n":36,"b":3,"en":"They found a baby Jesus lying in a manger.","ch":[["They found","they_found"],["a baby Jesus","a_baby_jesus"],["lying in a manger.","lying_in_a_manger"]],"ko":"그들은 구유에 누워 있는 아기 예수님을 찾았어요.","st":302.01,"et":307.27,"img":"s036.jpg"},{"n":37,"b":4,"en":"In the far East,","ch":[["In the far East,","in_the_far_east"]],"ko":"먼 동쪽 나라에서,","st":329.79,"et":332.57,"img":"s037.jpg"},{"n":38,"b":4,"en":"some wise men saw a big star in the sky.","ch":[["some wise men","some_wise_men"],["saw a big star","saw_a_big_star"],["in the sky.","in_the_sky"]],"ko":"동방박사들이 하늘에서 큰 별을 보았어요.","st":337.67,"et":342.29,"img":"s038.jpg"},{"n":39,"b":4,"en":"“A great king is born.","ch":[["“A great king","a_great_king"],["is born.","is_born"]],"ko":"“위대한 왕이 태어나셨다.","st":345.83,"et":348.99,"img":"s039.jpg"},{"n":40,"b":4,"en":"“Let’s follow that star,” one wise man said.","ch":[["“Let’s follow that star,”","let_s_follow_that_star"],["one wise man said.","one_wise_man_said"]],"ko":"“저 별을 따라가자.” 한 박사가 말했어요.","st":355.03,"et":359.75,"img":"s040.jpg"},{"n":41,"b":4,"en":"So they went on a long journey.","ch":[["So they went","so_they_went"],["on a long journey.","on_a_long_journey"]],"ko":"그래서 그들은 먼 길을 떠났어요.","st":365.21,"et":368.81,"img":"s041.jpg"},{"n":42,"b":4,"en":"They rode their camels night and day.","ch":[["They rode their camels","they_rode_their_camels"],["night and day.","night_and_day"]],"ko":"그들은 밤낮으로 낙타를 타고 갔어요.","st":374.21,"et":378.55,"img":"s042.jpg"},{"n":43,"b":4,"en":"The big star showed them the way.","ch":[["The big star","the_big_star"],["showed them the way.","showed_them_the_way"]],"ko":"큰 별이 그들에게 길을 알려 주었어요.","st":382.35,"et":386.31,"img":"s043.jpg"},{"n":44,"b":4,"en":"It finally stopped over a house.","ch":[["It finally stopped","it_finally_stopped"],["over a house.","over_a_house"]],"ko":"별은 마침내 어느 집 위에 멈췄어요.","st":394.92,"et":399.47,"img":"s044.jpg"},{"n":45,"b":4,"en":"“The great king is here!” They were so happy.","ch":[["“The great king is here!”","the_great_king_is_here"],["They were so happy.","they_were_so_happy"]],"ko":"“위대한 왕이 여기 계신다!” 그들은 무척 기뻤어요.","st":400.76,"et":405.47,"img":"s045.jpg"},{"n":46,"b":4,"en":"And there they found Jesus.","ch":[["And there","and_there"],["they found Jesus.","they_found_jesus"]],"ko":"그리고 거기에서 예수님을 찾았어요.","st":408.37,"et":411.67,"img":"s046.jpg"},{"n":47,"b":4,"en":"They bowed down and worshiped him.","ch":[["They bowed down","they_bowed_down"],["and worshiped him.","and_worshiped_him"]],"ko":"그들은 엎드려 예수님께 경배했어요.","st":420.5,"et":424.17,"img":"s047.jpg"},{"n":48,"b":4,"en":"They gave him wonderful gifts.","ch":[["They gave him","they_gave_him"],["wonderful gifts.","wonderful_gifts"]],"ko":"그들은 예수님께 멋진 선물을 드렸어요.","st":426.9,"et":431.49,"img":"s048.jpg"},{"n":49,"b":5,"en":"Herod was a bad king.","ch":[["Herod","herod"],["was a bad king.","was_a_bad_king"]],"ko":"헤롯은 나쁜 왕이었어요.","st":451.78,"et":454.43,"img":"s049.jpg"},{"n":50,"b":5,"en":"One day, he heard about the new king.","ch":[["One day,","one_day"],["he heard about","he_heard_about"],["the new king.","the_new_king"]],"ko":"어느 날, 헤롯은 새로운 왕에 대해 들었어요.","st":457.55,"et":461.51,"img":"s050.jpg"},{"n":51,"b":5,"en":"“A great king was born!”","ch":[["“A great king","a_great_king"],["was born!”","was_born"]],"ko":"“위대한 왕이 태어나셨대요!”","st":464.81,"et":468.75,"img":"s051.jpg"},{"n":52,"b":5,"en":"“What? Another king was born?”","ch":[["“What?","what"],["Another king was born?”","another_king_was_born"]],"ko":"“뭐라고? 또 다른 왕이 태어났다고?”","st":470.64,"et":474.97,"img":"s052.jpg"},{"n":53,"b":5,"en":"He was upset.","ch":[["He was upset.","he_was_upset"]],"ko":"헤롯은 몹시 화가 났어요.","st":476.65,"et":478.85,"img":"s053.jpg"},{"n":54,"b":5,"en":"“Kill the baby!” King Herod said.","ch":[["“Kill the baby!”","kill_the_baby"],["King Herod said.","king_herod_said"]],"ko":"“그 아기를 죽여라!” 헤롯 왕이 말했어요.","st":481.6,"et":486.37,"img":"s054.jpg"},{"n":55,"b":5,"en":"Then, an angel appeared to Joseph in a dream.","ch":[["Then,","then"],["an angel appeared to Joseph","an_angel_appeared_to_joseph"],["in a dream.","in_a_dream"]],"ko":"그때, 천사가 요셉의 꿈에 나타났어요.","st":493.27,"et":498.21,"img":"s055.jpg"},{"n":56,"b":5,"en":"“Herod wants to kill the baby.","ch":[["“Herod wants","herod_wants"],["to kill the baby.","to_kill_the_baby"]],"ko":"“헤롯이 아기를 죽이려고 해.","st":504.47,"et":507.71,"img":"s056.jpg"},{"n":57,"b":5,"en":"Take the baby and go to Egypt.”","ch":[["Take the baby","take_the_baby"],["and go to Egypt.”","and_go_to_egypt"]],"ko":"아기를 데리고 이집트로 가거라.”","st":509.7,"et":513.99,"img":"s057.jpg"},{"n":58,"b":5,"en":"Joseph took Jesus and Mary to Egypt.","ch":[["Joseph took Jesus and Mary","joseph_took_jesus_and_mary"],["to Egypt.","to_egypt"]],"ko":"요셉은 예수님과 마리아를 데리고 이집트로 갔어요.","st":517.09,"et":521.15,"img":"s058.jpg"},{"n":59,"b":5,"en":"Some time later, King Herod died.","ch":[["Some time later,","some_time_later"],["King Herod died.","king_herod_died"]],"ko":"얼마 뒤, 헤롯 왕이 죽었어요.","st":527.18,"et":531.51,"img":"s059.jpg"},{"n":60,"b":5,"en":"God kept them safe.","ch":[["God kept them","god_kept_them"],["safe.","safe"]],"ko":"하나님이 그들을 안전하게 지켜 주셨어요.","st":537.91,"et":540.49,"img":"s060.jpg"},{"n":61,"b":6,"en":"When Jesus was 12 years old,","ch":[["When Jesus","when_jesus"],["was 12 years old,","was_12_years_old"]],"ko":"예수님이 열두 살이 되었을 때,","st":562.28,"et":565.79,"img":"s061.jpg"},{"n":62,"b":6,"en":"his family went to Jerusalem for the Passover festival.","ch":[["his family went to Jerusalem","his_family_went_to_jerusalem"],["for the Passover festival.","for_the_passover_festival"]],"ko":"가족이 유월절을 지키러 예루살렘에 갔어요.","st":568.51,"et":574.01,"img":"s062.jpg"},{"n":63,"b":6,"en":"On the way back home,","ch":[["On the way","on_the_way"],["back home,","back_home"]],"ko":"집으로 돌아오는 길에,","st":580.63,"et":583.31,"img":"s063.jpg"},{"n":64,"b":6,"en":"Mary asked, “Joseph, where is Jesus?”","ch":[["Mary asked,","mary_asked"],["“Joseph,","joseph"],["where is Jesus?”","where_is_jesus"]],"ko":"마리아가 물었어요. “요셉, 예수가 어디 있어요?”","st":584.51,"et":590.47,"img":"s064.jpg"},{"n":65,"b":6,"en":"Joseph answered, “He’s probably with his friends.”","ch":[["Joseph answered,","joseph_answered"],["“He’s probably","he_s_probably"],["with his friends.”","with_his_friends"]],"ko":"요셉이 대답했어요. “아마 친구들과 함께 있을 거예요.”","st":591.81,"et":596.31,"img":"s065.jpg"},{"n":66,"b":6,"en":"“Have you seen Jesus?” they asked people.","ch":[["“Have you seen Jesus?”","have_you_seen_jesus"],["they asked people.","they_asked_people"]],"ko":"“예수를 보셨나요?” 그들은 사람들에게 물었어요.","st":600.79,"et":605.07,"img":"s066.jpg"},{"n":67,"b":6,"en":"No one saw Jesus.","ch":[["No one","no_one"],["saw Jesus.","saw_jesus"]],"ko":"아무도 예수님을 보지 못했어요.","st":607.1,"et":609.85,"img":"s067.jpg"},{"n":68,"b":6,"en":"They were getting very worried.","ch":[["They were getting","they_were_getting"],["very worried.","very_worried"]],"ko":"그들은 점점 더 걱정이 되었어요.","st":618.61,"et":622.93,"img":"s068.jpg"},{"n":69,"b":6,"en":"Where is he?","ch":[["Where is he?","where_is_he"]],"ko":"예수는 어디 있을까?","st":627.2,"et":629.87,"img":"s069.jpg"},{"n":70,"b":6,"en":"They hurried back to Jerusalem.","ch":[["They hurried back","they_hurried_back"],["to Jerusalem.","to_jerusalem"]],"ko":"그들은 서둘러 예루살렘으로 돌아갔어요.","st":633.57,"et":636.51,"img":"s070.jpg"},{"n":71,"b":6,"en":"They looked for him everywhere.","ch":[["They looked for him","they_looked_for_him"],["everywhere.","everywhere"]],"ko":"그들은 곳곳을 다니며 예수님을 찾았어요.","st":640.4,"et":643.69,"img":"s071.jpg"},{"n":72,"b":6,"en":"“Oh, over there!” Finally, they found Jesus in the temple!","ch":[["“Oh, over there!”","oh_over_there"],["Finally,","finally"],["they found Jesus","they_found_jesus"],["in the temple!","in_the_temple"]],"ko":"“아, 저기 있다!” 마침내 성전에서 예수님을 찾았어요!","st":650.1,"et":658.41,"img":"s072.jpg"},{"n":73,"b":7,"en":"Who is this boy?","ch":[["Who is this boy?","who_is_this_boy"]],"ko":"이 아이는 누구일까요?","st":676.42,"et":679.05,"img":"s073.jpg"},{"n":74,"b":7,"en":"He was sitting with some old men.","ch":[["He was sitting","he_was_sitting"],["with some old men.","with_some_old_men"]],"ko":"소년은 어르신들과 함께 앉아 있었어요.","st":682.36,"et":686.11,"img":"s074.jpg"},{"n":75,"b":7,"en":"These old men were teachers.","ch":[["These old men","these_old_men"],["were teachers.","were_teachers"]],"ko":"이 어르신들은 선생님들이었어요.","st":688.18,"et":691.05,"img":"s075.jpg"},{"n":76,"b":7,"en":"The boy was listening to them","ch":[["The boy was listening","the_boy_was_listening"],["to them","to_them"]],"ko":"소년은 그들의 말을 들으며","st":694.03,"et":698.29,"img":"s076.jpg"},{"n":77,"b":7,"en":"and asking them questions.","ch":[["and asking them","and_asking_them"],["questions.","questions"]],"ko":"그들에게 질문도 했어요.","st":700.11,"et":702.87,"img":"s077.jpg"},{"n":78,"b":7,"en":"They were amazed at his wisdom.","ch":[["They were amazed","they_were_amazed"],["at his wisdom.","at_his_wisdom"]],"ko":"그들은 소년의 지혜에 깜짝 놀랐어요.","st":707.73,"et":712.15,"img":"s078.jpg"},{"n":79,"b":7,"en":"They were also amazed by his answers.","ch":[["They were also amazed","they_were_also_amazed"],["by his answers.","by_his_answers"]],"ko":"그들은 소년의 대답에도 놀랐어요.","st":716.15,"et":721.05,"img":"s079.jpg"},{"n":80,"b":7,"en":"He was only twelve years old.","ch":[["He was only","he_was_only"],["twelve years old.","twelve_years_old"]],"ko":"소년은 겨우 열두 살이었어요.","st":724.3,"et":728.45,"img":"s080.jpg"},{"n":81,"b":7,"en":"The boy was Jesus.","ch":[["The boy","the_boy"],["was Jesus.","was_jesus"]],"ko":"그 소년은 바로 예수님이었어요.","st":733.9,"et":737.37,"img":"s081.jpg"},{"n":82,"b":7,"en":"They didn’t know that this boy was the Son of God.","ch":[["They didn’t know","they_didn_t_know"],["that this boy","that_this_boy"],["was the Son of God.","was_the_son_of_god"]],"ko":"그들은 이 소년이 하나님의 아들인 줄 몰랐어요.","st":742.13,"et":747.61,"img":"s082.jpg"},{"n":83,"b":7,"en":"The boy Jesus grew in wisdom and height.","ch":[["The boy Jesus grew","the_boy_jesus_grew"],["in wisdom and height.","in_wisdom_and_height"]],"ko":"소년 예수님은 지혜도 키도 자랐어요.","st":752.07,"et":757.73,"img":"s083.jpg"},{"n":84,"b":7,"en":"God loved him, and people loved him too!","ch":[["God loved him,","god_loved_him"],["and people loved him too!","and_people_loved_him_too"]],"ko":"하나님도 예수님을 사랑하셨고, 사람들도 예수님을 사랑했어요!","st":758.48,"et":763.17,"img":"s084.jpg"},{"n":85,"b":8,"en":"Look at him. He is John the Baptist.","ch":[["Look at him.","look_at_him"],["He is John the Baptist.","he_is_john_the_baptist"]],"ko":"저 사람을 보세요. 세례 요한이에요.","st":783.7,"et":788.31,"img":"s085.jpg"},{"n":86,"b":8,"en":"He wore clothes made of camel hair.","ch":[["He wore clothes","he_wore_clothes"],["made of camel hair.","made_of_camel_hair"]],"ko":"그는 낙타털로 만든 옷을 입었어요.","st":790.2,"et":793.93,"img":"s086.jpg"},{"n":87,"b":8,"en":"His food was locusts and wild honey.","ch":[["His food was","his_food_was"],["locusts and wild honey.","locusts_and_wild_honey"]],"ko":"그의 음식은 메뚜기와 들꿀이었어요.","st":795.2,"et":799.29,"img":"s087.jpg"},{"n":88,"b":8,"en":"In the desert, he shouted to the people,","ch":[["In the desert,","in_the_desert"],["he shouted","he_shouted"],["to the people,","to_the_people"]],"ko":"광야에서 그는 사람들에게 외쳤어요.","st":806.15,"et":811.03,"img":"s088.jpg"},{"n":89,"b":8,"en":"“Turn away from your sins and return to God!”","ch":[["“Turn away","turn_away"],["from your sins","from_your_sins"],["and return to God!”","and_return_to_god"]],"ko":"“죄에서 돌이켜 하나님께 돌아오세요!”","st":815.94,"et":820.85,"img":"s089.jpg"},{"n":90,"b":8,"en":"Many people listened to John.","ch":[["Many people","many_people"],["listened to John.","listened_to_john"]],"ko":"많은 사람들이 요한의 말을 들었어요.","st":822.22,"et":825.37,"img":"s090.jpg"},{"n":91,"b":8,"en":"They were sorry for their sins.","ch":[["They were sorry","they_were_sorry"],["for their sins.","for_their_sins"]],"ko":"그들은 자기 죄를 뉘우쳤어요.","st":826.42,"et":830.49,"img":"s091.jpg"},{"n":92,"b":8,"en":"They wanted to turn away from their sins.","ch":[["They wanted to turn away","they_wanted_to_turn_away"],["from their sins.","from_their_sins"]],"ko":"그들은 죄에서 돌이키고 싶었어요.","st":842.97,"et":847.07,"img":"s092.jpg"},{"n":93,"b":8,"en":"John baptized them in the Jordan River.","ch":[["John baptized them","john_baptized_them"],["in the Jordan River.","in_the_jordan_river"]],"ko":"요한은 요단강에서 그들에게 세례를 주었어요.","st":850.42,"et":854.35,"img":"s093.jpg"},{"n":94,"b":8,"en":"And he told people that the Savior would come.","ch":[["And he told people","and_he_told_people"],["that the Savior","that_the_savior"],["would come.","would_come"]],"ko":"그리고 사람들에게 구원자가 오실 거라고 말했어요.","st":856.77,"et":861.39,"img":"s094.jpg"},{"n":95,"b":8,"en":"John said, “I baptize you with water,","ch":[["John said,","john_said"],["“I baptize you","i_baptize_you"],["with water,","with_water"]],"ko":"요한이 말했어요. “나는 물로 너희에게 세례를 준다.","st":863.46,"et":868.33,"img":"s095.jpg"},{"n":96,"b":8,"en":"but he will baptize you with the Holy Spirit.”","ch":[["but he will baptize you","but_he_will_baptize_you"],["with the Holy Spirit.”","with_the_holy_spirit"]],"ko":"하지만 그분은 성령으로 너희에게 세례를 주실 거야.”","st":870.83,"et":875.73,"img":"s096.jpg"},{"n":97,"b":9,"en":"One day, Jesus came to the Jordan River.","ch":[["One day,","one_day"],["Jesus came","jesus_came"],["to the Jordan River.","to_the_jordan_river"]],"ko":"어느 날, 예수님이 요단강에 오셨어요.","st":902.66,"et":906.25,"img":"s097.jpg"},{"n":98,"b":9,"en":"“Will you baptize me?” Jesus asked.","ch":[["“Will you baptize me?”","will_you_baptize_me"],["Jesus asked.","jesus_asked"]],"ko":"“나에게 세례를 주겠니?” 예수님이 물으셨어요.","st":909.91,"et":914.79,"img":"s098.jpg"},{"n":99,"b":9,"en":"“I should be baptized by you,” John answered.","ch":[["“I should be baptized","i_should_be_baptized"],["by you,”","by_you"],["John answered.","john_answered"]],"ko":"“제가 오히려 주님께 세례를 받아야 해요.” 요한이 대답했어요.","st":918.33,"et":922.95,"img":"s099.jpg"},{"n":100,"b":9,"en":"Jesus said, “This is God’s will.”","ch":[["Jesus said,","jesus_said"],["“This is God’s will.”","this_is_god_s_will"]],"ko":"예수님이 말씀하셨어요. “이것이 하나님의 뜻이란다.”","st":924.04,"et":927.63,"img":"s100.jpg"},{"n":101,"b":9,"en":"So John baptized Jesus.","ch":[["So John","so_john"],["baptized Jesus.","baptized_jesus"]],"ko":"그래서 요한은 예수님께 세례를 주었어요.","st":930.29,"et":933.49,"img":"s101.jpg"},{"n":102,"b":9,"en":"When he came up from the water,","ch":[["When he came up","when_he_came_up"],["from the water,","from_the_water"]],"ko":"예수님이 물에서 올라오실 때,","st":936.61,"et":940.69,"img":"s102.jpg"},{"n":103,"b":9,"en":"the heavens were opened,","ch":[["the heavens","the_heavens"],["were opened,","were_opened"]],"ko":"하늘이 열렸어요.","st":942.99,"et":945.67,"img":"s103.jpg"},{"n":104,"b":9,"en":"and the Spirit of God came down to Jesus like a dove.","ch":[["and the Spirit of God","and_the_spirit_of_god"],["came down to Jesus","came_down_to_jesus"],["like a dove.","like_a_dove"]],"ko":"그리고 하나님의 영이 비둘기처럼 예수님께 내려왔어요.","st":949.19,"et":955.01,"img":"s104.jpg"},{"n":105,"b":9,"en":"It was the Holy Spirit.","ch":[["It was","it_was"],["the Holy Spirit.","the_holy_spirit"]],"ko":"그것은 성령님이었어요.","st":961.65,"et":965.23,"img":"s105.jpg"},{"n":106,"b":9,"en":"Then, a voice came from heaven.","ch":[["Then,","then"],["a voice came","a_voice_came"],["from heaven.","from_heaven"]],"ko":"그때, 하늘에서 소리가 들려왔어요.","st":970.29,"et":973.67,"img":"s106.jpg"},{"n":107,"b":9,"en":"“This is my Son, and I love him.","ch":[["“This is my Son,","this_is_my_son"],["and I love him.","and_i_love_him"]],"ko":"“이는 내 아들이니, 내가 그를 사랑한다.","st":974.24,"et":979.09,"img":"s107.jpg"},{"n":108,"b":9,"en":"I am very pleased with him.”","ch":[["I am very pleased","i_am_very_pleased"],["with him.”","with_him"]],"ko":"나는 그를 무척 기뻐한다.”","st":980.97,"et":985.03,"img":"s108.jpg"},{"n":109,"b":10,"en":"The Spirit led Jesus into the desert.","ch":[["The Spirit led Jesus","the_spirit_led_jesus"],["into the desert.","into_the_desert"]],"ko":"성령님이 예수님을 광야로 이끄셨어요.","st":1008.32,"et":1012.57,"img":"s109.jpg"},{"n":110,"b":10,"en":"He ate nothing for forty days.","ch":[["He ate nothing","he_ate_nothing"],["for forty days.","for_forty_days"]],"ko":"예수님은 40일 동안 아무것도 드시지 않았어요.","st":1018.18,"et":1022.25,"img":"s110.jpg"},{"n":111,"b":10,"en":"He was very hungry.","ch":[["He was","he_was"],["very hungry.","very_hungry"]],"ko":"예수님은 몹시 배가 고프셨어요.","st":1024.88,"et":1027.81,"img":"s111.jpg"},{"n":112,"b":10,"en":"Then the Satan came and said,","ch":[["Then the Satan came","then_the_satan_came"],["and said,","and_said"]],"ko":"그때 사탄이 와서 말했어요.","st":1033.1,"et":1036.35,"img":"s112.jpg"},{"n":113,"b":10,"en":"“If you are the Son of God, turn this stone into bread.”","ch":[["“If you are the Son of God,","if_you_are_the_son_of_god"],["turn this stone","turn_this_stone"],["into bread.”","into_bread"]],"ko":"“네가 하나님의 아들이라면, 이 돌을 빵으로 만들어 봐라.”","st":1039.07,"et":1046.27,"img":"s113.jpg"},{"n":114,"b":10,"en":"Jesus answered, “Man does not live only by bread,","ch":[["Jesus answered,","jesus_answered"],["“Man does not live","man_does_not_live"],["only by bread,","only_by_bread"]],"ko":"예수님이 대답하셨어요. “사람은 빵으로만 사는 것이 아니라,","st":1047.61,"et":1053.32,"img":"s114.jpg"},{"n":115,"b":10,"en":"but by the word of God.","ch":[["but by","but_by"],["the word of God.","the_word_of_god"]],"ko":"하나님의 말씀으로 산다.","st":1053.32,"et":1056.69,"img":"s115.jpg"},{"n":116,"b":10,"en":"“If you are the Son of God, jump off!","ch":[["“If you are the Son of God,","if_you_are_the_son_of_god"],["jump off!","jump_off"]],"ko":"“네가 하나님의 아들이라면, 뛰어내려 봐라!","st":1058.57,"et":1065.63,"img":"s116.jpg"},{"n":117,"b":10,"en":"Angels will lift you up.”","ch":[["Angels will","angels_will"],["lift you up.”","lift_you_up"]],"ko":"천사들이 너를 들어 올릴 거야.”","st":1069.53,"et":1072.75,"img":"s117.jpg"},{"n":118,"b":10,"en":"Jesus answered, “Do not test your God.”","ch":[["Jesus answered,","jesus_answered"],["“Do not test","do_not_test"],["your God.”","your_god"]],"ko":"예수님이 대답하셨어요. “너의 하나님을 시험하지 마라.”","st":1075.38,"et":1079.73,"img":"s118.jpg"},{"n":119,"b":10,"en":"“If you bow down to me,","ch":[["“If you bow down","if_you_bow_down"],["to me,","to_me"]],"ko":"“네가 나에게 엎드려 절하면,","st":1084.02,"et":1088.31,"img":"s119.jpg"},{"n":120,"b":10,"en":"I will give you all the world.”","ch":[["I will give you","i_will_give_you"],["all the world.”","all_the_world"]],"ko":"온 세상을 너에게 주겠다.”","st":1088.31,"et":1092.31,"img":"s120.jpg"},{"n":121,"b":10,"en":"Jesus said to him, “Get away, Satan!","ch":[["Jesus said to him,","jesus_said_to_him"],["“Get away, Satan!","get_away_satan"]],"ko":"예수님이 사탄에게 말씀하셨어요. “사탄아, 물러가라!","st":1101.15,"et":1105.21,"img":"s121.jpg"},{"n":122,"b":10,"en":"Worship only your God.”","ch":[["Worship only","worship_only"],["your God.”","your_god"]],"ko":"오직 너의 하나님만 경배하라.”","st":1106.44,"et":1109.63,"img":"s122.jpg"},{"n":123,"b":10,"en":"Jesus defeated Satan with the words of God.","ch":[["Jesus defeated Satan","jesus_defeated_satan"],["with the words of God.","with_the_words_of_god"]],"ko":"예수님은 하나님의 말씀으로 사탄을 이기셨어요.","st":1115.67,"et":1120.51,"img":"s123.jpg"},{"n":124,"b":10,"en":"Then the Satan left him.","ch":[["Then the Satan","then_the_satan"],["left him.","left_him"]],"ko":"그러자 사탄이 예수님을 떠났어요.","st":1123.18,"et":1126.59,"img":"s124.jpg"}]};
+const KP="enKidsNT_";
+const $=id=>document.getElementById(id);
+const S=DATA.s, W=DATA.words, BOOKS=DATA.books, VID=DATA.video.id;
+const store={get(k,d){try{const v=localStorage.getItem(KP+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(KP+k,JSON.stringify(v))}catch(e){}}};
+const DEF=[5,5,5,10], NAMES=["단어 읽기","끊어 읽기","천천히 읽기","빠르게 읽기"];
+let cnts=store.get("cnt",DEF).map(Number); if(cnts.length!==4||cnts.some(x=>!(x>=0&&x<=30))) cnts=DEF.slice();
+let opt={rate:String(store.get("rate","0.75")),gap:String(store.get("gap","0.6")),auto:store.get("auto",true),dedupe:store.get("dedupe",true),han:store.get("han",true),hideko:store.get("hideko",false)};
+let done=new Set(store.get("done",[]));
+let cur=Math.min(S.length-1,Math.max(0,+store.get("cur",0)||0));
+let P={step:0,r:0,u:0};          // r = repetition being played (0-based), u = word / chunk index
+let playing=false, runTok=0, wordsList=[], showCur=false;
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function norm(w){return String(w).toLowerCase().replace(/[’]/g,"'").replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu,"")}
+function bookOf(i){return S[i].b}
+
+// ---------- sentence structure ----------
+function wUrl(k){return "kids-nt/w/"+W[k][2]+".mp3"}
+function cUrl(c){return "kids-nt/c/"+c[1]+".mp3"}
+function sentWords(i){ // unique (or all) words in order. ONE item object feeds highlight + caption + audio: {k, ti(token index), url, han, mean}
+  const out=[],seen=new Set(); let ti=0;
+  S[i].ch.forEach(c=>c[0].split(/\s+/).forEach(t=>{const k=norm(t); if(k&&W[k]&&!(opt.dedupe&&seen.has(k))){seen.add(k);out.push({k,ti,url:wUrl(k),han:W[k][0],mean:W[k][1]});} ti++;}));
+  return out;
+}
+function chunkItems(i){return S[i].ch.map((c,ci)=>({ci,text:c[0],url:cUrl(c)}))}
+function units(step){ // number of units in one repetition
+  if(step===0) return wordsList.length; if(step===1) return S[cur].ch.length; return 1;
+}
+function resetP(step){P={step:step||0,r:0,u:0}; showCur=false; wordsList=sentWords(cur); skipEmpty();}
+function skipEmpty(){ while(P.step<4&&cnts[P.step]===0){P.step++;P.r=0;P.u=0;} }
+function totalUnits(){return [0,1,2,3].reduce((a,k)=>a+cnts[k]*(k===0?wordsList.length:k===1?S[cur].ch.length:1),0)}
+function doneUnits(){let d=0;for(let k=0;k<P.step&&k<4;k++) d+=cnts[k]*(k===0?wordsList.length:k===1?S[cur].ch.length:1);
+  if(P.step<4){ if(P.step===0) d+=P.u*cnts[0]+P.r; else if(P.step===1) d+=P.r*S[cur].ch.length+P.u; else d+=P.r;} return d}
+
+// ---------- rendering ----------
+function render(){
+  const s=S[cur];
+  $("books").innerHTML=BOOKS.map(b=>{const n=S.filter(x=>x.b===b.n),k=n.filter(x=>done.has(x.n)).length;return `<button type="button" data-b="${b.n}" aria-pressed="${b.n===s.b}">Book ${b.n}<span class="c">${k===n.length?"✓":k+"/"+n.length}</span></button>`}).join("");
+  const on=$("books").querySelector('[aria-pressed="true"]'); if(on){const T=$("books");T.scrollLeft=Math.max(0,on.offsetLeft-T.offsetLeft-10)}
+  $("ko").textContent=s.ko;
+  let ti=0;
+  $("il").innerHTML=s.ch.map((c,ci)=>`<span class="ch" data-c="${ci}">`+c[0].split(/\s+/).map(t=>{const k=norm(t),h=(W[k]||["",""])[0];return `<span class="col" role="button" tabindex="0" data-w="${esc(k)}" data-t="${ti++}"><span class="ie">${esc(t)}</span><span class="ik">${esc(h)}</span></span>`}).join("")+`</span>`).join("");
+  $("img").src="kids-nt/img/"+s.img; $("img").alt=s.ko;
+  $("badge").textContent=`${s.n} / ${S.length}`; renderWhere();
+  $("card").classList.toggle("hideko",!!opt.hideko);
+  $("card").classList.toggle("nohan",!opt.han);
+  renderRows(); renderStep(); fit();
+}
+function whereOf(s){const inB=S.filter(x=>x.b===s.b); return {b:s.b,i:inB.findIndex(x=>x.n===s.n)+1,t:inB.length}}
+function renderWhere(){const w=whereOf(S[cur]); $("wb").textContent=`Book ${w.b} · ${w.i}/${w.t}문장`; $("wg").textContent=`전체 ${S[cur].n}/${S.length}`;}
+function renderStep(){
+  const n=cnts;
+  $("chips").innerHTML=["①","②","③","④"].map((t,k)=>`<button type="button" class="chip ${P.step===k?"on":P.step>k?"done":""} ${n[k]===0?"zero":""}" data-s="${k}" aria-label="${NAMES[k]} ${n[k]}번">${P.step>k&&n[k]>0?"✓":t}</button>`).join("");
+  let b1,b2="";
+  if(P.step>=4){ b1=`<b>끝!</b> 4단계 완료 ✓`; b2="다음 문장으로 가 볼까요?"; }
+  else{
+    const rep=Math.min(P.r+1,n[P.step]);
+    b1=`${NAMES[P.step]} <b>${rep}/${n[P.step]}${P.step>=2?"회":""}</b>`;
+    if(P.step===0){const w=wordsList[Math.min(P.u,wordsList.length-1)]; b2=`단어 ${Math.min(P.u+1,wordsList.length)}/${wordsList.length} · ${w?w.k:""}`}
+    else if(P.step===1) b2=`끊어서 · ${Math.min(P.u+1,S[cur].ch.length)}/${S[cur].ch.length} 덩어리`;
+    else b2=vidB2();
+  }
+  $("b1").innerHTML=b1; $("b2").textContent=b2; $("b2").classList.toggle("live",playing&&(P.step===2||P.step===3)&&!!vph); renderPill();
+  const tot=totalUnits(), d=doneUnits();
+  {const w=whereOf(S[cur]); $("cnt").textContent=`Book ${w.b} · ${w.i}/${w.t}문장 (${S[cur].n}/${S.length})`;}
+  $("fill").style.width=(P.step>=4?100:tot?d/tot*100:0)+"%";
+  $("play").textContent=playing?"⏸ 멈춤":(P.step>=4?"↻ 다시":(d>0?"▶ 이어서":"▶ 시작"));
+  $("play").classList.toggle("on",playing);
+  const foc=playing||showCur;
+  document.querySelectorAll("#il .ch").forEach((e,i)=>e.classList.toggle("on",foc&&P.step===1&&i===P.u));
+  const wi=wordsList[P.u];
+  document.querySelectorAll("#il .col").forEach(e=>e.classList.toggle("cur",!!(foc&&P.step===0&&wi&&+e.dataset.t===wi.ti)));
+  if(!(playing&&(P.step===2||P.step===3))) setVid(false);   // still picture whenever the video is not actively playing
+  renderNav();
+}
+function prevStepIdx(){for(let k=P.step-1;k>=0;k--) if(cnts[k]>0) return k; return -1}
+function nextStepIdx(from){for(let k=from+1;k<4;k++) if(cnts[k]>0) return k; return -1}
+function renderNav(){
+  const st=P.step, a=$("uprev"), b=$("unext");
+  const L=(btn,txt,ar,left)=>{btn.querySelector(".lb").textContent=txt;btn.querySelector(".ar").textContent=ar;btn.setAttribute("aria-label",txt)};
+  if(st===0){L(a,"이전 단어","⏮");L(b,"다음 단어","⏭");a.disabled=b.disabled=false}
+  else if(st===1){L(a,"이전 끊어읽기","⏮");L(b,"다음 끊어읽기","⏭");a.disabled=b.disabled=false}
+  else if(st===2||st===3){L(a,"이전 단계","⏮");L(b,"다음 단계","⏭");a.disabled=prevStepIdx()<0;b.disabled=nextStepIdx(st)<0}
+  else {L(a,"이전 단어","⏮");L(b,"다음 단어","⏭");a.disabled=b.disabled=true}
+}
+function setVid(on){const p=$("pic"); if(p.classList.contains("vid")!==on) p.classList.toggle("vid",on)}
+function renderRows(){
+  $("listSum").textContent=`문장 목록 · Book ${S[cur].b} · ${S.filter(x=>x.b===S[cur].b).length}문장`;
+  $("rows").innerHTML=S.map((s,i)=>s.b!==S[cur].b?"":`<button type="button" data-i="${i}" class="${i===cur?"cur":""}"><span class="n">${s.n}</span><span class="t">${esc(s.en)}<span class="k">${esc(s.ko)}</span></span><span class="ok">${done.has(s.n)?"✓":""}</span></button>`).join("");
+}
+function showCap(it,sticky){
+  if(!it){$("cap").classList.remove("show");return}
+  $("cap").innerHTML=`<span class="cw"><b>${esc(it.k)}</b><i>${esc(it.han)}</i></span> <span class="cm">${esc(it.mean)}</span>`; $("cap").classList.add("show");
+  clearTimeout(showCap.t); if(!sticky) showCap.t=setTimeout(()=>$("cap").classList.remove("show"),2800);
+}
+function hideCap(){clearTimeout(showCap.t);$("cap").classList.remove("show")}
+
+// ---------- fit: big Korean meaning on top, English (+Hangul) below, picture gets the rest ----------
+let fitHdr=-1;
+function fit(){
+  const card=$("card"),bar=document.querySelector(".bar"),il=$("il"),pic=$("pic"),B=document.body;
+  if(!card.offsetParent) return;
+  const W0=innerWidth, vw=Math.min(W0,560);
+  const view=()=>innerHeight-bar.getBoundingClientRect().height-8-CARD_M;      // visible height above the bottom bar
+  B.classList.remove("squeeze"); card.classList.remove("nohan"); if(!opt.han) card.classList.add("nohan");
+  const kBase=Math.round(Math.min(28,Math.max(22,vw*0.068))), eBase=Math.round(Math.min(32,Math.max(24,vw*0.076)));
+  let kf=kBase, ef=eBase; const setK=()=>card.style.setProperty("--kfs",kf+"px"), setE=()=>card.style.setProperty("--efs",ef+"px");
+  setK(); setE();
+  // The picture is ALWAYS the full card width, 1:1 (CSS). Only the English text may shrink (never below 22px / Hangul kept) so that
+  // English + nav buttons + picture fit together above the bottom bar; the Korean meaning/header may scroll out instead.
+  const span=()=>pic.getBoundingClientRect().bottom-il.getBoundingClientRect().top+6;
+  const need=()=>span()>view();
+  const wide=()=>{const R=il.getBoundingClientRect();return [...il.querySelectorAll(".col")].some(c=>c.getBoundingClientRect().right>R.right+0.5)||document.documentElement.scrollWidth>W0};
+  let guard=0;
+  // 1) prefer to keep the WHOLE card (label, meaning, English, buttons, picture) on screen: shrink English down to 26px, then the Korean meaning down to 22px
+  const all=()=>pic.getBoundingClientRect().bottom-card.getBoundingClientRect().top+6>view();
+  while(all()&&(ef>26||kf>22)&&guard++<120){ if(ef>26){ef--;setE();} else {kf--;setK();} }
+  // 2) still too tall: keep at least English + buttons + picture visible (English may go down to 22px); the label/meaning scroll out
+  while((need()||wide())&&ef>22&&guard++<200){ef--;setE();}
+  if(wide()){ card.classList.add("nohan"); ef=Math.min(eBase,28); setE(); while(wide()&&ef>16&&guard++<160){ef--;setE();} }
+  const side=Math.round(pic.getBoundingClientRect().width);
+  card.dataset.fit=`k${kf} e${ef}${card.classList.contains("nohan")&&opt.han?" nohan":""} pic${side}`;
+  fitHdr=document.querySelector("header").offsetHeight;
+  // make sure the page is tall enough to scroll to the target position
+  const y=scrollTarget();
+  document.querySelector(".wrap").style.minHeight=Math.ceil(Math.max(y,0)+innerHeight)+"px";
+}
+// target scroll: card top at viewport top when everything fits; otherwise the picture bottom sits just above the bottom bar
+// (English text stays right above the picture; label/step header/meaning scroll out - the fixed bar still shows Book + sentence number)
+function scrollTarget(){
+  const c=$("card"),pic=$("pic"),bar=document.querySelector(".bar");
+  const cardTop=c.getBoundingClientRect().top+scrollY-CARD_M, picBottom=pic.getBoundingClientRect().bottom+scrollY+6;
+  const view=innerHeight-bar.getBoundingClientRect().height;
+  return Math.max(0,Math.round(Math.max(cardTop, picBottom-view)));
+}
+// ---------- scroll the practice card to the top of the viewport (play / sentence change / step change) ----------
+const CARD_M=4; let lastPos="";
+function scrollCard(){
+  const c=$("card"); if(!c.offsetParent) return;
+  const y=scrollTarget();
+  if(Math.abs(y-scrollY)<3) return;
+  const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  scrollTo({top:y,behavior:reduce?"auto":"smooth"});
+}
+function scrollIfNew(){ const k=cur+":"+P.step; if(k!==lastPos){lastPos=k;scrollCard();} }
+addEventListener("resize",fit);
+if(window.ResizeObserver) new ResizeObserver(()=>{if(document.querySelector("header").offsetHeight!==fitHdr) fit();}).observe(document.querySelector("header"));
+
+// ---------- ONE playback controller ----------
+// Single persistent <audio> (unlocked by the first Play tap). Every async step carries the run-token it was started with;
+// cancelAll() bumps the token, resolves/clears every pending timer/promise and silences the audio, so a stale callback can never act.
+const A=new Audio(); A.preload="auto";
+const CHUNK_RATE=0.85; // 끊어 읽기: 조금 더 천천히 (pitch preserved)
+const cancelFns=new Set();
+const dbg=o=>{ if(window.__log) window.__log.push(o); };
+function killAudio(){ A.onended=A.onerror=null; try{A.pause()}catch(e){} try{A.currentTime=0}catch(e){} }
+function cancelAll(){ runTok++; const fs=[...cancelFns]; cancelFns.clear(); fs.forEach(f=>{try{f()}catch(e){}}); killAudio(); }
+function sleep(ms,tok){return new Promise(res=>{ if(tok!==runTok) return res(); let t; const f=()=>{clearTimeout(t);cancelFns.delete(f);res()}; t=setTimeout(f,ms); cancelFns.add(f); })}
+function speak(url,tok,rate){return new Promise(res=>{
+  if(tok!==runTok) return res();
+  killAudio(); let to;
+  const fin=()=>{clearTimeout(to);cancelFns.delete(fin);A.onended=A.onerror=null;res()};
+  cancelFns.add(fin); to=setTimeout(fin,14000);
+  A.onended=()=>{ if(tok===runTok) fin(); };
+  A.onerror=()=>{ if(tok===runTok){ $("status").textContent="소리 파일을 불러오지 못했어요."; fin(); } };
+  dbg({ev:"speak",url,rate:rate||1}); A.src=url; A.preservesPitch=true; A.webkitPreservesPitch=true; A.defaultPlaybackRate=A.playbackRate=rate||1;
+  const p=A.play();
+  if(p&&p.catch) p.catch(err=>{ if(tok!==runTok) return; $("status").textContent="소리를 켤 수 없어요. ▶ 버튼을 다시 눌러 주세요."; fin(); if(err&&err.name==="NotAllowedError"&&playing) stop(); });
+})}
+const warmed=new Set();
+function warm(url){ if(warmed.has(url)||!window.fetch) return; warmed.add(url); try{fetch(url,{cache:"force-cache"}).catch(()=>{})}catch(e){} }
+function preload(){ wordsList.forEach(w=>warm(w.url)); chunkItems(cur).forEach(c=>warm(c.url)); } // cache warm-up only (no Audio objects, never plays)
+
+// ---------- YouTube player (slow / fast steps) ----------
+// YouTube draws its own centre ⏸ button (+ title / logo) briefly after every play start or seekTo(...,true) -- even with controls=0 (measured ~0.3 s at this size).
+// So: (1) the iframe is taller than the picture and clipped (title/logo fall into the cropped margins), (2) taps never reach it (pointer-events:none),
+// (3) while that overlay may be visible the still picture simply stays on top of the video -- but the SOUND never waits for it:
+// every repetition starts as fast as the player can seek (seekTo(start,true) + unmute the moment the play-head reaches the start),
+// and the picture switches to the live video only when ICON_MS have passed since playback resumed after the last seek.
+// The next video step is primed (hidden, muted, playing near its start) during the LAST repetition of the previous step, so its data is already loaded.
+// Between repetitions the player is never paused: it is muted at the end of the sentence and immediately seeked back (short gap, no loading wait).
+const REVEAL=false, ICON_MS=4400, LEAD=0.10, SEEKW=450;   // measured with real YouTube: after every seek/unmute the player's centre play/pause controls stay up for ~4.0-4.4 s (they auto-hide), so a live video could only be shown after that. The video is a slideshow of exactly the still pictures (pixel diff ~0), so REVEAL=false keeps the still on screen: no overlay/title/logo can ever show, and the SOUND never waits for anything
+let yt=null,ytReady=false,poll=null,primed=false,vidWanted=false,vw=null,vph="",vloadN=0,pulseT=0;
+(function(){const s=document.createElement("script");s.src="https://www.youtube.com/iframe_api";document.head.appendChild(s);})();
+window.onYouTubeIframeAPIReady=function(){
+  yt=new YT.Player("ytPlayer",{width:"100%",height:"100%",videoId:VID,playerVars:{playsinline:1,rel:0,modestbranding:1,controls:0,disablekb:1,fs:0,iv_load_policy:3,cc_load_policy:0,start:Math.floor(S[cur].st)},
+    events:{onReady:()=>{ytReady=true;window.__ytReady=true;try{yt.mute();if(!vidWanted&&!playing)yt.playVideo()}catch(e){}   /* muted warm-up: starts loading the video now, the state handler below pauses it again at once */ const f=document.querySelector("#pic iframe"); if(f){f.tabIndex=-1;f.setAttribute("aria-hidden","true");f.style.pointerEvents="none"}},
+      onStateChange:e=>{ if(e.data===1&&!vidWanted) ytIdle(); },   // never let the video keep playing (or make sound) outside a video step
+      onError:e=>{$("status").textContent="영상을 재생할 수 없어요 (YouTube 오류 "+e.data+")."}}});
+};
+function ytIdle(){ vidWanted=false; vw=null; vph=""; clearInterval(poll); setVid(false); try{ if(ytReady){yt.mute();yt.pauseVideo();} }catch(e){} }
+function ytMuted(){ try{ if(ytReady&&!yt.isMuted()) yt.mute(); }catch(e){} }
+function primeYt(){ if(primed||!ytReady) return; primed=true; try{yt.mute();yt.playVideo();setTimeout(()=>{if(!vidWanted) ytIdle()},500)}catch(e){} }
+function prewarm(i,rate){ // hidden + muted: start playing just before the sentence so the data is loaded when the step begins
+  if(!ytReady||(vw&&vw.i===i)) return; vidWanted=true; vw={i}; const s=S[i];
+  try{yt.mute();yt.setPlaybackRate(rate);yt.seekTo(Math.max(0,s.st-0.6*rate),true);yt.playVideo();}catch(e){}
+}
+function maybePrewarm(){ // called at the START of the last repetition of step 1/2 (the first word of step 1 is the last group): a video step is next
+  const st=P.step; if(st>1) return;
+  const last = st===0 ? (P.u===wordsList.length-1&&P.r===0) : (P.u===0&&P.r===cnts[1]-1);
+  if(!last) return;
+  const k=nextStepIdx(st); if(k>=2) prewarm(cur,k===2?+opt.rate:1);
+}
+// ---- repetition UI (counter + dots + state text), video steps only
+function vidB2(){
+  const sp=P.step===2?`${opt.rate}배속`:"원래 속도";
+  const t=!playing?"":vph==="play"?"재생 중":vph==="next"?(P.r>0?"다음 반복…":"곧 시작…"):vph==="load"?`영상 불러오는 중… (${vloadN}초)`:"";
+  return t?`${t} · ${sp}`:`${sp} · 영상 소리`;
+}
+function renderPill(){
+  const el=$("rep"); if(!el) return; const vs=P.step===2||P.step===3;
+  el.classList.toggle("show",vs); if(!vs){ el.classList.remove("playing","pulse"); return; }
+  const n=cnts[P.step], dn=Math.min(P.r,n), c=Math.min(P.r+1,n);
+  const txt=!playing?"":vph==="play"?"재생 중":vph==="next"?(P.r>0?"다음 반복…":"곧 시작…"):vph==="load"?`불러오는 중… ${vloadN}초`:"";
+  let mid;
+  if(n<=10){ let d=""; for(let k=0;k<n;k++) d+=`<i class="${k<dn?"on":(k===dn&&playing?"cur":"")}"></i>`; mid=`<span class="rd">${d}</span>`; }
+  else mid=`<span class="bar"><u style="width:${dn/n*100}%"></u></span>`;
+  el.classList.toggle("playing",playing&&vph==="play");
+  el.setAttribute("aria-label",`${NAMES[P.step]} ${n}회 중 ${dn}회 끝`);
+  el.innerHTML=`<span class="rn"><b>${c}/${n}</b>회</span>${mid}${txt?`<span class="rp">${txt}</span>`:""}`;
+}
+function setPhase(p){ if(vph===p) return; vph=p; if(P.step===2||P.step===3){ $("b2").textContent=vidB2(); $("b2").classList.toggle("live",playing&&!!vph); renderPill(); } }
+function pulseRep(){ const el=$("rep"); if(!el) return; el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse"); clearTimeout(pulseT); pulseT=setTimeout(()=>el.classList.remove("pulse"),750); }
+// one repetition of the sentence. gapMs = pause before the sound starts again (measured from this call). Resolves exactly once.
+function playSeg(i,rate,tok,gapMs){return new Promise(res=>{
+  if(tok!==runTok) return res();
+  gapMs=gapMs||0;
+  const s=S[i], t0=Date.now(), gapEnd=t0+gapMs, seekDue=t0+Math.max(0,gapMs-SEEKW);
+  let armed=false,done=false,w=null,seekAt=0,lastPlay=0,lastT=-1,lastMove=t0,reseekAt=0,p1At=0,lastAt=0,armAt=0;
+  const finish=()=>{ if(done)return; done=true; clearInterval(poll); clearInterval(w); cancelFns.delete(finish); setVid(false); try{yt.mute()}catch(e){} vph="next"; res(); };   // NOT paused: hidden + muted, repositioned for the next repetition
+  cancelFns.add(finish); vidWanted=true;
+  const doSeek=(from)=>{ const now=Date.now(); try{ yt.mute(); yt.setPlaybackRate(rate); yt.seekTo(Math.max(0,s.st-LEAD*rate),true); }catch(e){} seekAt=now; lastMove=now; lastT=-1; lastAt=0; p1At=0; setVid(false);
+    try{ const ps=yt.getPlayerState(); if(ps!==1&&ps!==3){ yt.playVideo(); lastPlay=now; } }catch(e){} dbg({ev:"vseek",i,from,r:P.r}); };
+  const begin=()=>{
+    setPhase("next"); setVid(false);
+    clearInterval(poll);
+    if(Date.now()>=seekDue) doSeek("start");   // inside the tap handler when possible (autoplay rules)
+    poll=setInterval(()=>{ if(tok!==runTok||done){finish();return}
+      let t=0,ps=-1; try{t=yt.getCurrentTime();ps=yt.getPlayerState()}catch(e){return}
+      const now=Date.now();
+      if(!seekAt){ if(now<seekDue) return; doSeek("start"); return; }
+      const moving=Math.abs(t-lastT)>0.001&&ps===1; if(moving) lastMove=now; if(ps===1&&lastT>=0&&lastAt&&Math.abs(t-(lastT+(now-lastAt)/1000*rate))>0.3) p1At=now; lastT=t; lastAt=now; if(ps===1&&!p1At&&now-seekAt>=150) p1At=now;   // playback has resumed after the seek (overlay may flash now)
+      if(!armed){
+        const waited=now-Math.max(t0,gapEnd);
+        if(ps===1&&now>=gapEnd&&now-seekAt>=60&&t>=s.st-0.05&&t<=s.st+0.6){ armed=true; armAt=now; try{yt.setPlaybackRate(rate);yt.unMute()}catch(e){} setPhase("play"); pulseRep(); $("status").textContent=""; dbg({ev:"vstart",i,r:P.r,t}); }
+        else if(ps===1&&t>s.st+0.6&&now-seekAt>250){ doSeek("overshoot"); }          // gap was longer than seek+lead: go back
+        else if(ps!==1&&ps!==3&&now-seekAt>200&&now-lastPlay>700){ try{ yt.mute(); yt.playVideo(); }catch(e){} lastPlay=now; p1At=0; }
+        else if(now-lastMove>1600&&now-reseekAt>1600){ reseekAt=now; doSeek("stall"); }
+        if(waited>1400){ vloadN=Math.ceil(waited/1000); setPhase("load"); if(vph==="load"){ $("b2").textContent=vidB2(); renderPill(); } }
+        if(now-t0>12000){$("status").textContent="영상이 시작되지 않았어요. ▶를 다시 눌러 주세요.";finish()}
+        return; }
+      // armed: audible. Show the live video only once YouTube's overlay can no longer be on screen.
+      setVid(REVEAL&&ps===1&&p1At>0&&now-Math.max(p1At,armAt)>=ICON_MS);
+      if(t>=s.et||ps===0){ finish(); return; }
+      if(now-lastMove>1500){ if(vph!=="load"){ vloadN=1; } else vloadN=Math.ceil((now-lastMove)/1000); setPhase("load"); $("b2").textContent=vidB2(); renderPill();
+        if(now-reseekAt>2500){ reseekAt=now; p1At=0; setVid(false); try{ yt.seekTo(Math.max(t,s.st-0.05),true); yt.playVideo(); }catch(e){} lastMove=now-1000; } }
+      else if(vph==="load") setPhase("play");
+    },40);
+  };
+  if(ytReady) begin();
+  else{ $("status").textContent="영상 플레이어를 기다리는 중…"; w=setInterval(()=>{ if(tok!==runTok||done){clearInterval(w);return} if(ytReady){clearInterval(w);$("status").textContent="";begin()} },300); }
+})}
+
+// ---------- the 4-step engine ----------
+const gap=()=>+opt.gap*1000, vgap=()=>Math.max(200,Math.min(900,+opt.gap*700));   // video steps: short pause between repetitions
+async function run(tok){
+  const live=()=>playing&&tok===runTok;
+  preload();
+  while(live()){
+    skipEmpty();
+    if(P.step>=4){ finishSentence(); if(!live()) return; await sleep(500,tok); if(!live()) return; continue; }
+    renderStep(); scrollIfNew();
+    const st=P.step, n=cnts[st];
+    if(st<2){ ytMuted(); maybePrewarm(); }
+    if(st===0){
+      const it=wordsList[P.u]; if(!it){P.step=1;P.u=0;P.r=0;continue}
+      showCap(it,true); dbg({ev:"item",step:0,u:P.u,r:P.r,k:it.k,url:it.url});
+      await speak(it.url,tok); if(!live()) return;
+      await sleep(gap()*0.8,tok); if(!live()) return;
+      P.r++; if(P.r>=n){P.r=0;P.u++; if(P.u>=wordsList.length){hideCap();P.step=1;P.u=0;P.r=0;await sleep(500,tok);} }
+    } else if(st===1){
+      hideCap();
+      const items=chunkItems(cur), it=items[P.u]; dbg({ev:"item",step:1,u:P.u,r:P.r,url:it.url,text:it.text});
+      await speak(it.url,tok,CHUNK_RATE); if(!live()) return;
+      P.u++; if(P.u>=items.length){P.u=0;P.r++; await sleep(P.r>=n?150:gap()*1.3,tok); if(!live()) return; if(P.r>=n){P.step=2;P.r=0;P.u=0;}}
+      else { await sleep(400,tok); if(!live()) return; }
+    } else {
+      hideCap(); dbg({ev:"item",step:st,r:P.r});
+      await playSeg(cur,st===2?+opt.rate:1,tok,P.r>0?vgap():(st===3?250:0)); if(!live()) return;
+      P.r++; if(P.r>=n){P.step=st+1;P.r=0;P.u=0;} else renderStep();   // dots fill the moment a repetition has finished
+    }
+    if(!live()) return;
+  }
+}
+function finishSentence(){
+  ytIdle();
+  done.add(S[cur].n); store.set("done",[...done]); renderRows(); renderBooksOnly();
+  if(opt.auto&&cur<S.length-1){ cur++; store.set("cur",cur); resetP(0); const b=S[cur].b!==S[cur-1].b; render(); $("status").textContent=b?`Book ${S[cur].b} 시작!`:""; preload(); }
+  else { playing=false; renderStep(); $("status").textContent=cur>=S.length-1?"마지막 문장까지 모두 끝났어요! 🎉":"이 문장을 모두 읽었어요."; }
+}
+function renderBooksOnly(){const t=$("books");const sl=t.scrollLeft;render_books_keep(sl)}
+function render_books_keep(sl){ $("books").innerHTML=BOOKS.map(b=>{const n=S.filter(x=>x.b===b.n),k=n.filter(x=>done.has(x.n)).length;return `<button type="button" data-b="${b.n}" aria-pressed="${b.n===S[cur].b}">Book ${b.n}<span class="c">${k===n.length?"✓":k+"/"+n.length}</span></button>`}).join(""); $("books").scrollLeft=sl; }
+function start(){ if(playing) return; if(P.step>=4) resetP(0); skipEmpty(); if(P.step>=4){$("status").textContent="설정에서 횟수를 1 이상으로 해 주세요.";return}
+  cancelAll(); playing=true; $("status").textContent=""; primeYt(); renderStep(); lastPos=cur+":"+P.step; scrollCard(); run(++runTok); }
+function stop(){ playing=false; cancelAll(); ytIdle(); hideCap(); renderStep(); }
+function go(i,keepPlaying){ const was=playing; stop(); if(i<0||i>=S.length) return; cur=i; store.set("cur",cur); resetP(0); $("status").textContent=""; render(); history.replaceState(null,"","#"+S[cur].n); if(was||keepPlaying) start(); }
+function setStep(k){ const was=playing; stop(); P={step:k,r:0,u:0}; showCur=false; wordsList=sentWords(cur); render(); if(was) start(); }
+$("play").onclick=()=>playing?stop():start();
+$("prev").onclick=()=>go(cur-1,true);
+$("next").onclick=()=>go(cur+1,true);
+$("chips").addEventListener("click",e=>{const b=e.target.closest("button[data-s]");if(!b)return;const k=+b.dataset.s;if(cnts[k]===0){$("status").textContent="이 단계는 횟수가 0이에요 (⚙ 설정).";return}setStep(k);});
+$("books").addEventListener("click",e=>{const b=e.target.closest("button[data-b]");if(!b)return;const i=S.findIndex(x=>x.b===+b.dataset.b);go(i,playing)});
+$("rows").addEventListener("click",e=>{const b=e.target.closest("button[data-i]");if(!b)return;go(+b.dataset.i,true)});
+
+// ---------- previous / next word (chunk) inside the current step ----------
+async function preview(tok){ // paused: hear the item we just jumped to, once
+  if(P.step===0){const it=wordsList[P.u]; if(!it) return; showCap(it,true); dbg({ev:"item",step:0,u:P.u,r:0,k:it.k,url:it.url,preview:1}); await speak(it.url,tok);}
+  else if(P.step===1){const it=chunkItems(cur)[P.u]; if(!it) return; hideCap(); dbg({ev:"item",step:1,u:P.u,r:0,url:it.url,text:it.text,preview:1}); await speak(it.url,tok,CHUNK_RATE);}
+}
+function navMove(dir){
+  if(P.step>=4) return;
+  const st=P.step; let np=null;
+  if(st===0||st===1){
+    const len=st===0?wordsList.length:S[cur].ch.length; let nu=P.u+dir;
+    if(nu<0) nu=0;
+    if(nu>=len){ const k=nextStepIdx(st); if(k>=0) np={step:k,r:0,u:0}; else nu=len-1; }
+    if(!np) np={step:st,r:0,u:nu};
+  } else { const k=dir<0?prevStepIdx():nextStepIdx(st); if(k<0) return; np={step:k,r:0,u:0}; }
+  const was=playing; cancelAll(); ytIdle(); hideCap(); $("status").textContent="";
+  P=np; showCur=true; renderStep();
+  if(was){ lastPos=cur+":"+P.step; scrollCard(); run(++runTok); }
+  else { preview(++runTok); }
+}
+$("uprev").onclick=()=>navMove(-1);
+$("unext").onclick=()=>navMove(1);
+
+// ---------- tap a word = hear it + see its meaning ----------
+function sayWord(k,el){
+  if(!W[k]) return; const was=playing; if(was) stop(); else cancelAll();
+  document.querySelectorAll(".say").forEach(e=>e.classList.remove("say")); if(el) el.classList.add("say");
+  const it={k,url:wUrl(k),han:W[k][0],mean:W[k][1]};
+  showCap(it,false); const tok=++runTok;
+  speak(it.url,tok).then(()=>{if(el) el.classList.remove("say")});
+}
+$("il").addEventListener("click",e=>{const c=e.target.closest(".col");if(c)sayWord(c.dataset.w,c)});
+$("il").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const c=e.target.closest(".col");if(c){e.preventDefault();sayWord(c.dataset.w,c)}});
+$("ko").onclick=()=>{const c=$("card");if(c.classList.contains("hideko")){c.classList.remove("hideko");setTimeout(()=>{if(opt.hideko)c.classList.add("hideko")},2500)}};
+
+// ---------- settings ----------
+function saveOpt(){store.set("rate",opt.rate);store.set("gap",opt.gap);store.set("auto",opt.auto);store.set("dedupe",opt.dedupe);store.set("han",opt.han);store.set("hideko",opt.hideko);store.set("cnt",cnts)}
+function syncSettings(){
+  document.querySelectorAll(".step").forEach(s=>{s.querySelector("output").textContent=cnts[+s.dataset.k]});
+  $("rate").value=opt.rate; $("gap").value=opt.gap;
+  [["auto","auto"],["dedupe","dedupe"],["han","han"],["hideko","hideko"]].forEach(([id,k])=>$(id).setAttribute("aria-pressed",String(!!opt[k])));
+}
+document.querySelectorAll(".step").forEach(s=>s.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const k=+s.dataset.k;cnts[k]=Math.max(0,Math.min(30,cnts[k]+ +b.dataset.d));syncSettings();saveOpt();}));
+["auto","dedupe","han","hideko"].forEach(id=>$(id).onclick=()=>{opt[id]=!opt[id];syncSettings();saveOpt();});
+$("rate").onchange=()=>{opt.rate=$("rate").value;saveOpt()}; $("gap").onchange=()=>{opt.gap=$("gap").value;saveOpt()};
+$("reset").onclick=()=>{cnts=DEF.slice();syncSettings();saveOpt()};
+function openSet(){ $("modal").dataset.was=playing?"1":""; stop(); syncSettings(); $("modal").classList.add("show"); }
+function closeSet(){ $("modal").classList.remove("show"); const keep=P.step; resetP(0); render(); }
+$("gear").onclick=openSet; $("mclose").onclick=closeSet; $("mok").onclick=closeSet;
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))closeSet()});
+
+// ---------- init ----------
+(function(){ const h=location.hash.replace("#",""); if(/^\d{1,3}$/.test(h)){const i=S.findIndex(s=>s.n===+h); if(i>=0) cur=i;} })();
+syncSettings(); resetP(0); render();
+window.__app={get cur(){return cur},get P(){return P},get playing(){return playing}};
+</script>
+</html>
