@@ -333,19 +333,20 @@ if(window.ResizeObserver) new ResizeObserver(()=>{if(document.querySelector("hea
 // Single persistent <audio> (unlocked by the first Play tap). Every async step carries the run-token it was started with;
 // cancelAll() bumps the token, resolves/clears every pending timer/promise and silences the audio, so a stale callback can never act.
 const A=new Audio(); A.preload="auto";
+const CHUNK_RATE=0.85; // 끊어 읽기: 조금 더 천천히 (pitch preserved)
 const cancelFns=new Set();
 const dbg=o=>{ if(window.__log) window.__log.push(o); };
 function killAudio(){ A.onended=A.onerror=null; try{A.pause()}catch(e){} try{A.currentTime=0}catch(e){} }
 function cancelAll(){ runTok++; const fs=[...cancelFns]; cancelFns.clear(); fs.forEach(f=>{try{f()}catch(e){}}); killAudio(); }
 function sleep(ms,tok){return new Promise(res=>{ if(tok!==runTok) return res(); let t; const f=()=>{clearTimeout(t);cancelFns.delete(f);res()}; t=setTimeout(f,ms); cancelFns.add(f); })}
-function speak(url,tok){return new Promise(res=>{
+function speak(url,tok,rate){return new Promise(res=>{
   if(tok!==runTok) return res();
   killAudio(); let to;
   const fin=()=>{clearTimeout(to);cancelFns.delete(fin);A.onended=A.onerror=null;res()};
-  cancelFns.add(fin); to=setTimeout(fin,10000);
+  cancelFns.add(fin); to=setTimeout(fin,14000);
   A.onended=()=>{ if(tok===runTok) fin(); };
   A.onerror=()=>{ if(tok===runTok){ $("status").textContent="소리 파일을 불러오지 못했어요."; fin(); } };
-  dbg({ev:"speak",url}); A.src=url;
+  dbg({ev:"speak",url,rate:rate||1}); A.src=url; A.preservesPitch=true; A.webkitPreservesPitch=true; A.defaultPlaybackRate=A.playbackRate=rate||1;
   const p=A.play();
   if(p&&p.catch) p.catch(err=>{ if(tok!==runTok) return; $("status").textContent="소리를 켤 수 없어요. ▶ 버튼을 다시 눌러 주세요."; fin(); if(err&&err.name==="NotAllowedError"&&playing) stop(); });
 })}
@@ -463,9 +464,9 @@ async function run(tok){
     } else if(st===1){
       hideCap();
       const items=chunkItems(cur), it=items[P.u]; dbg({ev:"item",step:1,u:P.u,r:P.r,url:it.url,text:it.text});
-      await speak(it.url,tok); if(!live()) return;
+      await speak(it.url,tok,CHUNK_RATE); if(!live()) return;
       P.u++; if(P.u>=items.length){P.u=0;P.r++; await sleep(P.r>=n?150:gap()*1.3,tok); if(!live()) return; if(P.r>=n){P.step=2;P.r=0;P.u=0;}}
-      else { await sleep(220,tok); if(!live()) return; }
+      else { await sleep(400,tok); if(!live()) return; }
     } else {
       hideCap(); dbg({ev:"item",step:st,r:P.r});
       await playSeg(cur,st===2?+opt.rate:1,tok,P.r>0?vgap():(st===3?250:0)); if(!live()) return;
@@ -497,7 +498,7 @@ $("rows").addEventListener("click",e=>{const b=e.target.closest("button[data-i]"
 // ---------- previous / next word (chunk) inside the current step ----------
 async function preview(tok){ // paused: hear the item we just jumped to, once
   if(P.step===0){const it=wordsList[P.u]; if(!it) return; showCap(it,true); dbg({ev:"item",step:0,u:P.u,r:0,k:it.k,url:it.url,preview:1}); await speak(it.url,tok);}
-  else if(P.step===1){const it=chunkItems(cur)[P.u]; if(!it) return; hideCap(); dbg({ev:"item",step:1,u:P.u,r:0,url:it.url,text:it.text,preview:1}); await speak(it.url,tok);}
+  else if(P.step===1){const it=chunkItems(cur)[P.u]; if(!it) return; hideCap(); dbg({ev:"item",step:1,u:P.u,r:0,url:it.url,text:it.text,preview:1}); await speak(it.url,tok,CHUNK_RATE);}
 }
 function navMove(dir){
   if(P.step>=4) return;
