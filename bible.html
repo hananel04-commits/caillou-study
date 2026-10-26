@@ -37,9 +37,9 @@ li.on button .n{color:var(--accent)}
   <div class="err" id="err" hidden></div>
 </main>
 <script>
-// Usage: bible.html?ids=ID1,ID2,ID3&t=제목  — plays the YouTube IDs back to back.
+// Usage: bible.html?ids=ID1.ID2.ID3 (or commas)&t=제목  — plays the YouTube IDs back to back.
 var q=new URLSearchParams(location.search);
-var ids=(q.get('ids')||'').split(/[,\s]+/).filter(function(s){return /^[\w-]{11}$/.test(s)});
+var ids=(q.get('ids')||'').split(/[,.~|\s]+/).filter(function(s){return /^[\w-]{11}$/.test(s)});
 var titles=ids.map(function(id){return id});
 var cur=Math.max(0,Math.min(ids.length-1,(parseInt(q.get('i')||'1',10)||1)-1));
 var player=null;
