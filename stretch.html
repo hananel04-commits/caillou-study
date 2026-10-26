@@ -98,8 +98,8 @@ function mkP(l){want=l;if(!apiOK)return;const el=document.getElementById('yt');i
    if(ev.data===S.PLAYING){const c=P.getCurrentTime();
      if(c>=l.end-0.6||c<l.t-1){P.seekTo(l.t,true);unmark();}
      else if(done)unmark();
-     clearInterval(tm);tm=setInterval(()=>{if(!P||!P.getCurrentTime)return;if(P.getCurrentTime()>=l.end-0.25){P.pauseVideo();clearInterval(tm);mark();}},200);}
-   else if(ev.data===S.ENDED){clearInterval(tm);mark();}
+     clearInterval(tm);tm=setInterval(()=>{if(!P||!P.getCurrentTime)return;if(P.getCurrentTime()>=l.end-0.25){clearInterval(tm);P.pauseVideo();mark();const me=P;setTimeout(()=>{if(P===me&&P.seekTo){P.seekTo(l.t,true);P.pauseVideo();}},400);}},200);}
+   else if(ev.data===S.ENDED){clearInterval(tm);mark();P.seekTo(l.t,true);P.pauseVideo();}
    else{clearInterval(tm);}}}});}
 function onYouTubeIframeAPIReady(){apiOK=true;if(want&&!showList&&!P)mkP(want);}
 fromHash();
