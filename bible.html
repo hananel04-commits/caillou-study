@@ -39,6 +39,10 @@ li.on button .n{color:var(--accent)}
 <script>
 // Usage: bible.html?ids=ID1.ID2.ID3 (or commas)&t=제목  — plays the YouTube IDs back to back.
 var q=new URLSearchParams(location.search);
+// Short form: bible.html?d=20261026 -> looks up bible-days.json (letters/digits only, safe in chat apps)
+var dayEntry=null;
+if(q.get('d')){ try{ var x=new XMLHttpRequest(); x.open('GET','bible-days.json?v='+Date.now(),false); x.send(); var all=JSON.parse(x.responseText); dayEntry=all[q.get('d')]||null; }catch(e){} }
+if(dayEntry){ q.set('ids',dayEntry.ids.join('.')); if(dayEntry.t) q.set('t',dayEntry.t); }
 var ids=(q.get('ids')||'').split(/[,.~|\s]+/).filter(function(s){return /^[\w-]{11}$/.test(s)});
 var titles=ids.map(function(id){return id});
 var cur=Math.max(0,Math.min(ids.length-1,(parseInt(q.get('i')||'1',10)||1)-1));
