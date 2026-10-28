@@ -1,94 +1,103 @@
 {
-  "20261026": {
-    "t": "사도행전 12~14장 · 갈라디아서 1장",
-    "ids": [
-      "5ZdCbwQ89d4",
-      "Im1BPL0kRuo",
-      "_bL20ul-vaM",
-      "JhaidUXm6CQ"
-    ]
-  },
-  "20261027": {
-    "t": "갈라디아서 2~4장 · 사도행전 15장",
-    "ids": [
-      "obmGBNjmhpQ",
-      "e6mXwFyShrk",
-      "5YBmbeA487k",
-      "g5ZfSHt8fng"
-    ]
-  },
-  "s20261025": {
-    "t": "10/25 옵 1:10-16 설교",
-    "ids": [
-      "n0yLxq6nUhs",
-      "-jCp7onaMDs",
-      "5aWxnLuKsv8"
-    ]
-  },
-  "s20261026": {
-    "t": "10/26 옵 1:17-21 설교",
-    "ids": [
-      "y61mGSzMQbY",
-      "5aWxnLuKsv8"
-    ]
-  },
-  "s20261027": {
-    "t": "10/27 고전 1:1-9 설교",
-    "ids": [
-      "vm8nvhNOzkg",
-      "y3KUOuMrpSw",
-      "WRYPYLOMcTk",
-      "lYfwg87GH1M"
-    ]
-  },
-  "s20261028": {
-    "t": "10/28 고전 1:10-17 설교",
-    "ids": [
-      "y3KUOuMrpSw",
-      "cXeJC2DKO6c"
-    ]
-  },
-  "s20261029": {
-    "t": "10/29 고전 1:18-25 설교",
-    "ids": [
-      "FcLEgRhnUzE",
-      "Qz6koGdIGVs",
-      "JrDDTtbzDTU",
-      "AtdLiun4Ook",
-      "hijq8HuT5P8",
-      "y3KUOuMrpSw",
-      "Rh5gjg8EKUY"
-    ]
-  },
-  "s20261030": {
-    "t": "10/30 고전 1:26-2:5 설교",
-    "ids": [
-      "XLiiRfYFeuk",
-      "TzovnrBkgpo",
-      "y3KUOuMrpSw",
-      "5oYniOr12hU",
-      "Bf9q4dhqDrs"
-    ]
-  },
-  "s20261031": {
-    "t": "10/31 고전 2:6-16 설교",
-    "ids": [
-      "qBOEGWA1b6M",
-      "j9GZXt7oXPE",
-      "uhnKrDrSBzY",
-      "QNEgezD294c",
-      "MG6vEUdhcvQ",
-      "XLiiRfYFeuk",
-      "5oYniOr12hU"
-    ]
-  },
-  "20261028": {
-    "t": "갈라디아서 5~6장 · 사도행전 16~17장",
-    "ids": [
-      "BsxpXm4COHs",
-      "DwGQZRSRp3Y",
-      "EvEwcJ0NnZQ",
-      "sBO30J7PSqA"
-    ]
-  }
+ "20261026": {
+  "t": "사도행전 12~14장 · 갈라디아서 1장",
+  "ids": [
+   "5ZdCbwQ89d4",
+   "Im1BPL0kRuo",
+   "_bL20ul-vaM",
+   "JhaidUXm6CQ"
+  ]
+ },
+ "20261027": {
+  "t": "갈라디아서 2~4장 · 사도행전 15장",
+  "ids": [
+   "obmGBNjmhpQ",
+   "e6mXwFyShrk",
+   "5YBmbeA487k",
+   "g5ZfSHt8fng"
+  ]
+ },
+ "s20261025": {
+  "t": "10/25 옵 1:10-16 설교",
+  "ids": [
+   "n0yLxq6nUhs",
+   "-jCp7onaMDs",
+   "5aWxnLuKsv8"
+  ]
+ },
+ "s20261026": {
+  "t": "10/26 옵 1:17-21 설교",
+  "ids": [
+   "y61mGSzMQbY",
+   "5aWxnLuKsv8"
+  ]
+ },
+ "s20261027": {
+  "t": "10/27 고전 1:1-9 설교",
+  "ids": [
+   "vm8nvhNOzkg",
+   "y3KUOuMrpSw",
+   "WRYPYLOMcTk",
+   "lYfwg87GH1M"
+  ]
+ },
+ "s20261028": {
+  "t": "10/28 고전 1:10-17 설교",
+  "ids": [
+   "y3KUOuMrpSw",
+   "cXeJC2DKO6c"
+  ]
+ },
+ "s20261029": {
+  "t": "10/29 고전 1:18-25 설교",
+  "ids": [
+   "FcLEgRhnUzE",
+   "Qz6koGdIGVs",
+   "JrDDTtbzDTU",
+   "AtdLiun4Ook",
+   "hijq8HuT5P8",
+   "y3KUOuMrpSw",
+   "Rh5gjg8EKUY"
+  ]
+ },
+ "s20261030": {
+  "t": "10/30 고전 1:26-2:5 설교",
+  "ids": [
+   "XLiiRfYFeuk",
+   "TzovnrBkgpo",
+   "y3KUOuMrpSw",
+   "5oYniOr12hU",
+   "Bf9q4dhqDrs"
+  ]
+ },
+ "s20261031": {
+  "t": "10/31 고전 2:6-16 설교",
+  "ids": [
+   "qBOEGWA1b6M",
+   "j9GZXt7oXPE",
+   "uhnKrDrSBzY",
+   "QNEgezD294c",
+   "MG6vEUdhcvQ",
+   "XLiiRfYFeuk",
+   "5oYniOr12hU"
+  ]
+ },
+ "20261028": {
+  "t": "갈라디아서 5~6장 · 사도행전 16~17장",
+  "ids": [
+   "BsxpXm4COHs",
+   "DwGQZRSRp3Y",
+   "EvEwcJ0NnZQ",
+   "sBO30J7PSqA"
+  ]
+ },
+ "20261029": {
+  "t": "사도행전 18장 · 데살로니가전서 1~3장",
+  "ids": [
+   "WKmVJUPc_vE",
+   "kW1KDmsR4Hg",
+   "yzS6971nweY",
+   "kxzH7qQ3ebY"
+  ]
+ }
 }
