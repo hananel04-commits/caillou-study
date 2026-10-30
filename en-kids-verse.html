@@ -131,15 +131,50 @@ select{font:inherit;font-size:16px;min-height:44px;padding:6px 8px;border:1px so
 .sw[aria-pressed="true"]::after{left:26px}
 .sbtn{min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-weight:700;padding:0 14px}
 .sbtn.pri{background:var(--accent);color:#fff;border:0}
+
+/* ===== 전체 이어서 연습 (full-verse mode) ===== */
+.brow{display:flex;gap:6px;align-items:center;min-width:0}
+.brow .books{flex:0 1 auto;min-width:0}
+.modes{display:flex;gap:4px;flex:1 0 auto;justify-content:flex-end;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px}
+.modes button{border:0;background:none;color:var(--muted);border-radius:999px;min-height:34px;padding:2px 10px;font-size:14px;font-weight:800;white-space:nowrap}
+.modes button[aria-pressed="true"]{background:var(--accent);color:#fff}
+body.squeeze .brow{min-height:0}
+.full{display:none;gap:7px}
+body.fm .full{display:grid}
+body.fm #where,body.fm .steprow,body.fm #ko,body.fm #il,body.fm #unav,body.fm #rep,body.fm #cap,body.fm #badge,body.fm #listBox,body.fm #prev,body.fm #next{display:none!important}
+body.fm .card{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"c c" "b p" "l l"}
+body.fm .full{display:contents}
+.fchips{grid-area:c}.fban{grid-area:b;align-self:center}.flines{grid-area:l}
+body.fm .pic{grid-area:p;width:min(26vw,118px);margin:0}
+.fchips{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.fchips button{min-height:44px;border:2px solid var(--line);background:var(--bg);color:var(--muted);border-radius:12px;font-weight:800;font-size:13.5px;padding:2px 3px;line-height:1.15;word-break:keep-all}
+.fchips button .n{display:block;font-family:var(--f-en);font-size:15px}
+.fchips button.done{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-soft)}
+.fchips button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.fban{line-height:1.25;min-height:2.5em}
+.fban b{display:block;font-size:18px;font-weight:800}
+.fban span{display:block;font-size:13.5px;color:var(--muted);word-break:keep-all}
+.flines{list-style:none;margin:0;padding:0;display:grid;gap:3px}
+.flines li{border-radius:12px;padding:4px 10px 5px;border:2px solid transparent;cursor:pointer;transition:background .15s}
+.flines .fe{display:block;font-family:var(--f-en);font-weight:700;font-size:min(21px,5.4vw);color:var(--en);line-height:1.25;letter-spacing:.01em;overflow-wrap:anywhere}
+.flines .fe.m{color:var(--muted);letter-spacing:.02em;font-size:min(19px,4.8vw);word-spacing:.18em}
+.flines .fe.ok{color:var(--accent)}
+.flines .fk{display:block;font-family:var(--f-ko);font-size:13.5px;color:var(--muted);line-height:1.3;word-break:keep-all}
+.flines li.cur{background:var(--mark-soft);border-color:var(--mark)}
+.flines li.cur .fk{color:var(--fg)}
+.flines li.past{opacity:.6}
+.fdone{display:block;margin-top:3px;font-size:13px;color:var(--accent);font-weight:700}
+.fdone:empty{display:none}
 </style>
 
 <div class="wrap">
   <header>
     <div class="top"><h1 id="ttl">John 15:5 암송<small>요한복음 15장 5절 · 노래로 외우기</small></h1><button class="ibtn" id="gear" type="button" aria-label="설정 (반복 횟수)">⚙️</button></div>
-    <div class="books" id="books" role="group" aria-label="Book"></div>
+    <div class="brow"><div class="books" id="books" role="group" aria-label="Book"></div><div class="modes" role="group" aria-label="연습 방법"><button type="button" id="mOne" aria-pressed="true">📖 한 문장씩</button><button type="button" id="mFull" aria-pressed="false">🎵 전체 이어서 연습</button></div></div>
   </header>
 
   <section class="card" id="card" aria-live="polite">
+    <div class="full" id="full"><div class="fchips" id="fchips"></div><div class="fban"><b id="fb1"></b><span id="fb2"></span><span class="fdone" id="fdone"></span></div><ol class="flines" id="flines"></ol></div>
     <div class="where" id="where"><b id="wb"></b><span id="wg"></span></div>
     <div class="steprow">
       <div class="chips" id="chips"></div>
@@ -286,7 +321,7 @@ function hideCap(){clearTimeout(showCap.t);$("cap").classList.remove("show")}
 let fitHdr=-1;
 function fit(){
   const card=$("card"),bar=document.querySelector(".bar"),il=$("il"),pic=$("pic"),B=document.body;
-  if(!card.offsetParent) return;
+  if(!card.offsetParent||FM) return;
   const W0=innerWidth, vw=Math.min(W0,560);
   const view=()=>innerHeight-bar.getBoundingClientRect().height-8-CARD_M;      // visible height above the bottom bar
   B.classList.remove("squeeze"); card.classList.remove("nohan"); if(!opt.han) card.classList.add("nohan");
@@ -409,10 +444,10 @@ function renderPill(){
 function setPhase(p){ if(vph===p) return; vph=p; if(P.step===2||P.step===3){ $("b2").textContent=vidB2(); $("b2").classList.toggle("live",playing&&!!vph); renderPill(); } }
 function pulseRep(){ const el=$("rep"); if(!el) return; el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse"); clearTimeout(pulseT); pulseT=setTimeout(()=>el.classList.remove("pulse"),750); }
 // one repetition of the sentence. gapMs = pause before the sound starts again (measured from this call). Resolves exactly once.
-function playSeg(i,rate,tok,gapMs){return new Promise(res=>{
+function playSeg(i,rate,tok,gapMs,seg){return new Promise(res=>{
   if(tok!==runTok) return res();
   gapMs=gapMs||0;
-  const s=S[i], t0=Date.now(), gapEnd=t0+gapMs, seekDue=t0+Math.max(0,gapMs-SEEKW);
+  const s=seg||S[i], t0=Date.now(), gapEnd=t0+gapMs, seekDue=t0+Math.max(0,gapMs-SEEKW);
   let armed=false,done=false,w=null,seekAt=0,lastPlay=0,lastT=-1,lastMove=t0,reseekAt=0,p1At=0,lastAt=0,armAt=0;
   const finish=()=>{ if(done)return; done=true; clearInterval(poll); clearInterval(w); cancelFns.delete(finish); setVid(false); try{yt.mute()}catch(e){} vph="next"; res(); };   // NOT paused: hidden + muted, repositioned for the next repetition
   cancelFns.add(finish); vidWanted=true;
@@ -492,7 +527,7 @@ function start(){ if(playing) return; if(P.step>=4) resetP(0); skipEmpty(); if(P
 function stop(){ playing=false; cancelAll(); ytIdle(); hideCap(); renderStep(); }
 function go(i,keepPlaying){ const was=playing; stop(); if(i<0||i>=S.length) return; cur=i; store.set("cur",cur); resetP(0); $("status").textContent=""; render(); history.replaceState(null,"","#"+S[cur].n); if(was||keepPlaying) start(); }
 function setStep(k){ const was=playing; stop(); P={step:k,r:0,u:0}; showCur=false; wordsList=sentWords(cur); render(); if(was) start(); }
-$("play").onclick=()=>playing?stop():start();
+$("play").onclick=()=>FM?(playing?fStop():fStart()):(playing?stop():start());
 $("prev").onclick=()=>go(cur-1,true);
 $("next").onclick=()=>go(cur+1,true);
 $("chips").addEventListener("click",e=>{const b=e.target.closest("button[data-s]");if(!b)return;const k=+b.dataset.s;if(cnts[k]===0){$("status").textContent="이 단계는 횟수가 0이에요 (⚙ 설정).";return}setStep(k);});
@@ -544,14 +579,88 @@ document.querySelectorAll(".step").forEach(s=>s.addEventListener("click",e=>{con
 ["auto","dedupe","han","hideko"].forEach(id=>$(id).onclick=()=>{opt[id]=!opt[id];syncSettings();saveOpt();});
 $("rate").onchange=()=>{opt.rate=$("rate").value;saveOpt()}; $("gap").onchange=()=>{opt.gap=$("gap").value;saveOpt()};
 $("reset").onclick=()=>{cnts=DEF.slice();syncSettings();saveOpt()};
-function openSet(){ $("modal").dataset.was=playing?"1":""; stop(); syncSettings(); $("modal").classList.add("show"); }
-function closeSet(){ $("modal").classList.remove("show"); const keep=P.step; resetP(0); render(); }
+function openSet(){ $("modal").dataset.was=playing?"1":""; if(FM) fStop(); else stop(); syncSettings(); $("modal").classList.add("show"); }
+function closeSet(){ $("modal").classList.remove("show"); const keep=P.step; resetP(0); render(); if(FM) fRender(); }
 $("gear").onclick=openSet; $("mclose").onclick=closeSet; $("mok").onclick=closeSet;
 $("modal").addEventListener("click",e=>{if(e.target===$("modal"))closeSet()});
+
+// ---------- 전체 이어서 연습 (full-verse mode): whole song 1.82–20.1 s, 4 passes ----------
+// Separate state + storage keys (KP+"fullDone", KP+"fullRuns", KP+"mode"); per-sentence state (cur/done/P) is never touched.
+var FM=false; const F={step:0,from:0,line:-1,rev:new Set(),tick:null};
+const FSTEPS=[
+  {n:"①",t:"듣기",d:"노래를 잘 들어 보세요 👂 지금 부르는 줄이 노랗게 빛나요."},
+  {n:"②",t:"따라 부르기",d:"천천히 나와요. 노래에 맞춰 같이 불러요 🎤"},
+  {n:"③",t:"힌트 보고",f:"힌트 보고 부르기",d:"첫 글자만 보여요. 보고 불러요! 부르고 나면 정답이 나와요."},
+  {n:"④",t:"외워서",f:"외워서 부르기",d:"영어가 모두 숨었어요! 외워서 불러요 💪 부르고 나면 정답이 나와요."}];
+const FEND=()=>S[S.length-1].et;
+const FWS=[2.14, 6.36, 9.92, 13.28, 14.8, 18.32], FWE=[4.8, 9.16, 12.72, 14.56, 17.7, 19.64];   // sung-word start/end of each line (from the song's word timing): highlight just before the first word, reveal after the last
+const fRate=k=>k===1?+opt.rate:1;
+let fDone=new Set(store.get("fullDone",[])), fRuns=+store.get("fullRuns",0)||0;
+function fMask(en,lvl){ return en.split(" / ").join(" ").split(" ").map(w=>{let first=true; return w.replace(/[A-Za-z0-9]/g,c=>{ if(lvl===1&&first){first=false;return c} first=false; return "_"; })}).join(" "); }
+function fActive(t){ let a=0; for(let i=0;i<S.length;i++) if(t>=FWS[i]-0.12) a=i; return a; }
+function fRenderLines(){
+  const ol=$("flines"); const k=F.step;
+  if(ol.children.length!==S.length) ol.innerHTML=S.map((s,i)=>`<li data-i="${i}"><span class="fe"></span><span class="fk"></span></li>`).join("");
+  S.forEach((s,i)=>{ const li=ol.children[i], fe=li.firstChild, en=s.en.split(" / ").join(" ");
+    const hide=k>=2&&!F.rev.has(i); const txt=hide?fMask(s.en,k===2?1:2):en;
+    if(fe.textContent!==txt) fe.textContent=txt;
+    fe.classList.toggle("m",hide); fe.classList.toggle("ok",k>=2&&!hide);
+    li.lastChild.textContent=s.ko;
+    li.classList.toggle("cur",i===F.line); li.classList.toggle("past",F.line>=0&&i<F.line&&playing);
+    li.setAttribute("aria-current",i===F.line?"true":"false"); });
+}
+function fSetLine(a){ if(a===F.line) return; F.line=a; if(a>=0){ const s=S[a]; $("img").src="kids-verse/img/"+s.img; $("img").alt=s.ko; } fRenderLines(); }
+function fRender(){
+  $("fchips").innerHTML=FSTEPS.map((s,k)=>`<button type="button" data-f="${k}" class="${k===F.step?"on":fDone.has(k)?"done":""}" aria-pressed="${k===F.step}"><span class="n">${s.n}</span>${s.t}</button>`).join("");
+  const st=FSTEPS[F.step];
+  $("fb1").textContent=`${st.n} ${st.f||st.t}`+(F.step===1?` (${opt.rate}배 빠르기)`:"");
+  $("fb2").textContent=playing&&vph==="load"?"⏳ 노래를 불러오는 중…":st.d;
+  $("fdone").textContent=fRuns?`🏅 전체 이어서 연습을 ${fRuns}번 끝까지 했어요!`:"";
+  if(F.line<0) fSetLine(F.from); else fRenderLines();
+  const sl=S[Math.max(0,F.line)]; if(sl&&!$("img").src.endsWith(sl.img)){ $("img").src="kids-verse/img/"+sl.img; $("img").alt=sl.ko; }
+  $("play").textContent=playing?"⏸ 멈춤":(F.from>0?"▶ 이어서 부르기":"▶ "+st.n+" "+(st.f||st.t)+" 시작"); $("play").classList.toggle("on",playing);
+  $("cnt").textContent=`전체 이어서 · ${F.step+1}/4단계`; $("fill").style.width=(F.step*25+(F.line>0?F.line/S.length*25:0))+"%";
+  $("mOne").setAttribute("aria-pressed",String(!FM)); $("mFull").setAttribute("aria-pressed",String(FM));
+}
+function fTickStart(){ clearInterval(F.tick); F.tick=setInterval(()=>{ if(!FM||!playing){clearInterval(F.tick);return}
+  let t=-1; try{ if(vph==="play"||vph==="load") t=yt.getCurrentTime(); }catch(e){}
+  if(t>=0&&t>=S[F.from].st-0.05){ const a=Math.max(F.from,fActive(t)); if(F.step>=2) S.forEach((s,i)=>{ if(!F.rev.has(i)&&(i<a||t>=FWE[i]+0.1)) F.rev.add(i); }); if(a!==F.line) fSetLine(a); else fRenderLines(); }
+  const b=vph==="load"?"⏳ 노래를 불러오는 중…":FSTEPS[F.step].d; if($("fb2").textContent!==b) $("fb2").textContent=b;
+  const w=(F.step*25+(F.line>0?F.line/S.length*25:0))+"%"; if($("fill").style.width!==w) $("fill").style.width=w;
+},100); }
+async function fRun(tok){
+  let first=true;
+  while(tok===runTok&&FM){
+    if(F.step>=FSTEPS.length){ fRuns++; store.set("fullRuns",fRuns); playing=false; ytIdle(); F.step=0; F.from=0; F.line=-1; F.rev.clear(); fRender(); $("status").textContent="🎉 John 15:5 전체를 끝까지 연습했어요!"; return; }
+    if(F.from===0){ F.rev.clear(); } else { for(let i=0;i<F.from;i++) F.rev.add(i); }
+    F.line=-1; fRender(); fTickStart();
+    $("status").textContent=first?"":`다음: ${FSTEPS[F.step].n} ${FSTEPS[F.step].t}`;
+    window.__flog&&window.__flog.push({ev:"fstep",k:F.step,from:F.from,at:Date.now()});
+    if(!first){ await sleep(1500,tok); if(tok!==runTok||!FM) return; }   // short breath between passes (seek starts after it, so the sound never starts late)
+    await playSeg(F.from,fRate(F.step),tok,0,{st:S[F.from].st,et:FEND()});
+    if(tok!==runTok||!FM) return;
+    if($("status").textContent.startsWith("영상이 시작되지")){ playing=false; ytIdle(); fRender(); return; }
+    for(let i=0;i<S.length;i++) F.rev.add(i); fSetLine(S.length-1); fRenderLines();
+    fDone.add(F.step); store.set("fullDone",[...fDone]); window.__flog&&window.__flog.push({ev:"fend",k:F.step,at:Date.now()});
+    F.step++; F.from=0; first=false;
+  }
+}
+function fStart(){ if(!FM) return; cancelAll(); playing=true; $("status").textContent=""; primeYt(); fRender(); scrollTo({top:0}); fRun(++runTok); }
+function fStop(){ playing=false; cancelAll(); ytIdle(); hideCap(); clearInterval(F.tick); if(F.line>0) F.from=F.line; fRender(); }
+function setMode(full){
+  if(full===FM) return;
+  if(full){ stop(); FM=true; document.body.classList.add("fm"); F.from=0; F.line=-1; F.rev.clear(); fRender(); scrollTo({top:0}); }
+  else { fStop(); FM=false; document.body.classList.remove("fm"); F.from=0; F.line=-1; render(); fit(); }
+  store.set("mode",FM?"full":"one");
+}
+$("mFull").onclick=()=>setMode(true); $("mOne").onclick=()=>setMode(false);
+$("fchips").addEventListener("click",e=>{const b=e.target.closest("button[data-f]");if(!b)return;const was=playing; if(was) fStop(); F.step=+b.dataset.f; F.from=0; F.line=-1; F.rev.clear(); $("status").textContent=""; fRender(); if(was) fStart();});
+$("flines").addEventListener("click",e=>{const li=e.target.closest("li[data-i]");if(!li)return; if(playing) fStop(); F.from=+li.dataset.i; F.line=-1; fRender(); fStart();});
 
 // ---------- init ----------
 (function(){ const h=location.hash.replace("#",""); if(/^\d{1,3}$/.test(h)){const i=S.findIndex(s=>s.n===+h); if(i>=0) cur=i;} })();
 syncSettings(); resetP(0); render();
-window.__app={get cur(){return cur},get P(){return P},get playing(){return playing}};
+if(store.get("mode","one")==="full") setMode(true);
+window.__app={get cur(){return cur},get P(){return P},get playing(){return playing},get FM(){return FM},get F(){return F},get fRuns(){return fRuns}};
 </script>
 </html>
