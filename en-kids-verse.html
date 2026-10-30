@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:,">
+<title>John 15:5 암송 · 노래로 외우는 성경 구절 (단어→끊어→천천히→빠르게)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#F3F5F4;--surface:#fff;--fg:#1C2524;--muted:#5E6B69;--line:#D9E0DE;--accent:#0E7C74;--accent-soft:#DDF0EC;--mark:#F2B33D;--mark-soft:#FDF1D6;
+--en:#1b2a4a;--han:#d4570f;--f-en:"Lexend",system-ui,sans-serif;--f-ko:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-ko);font-size:16px;line-height:1.45;overflow-x:hidden}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding:max(6px,env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) 150px max(10px,env(safe-area-inset-left,0px));display:grid;align-content:start;gap:8px;min-width:0}
+.wrap>*{min-width:0}
+header{display:grid;gap:6px}
+.top{display:flex;align-items:center;gap:8px}
+.top h1{flex:1;margin:0;font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top h1 small{font-weight:500;color:var(--muted);font-size:13px;margin-left:6px}
+.ibtn{border:1px solid var(--line);background:var(--surface);color:var(--fg);min-width:44px;height:40px;border-radius:12px;font-size:20px;padding:0 10px}
+.books{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.books::-webkit-scrollbar{display:none}
+.books button{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;min-height:38px;padding:4px 12px;font-size:14px;font-weight:600}
+.books button .c{font-size:11px;opacity:.75;margin-left:4px;font-weight:500}
+.books button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+body.squeeze .books,body.squeeze .top h1 small{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px 10px 10px;display:grid;gap:7px;align-content:start}
+.where{display:flex;align-items:baseline;justify-content:space-between;gap:8px;line-height:1.2;white-space:nowrap}
+.where b{font-size:18px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis}
+.where span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;flex:0 0 auto}
+.steprow{display:flex;align-items:center;gap:8px}
+.chips{display:flex;gap:5px;flex:0 0 auto}
+.chip{width:36px;height:40px;border:2px solid var(--line);background:var(--bg);color:var(--muted);border-radius:12px;font-weight:700;font-size:16px;padding:0;font-family:var(--f-en)}
+.chip.done{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-soft)}
+.chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.chip.zero{opacity:.35}
+.banner{min-width:0;flex:1;line-height:1.2}
+.banner .b1{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.banner .b1 b{color:var(--accent);font-family:var(--f-en)}
+.banner .b2{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ko{margin:0;font-weight:800;line-height:1.3;color:#14171a;background:#fff1b8;border-radius:12px;padding:8px 12px;font-size:var(--kfs,26px);word-break:keep-all;overflow-wrap:anywhere}
+.hideko .ko{color:transparent;background:var(--line)}
+.il{margin:0;display:flex;flex-wrap:wrap;align-items:flex-start;gap:.35em .55em;font-size:var(--efs,28px);line-height:1.18}
+.ch{display:inline-flex;flex-wrap:wrap;gap:.3em .32em;max-width:100%;border-radius:10px;padding:1px 3px;margin:0 -3px}
+.ch.on{background:var(--mark-soft);box-shadow:0 0 0 2px var(--mark)}
+.col{display:inline-flex;flex-direction:column;align-items:center;max-width:100%;cursor:pointer;border-radius:8px;padding:1px 2px 2px;touch-action:manipulation}
+.col .ie{font-family:var(--f-en);font-weight:600;color:var(--en);overflow-wrap:anywhere}
+.col .ik{font-weight:700;color:var(--han);margin-top:1px;word-break:keep-all;overflow-wrap:anywhere}
+.nohan .col .ik{display:none}
+.col.cur{background:var(--mark-soft);outline:2px solid var(--mark)}
+.col.say{background:var(--accent-soft)}
+.pic{position:relative;margin:0 auto;border-radius:14px;overflow:hidden;background:#000;width:100%;aspect-ratio:4/5}
+.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
+.pic.vid img{opacity:0;pointer-events:none;transition:opacity .12s}
+/* Vertical (9:16) Shorts video in a 4:5 picture: the iframe is exactly 9:16 (142.2% of the picture height) so the video fills it; its top 9% (YouTube title strip) and bottom (logo/bar, table) are clipped */
+.pic{--bar:110px}
+.pic .yt{position:absolute;left:0;right:0;top:-12.8%;height:142.2%;z-index:1;pointer-events:none}
+.pic .yt iframe,.pic .yt>div{width:100%;height:100%;border:0;pointer-events:none}
+.pic .shield{position:absolute;inset:0;z-index:2;background:transparent}
+.pic.vid .shield{z-index:4}
+.rep{position:absolute;left:6px;right:6px;bottom:6px;z-index:5;display:none;align-items:center;gap:8px;background:rgba(255,255,255,.93);border-radius:12px;padding:5px 10px;box-shadow:0 1px 6px rgba(0,0,0,.28);pointer-events:none;min-width:0}
+.rep.show{display:flex}
+.rep .rn{font-weight:800;font-size:19px;font-variant-numeric:tabular-nums;color:#14171a;white-space:nowrap}
+.rep .rn b{color:var(--accent);font-family:var(--f-en)}
+.rep .rd{display:flex;align-items:center;gap:4px;flex:1;min-width:0;justify-content:center}
+.rep .rd i{width:14px;height:14px;border-radius:50%;border:2px solid var(--accent);box-sizing:border-box;background:#fff;flex:none}
+.rep .rd i.on{background:var(--accent)}
+.rep .rd i.cur{background:var(--accent-soft)}
+.rep.playing .rd i.cur{animation:dotp 1s ease-in-out infinite}
+.rep .bar{flex:1;height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.rep .bar u{display:block;height:100%;background:var(--accent);text-decoration:none}
+.rep .rp{font-weight:800;font-size:14px;color:var(--accent);white-space:nowrap;max-width:46%;overflow:hidden;text-overflow:ellipsis}
+.rep.pulse{animation:repflash .7s ease-out}
+@keyframes repflash{0%{background:var(--accent);transform:scale(1.04)}100%{background:rgba(255,255,255,.93);transform:scale(1)}}
+@keyframes dotp{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+.rep.pulse .rn,.rep.pulse .rp{animation:repflashtx .7s ease-out}
+@keyframes repflashtx{0%{color:#fff}100%{}}
+@media (prefers-reduced-motion:reduce){.rep.pulse,.rep.pulse .rn,.rep.pulse .rp,.rep.playing .rd i.cur{animation:none}}
+.banner .b2.live{font-size:15px;font-weight:800;color:var(--accent)}
+.unav{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.unav button{height:46px;border:2px solid var(--accent-soft);background:var(--accent-soft);color:var(--accent);border-radius:14px;font-weight:800;font-size:16px;padding:0 6px;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;min-width:0}
+.unav button:active{background:var(--accent);color:#fff}
+.unav button:disabled{opacity:.35}
+.unav .ar{font-size:18px;line-height:1}
+.cap{position:absolute;left:6px;right:6px;bottom:6px;z-index:3;background:rgba(255,255,255,.9);border-radius:12px;padding:6px 10px 7px;line-height:1.2;display:none;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+.cap.show{display:block}
+.cap .cw{display:inline-block;max-width:100%;margin:0 4px;overflow-wrap:anywhere}
+.cap b{font-family:var(--f-en);font-weight:700;color:var(--en);font-size:min(28px,7.2vw);margin-right:8px}
+.cap i{font-style:normal;font-weight:800;color:var(--han);font-size:min(27px,6.9vw)}
+.cap .cm{display:inline-block;max-width:100%;margin:0 4px;font-weight:700;color:var(--en);font-size:min(25px,6.4vw);word-break:keep-all;overflow-wrap:anywhere}
+.badge{position:absolute;right:8px;top:8px;z-index:3;background:rgba(0,0,0,.55);color:#fff;font-size:13px;border-radius:999px;padding:2px 10px;font-variant-numeric:tabular-nums}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);z-index:5;padding:8px max(10px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+.barin{max-width:560px;margin:0 auto;display:grid;gap:7px}
+.prog{display:flex;align-items:center;gap:10px;font-family:var(--f-en);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.track{flex:1;min-width:24px;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.track i{display:block;height:100%;width:0;background:var(--mark);transition:width .2s}
+.main{display:flex;gap:8px;align-items:center}
+.nav{flex:0 0 64px;height:56px;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:16px;font-size:26px;padding:0}
+.play{flex:1;min-width:0;height:56px;border:0;background:var(--accent);color:#fff;font-weight:800;font-size:20px;border-radius:16px}
+.play.on{background:#c0392b}
+.status{font-size:13px;color:var(--muted);min-height:1.2em;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+details.list{background:var(--surface);border:1px solid var(--line);border-radius:14px}
+details.list summary{cursor:pointer;padding:12px 14px;font-weight:700;min-height:48px}
+.rows{display:grid;max-height:360px;overflow:auto;border-top:1px solid var(--line)}
+.rows button{display:grid;grid-template-columns:38px 1fr 20px;gap:8px;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;color:var(--fg);padding:10px 12px;min-height:48px}
+.rows .n{font-family:var(--f-en);color:var(--muted);font-size:13px}
+.rows .t{font-family:var(--f-en);font-size:15px;min-width:0}
+.rows .k{display:block;font-family:var(--f-ko);font-size:13px;color:var(--muted)}
+.rows button.cur{background:var(--accent-soft)}
+.rows .ok{color:var(--accent);font-weight:700}
+.credit{font-size:12.5px;color:var(--muted);margin:0}
+.credit a{color:var(--accent)}
+/* settings modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:none;align-items:flex-end;justify-content:center}
+.modal.show{display:flex}
+.sheet{background:var(--surface);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:14px 14px calc(16px + env(safe-area-inset-bottom,0px));display:grid;gap:10px}
+.sheet h2{margin:0;font-size:18px;display:flex;justify-content:space-between;align-items:center}
+.srow{display:flex;align-items:center;gap:8px;justify-content:space-between;border-top:1px solid var(--line);padding-top:8px}
+.srow label{font-weight:700;font-size:16px;min-width:0}
+.srow label small{display:block;font-weight:400;font-size:12.5px;color:var(--muted)}
+.step{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.step button{width:46px;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-size:24px;font-weight:700;padding:0}
+.step output{min-width:34px;text-align:center;font-family:var(--f-en);font-weight:700;font-size:22px;font-variant-numeric:tabular-nums}
+select{font:inherit;font-size:16px;min-height:44px;padding:6px 8px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg)}
+.sw{width:56px;height:34px;border-radius:99px;border:0;background:var(--line);position:relative;flex:0 0 auto;padding:0}
+.sw::after{content:"";position:absolute;top:4px;left:4px;width:26px;height:26px;border-radius:50%;background:#fff;transition:left .15s}
+.sw[aria-pressed="true"]{background:var(--accent)}
+.sw[aria-pressed="true"]::after{left:26px}
+.sbtn{min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-weight:700;padding:0 14px}
+.sbtn.pri{background:var(--accent);color:#fff;border:0}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="top"><h1 id="ttl">John 15:5 암송<small>요한복음 15장 5절 · 노래로 외우기</small></h1><button class="ibtn" id="gear" type="button" aria-label="설정 (반복 횟수)">⚙️</button></div>
+    <div class="books" id="books" role="group" aria-label="Book"></div>
+  </header>
+
+  <section class="card" id="card" aria-live="polite">
+    <div class="where" id="where"><b id="wb"></b><span id="wg"></span></div>
+    <div class="steprow">
+      <div class="chips" id="chips"></div>
+      <div class="banner"><div class="b1" id="b1"></div><div class="b2" id="b2"></div></div>
+    </div>
+    <p class="ko" id="ko"></p>
+    <p class="il" id="il"></p>
+    <div class="unav" id="unav"><button type="button" id="uprev"><span class="ar">⏮</span><span class="lb">이전 단어</span></button><button type="button" id="unext"><span class="lb">다음 단어</span><span class="ar">⏭</span></button></div>
+    <div class="pic" id="pic"><div class="yt"><div id="ytPlayer"></div></div><div class="shield"></div><img id="img" alt="" decoding="async"><span class="badge" id="badge"></span><div class="cap" id="cap"></div><div class="rep" id="rep" aria-live="off"></div></div>
+  </section>
+
+  <details class="list" id="listBox"><summary id="listSum">문장 목록</summary><div class="rows" id="rows"></div></details>
+  <p class="credit">영상: <a id="vlink" href="https://youtube.com/shorts/uZruVsxMHdw" target="_blank" rel="noopener">Memorize John 15:5 With A Song · Little Bitty Seeds</a> (NIV). 이 페이지는 공식 영상을 YouTube 플레이어로 재생만 해요(영상·음원 파일은 올리지 않았어요). 그림은 영상 장면이에요. 한글 뜻은 개역개정 요한복음 15:5를 참고해 쉽게 풀어 썼어요. 단어·끊어 읽기 소리는 미리 만든 영어 음성(AI 음성) 파일이에요. 한글 발음은 영어 소리를 비슷하게 적은 거예요.</p>
+</div>
+
+<div class="bar"><div class="barin">
+  <div class="prog"><span id="cnt"></span><div class="track"><i id="fill"></i></div></div>
+  <div class="main">
+    <button class="nav" id="prev" type="button" aria-label="이전 문장">‹</button>
+    <button class="play" id="play" type="button">▶ 시작</button>
+    <button class="nav" id="next" type="button" aria-label="다음 문장">›</button>
+  </div>
+  <div class="status" id="status"></div>
+</div></div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="설정"><div class="sheet">
+  <h2>설정 <button class="ibtn" id="mclose" type="button" aria-label="닫기">✕</button></h2>
+  <div class="srow"><label>① 단어 읽기<small>단어 하나씩, 각각 몇 번</small></label><div class="step" data-k="0"><button type="button" data-d="-1" aria-label="줄이기">−</button><output></output><button type="button" data-d="1" aria-label="늘리기">＋</button></div></div>
+  <div class="srow"><label>② 끊어 읽기<small>문장을 끊어서, 처음부터 끝까지 몇 번</small></label><div class="step" data-k="1"><button type="button" data-d="-1" aria-label="줄이기">−</button><output></output><button type="button" data-d="1" aria-label="늘리기">＋</button></div></div>
+  <div class="srow"><label>③ 천천히 읽기<small>문장 전체, 몇 번</small></label><div class="step" data-k="2"><button type="button" data-d="-1" aria-label="줄이기">−</button><output></output><button type="button" data-d="1" aria-label="늘리기">＋</button></div></div>
+  <div class="srow"><label>④ 빠르게 읽기<small>문장 전체, 몇 번</small></label><div class="step" data-k="3"><button type="button" data-d="-1" aria-label="줄이기">−</button><output></output><button type="button" data-d="1" aria-label="늘리기">＋</button></div></div>
+  <div class="srow"><label>천천히 속도<small>③에서 영상 재생 속도</small></label><select id="rate"><option value="0.5">0.5배</option><option value="0.75">0.75배</option></select></div>
+  <div class="srow"><label>쉬는 시간<small>한 번 읽고 나서</small></label><select id="gap"><option value="0.3">짧게</option><option value="0.6">보통</option><option value="1.2">길게</option></select></div>
+  <div class="srow"><label>자동으로 다음 문장<small>4단계가 끝나면 이어서</small></label><button class="sw" id="auto" type="button" aria-pressed="true" aria-label="자동으로 다음 문장"></button></div>
+  <div class="srow"><label>같은 단어는 한 번만<small>한 문장에서 반복되는 단어</small></label><button class="sw" id="dedupe" type="button" aria-pressed="true" aria-label="같은 단어는 한 번만"></button></div>
+  <div class="srow"><label>한글 발음 보이기<small>영어 단어 아래 한글</small></label><button class="sw" id="han" type="button" aria-pressed="true" aria-label="한글 발음 보이기"></button></div>
+  <div class="srow"><label>한국어 뜻 가리기<small>눌러서 잠깐 보기</small></label><button class="sw" id="hideko" type="button" aria-pressed="false" aria-label="한국어 뜻 가리기"></button></div>
+  <div class="srow"><button class="sbtn" id="reset" type="button">기본값으로 (5·5·5·10)</button><button class="sbtn pri" id="mok" type="button">확인</button></div>
+</div></div>
+
+<script>
+const DATA={"video":{"id":"uZruVsxMHdw","title":"Memorize John 15:5 With A Song","channel":"Little Bitty Seeds","dur":25},"books":[{"n":1,"from":0,"v":0}],"words":{"i":["아이","나","i"],"am":["앰","~이다(I am)","am"],"the":["더","그","the"],"vine":["바인","포도나무","vine"],"you":["유","너, 너희","you"],"are":["아","~이다, ~있다","are"],"branches":["브랜치즈","가지들 (나뭇가지)","branches"],"if":["이프","만약 ~라면","if"],"remain":["리메인","머물다, 계속 있다","remain"],"in":["인","~ 안에","in"],"me":["미","나, 나를","me"],"and":["앤드","그리고","and"],"will":["윌","~할 것이다","will"],"bear":["베어","(열매를) 맺다","bear"],"much":["머치","많이, 많은","much"],"fruit":["프루트","열매, 과일","fruit"],"apart":["어파트","떨어져서, 따로","apart"],"from":["프럼","~에서, ~부터","from"],"can":["캔","~할 수 있다","can"],"do":["두","하다","do"],"nothing":["나씽","아무것도 (없음)","nothing"],"john":["존","요한(요한복음)","john"],"15:5":["피프틴 파이브","15장 5절","15_5"]},"s":[{"n":1,"b":1,"en":"I am the vine;","ch":[["I am","i_am"],["the vine;","the_vine"]],"ko":"나는 포도나무예요.","st":1.82,"et":5.25,"img":"s001.jpg","v":0},{"n":2,"b":1,"en":"you are the branches.","ch":[["you are","you_are"],["the branches.","the_branches"]],"ko":"너희는 가지예요.","st":6.04,"et":9.61,"img":"s002.jpg","v":0},{"n":3,"b":1,"en":"If you remain in me and I in you,","ch":[["If you remain","if_you_remain"],["in me","in_me"],["and I","and_i"],["in you,","in_you"]],"ko":"너희가 내 안에 머물고, 내가 너희 안에 머물면,","st":9.6,"et":13.05,"img":"s003.jpg","v":0},{"n":4,"b":1,"en":"you will bear much fruit;","ch":[["you will bear","you_will_bear"],["much fruit;","much_fruit"]],"ko":"너희는 열매를 많이 맺어요.","st":13.05,"et":14.68,"img":"s004.jpg","v":0},{"n":5,"b":1,"en":"apart from me you can do nothing.","ch":[["apart from me","apart_from_me"],["you can do nothing.","you_can_do_nothing"]],"ko":"나를 떠나서는 너희가 아무것도 할 수 없어요.","st":14.68,"et":18.15,"img":"s005.jpg","v":0},{"n":6,"b":1,"en":"John 15:5","ch":[["John 15:5","john_15_5"]],"ko":"요한복음 15장 5절","st":18.0,"et":20.1,"img":"s006.jpg","v":0}],"videos":[{"id":"uZruVsxMHdw","title":"Memorize John 15:5 With A Song","dur":25,"name":"Memorize John 15:5 With A Song"}]};
+const KP="enKidsVerse_";
+const BN=n=>"John 15:5";
+const $=id=>document.getElementById(id);
+const S=DATA.s, W=DATA.words, BOOKS=DATA.books, VIDS=DATA.videos||[DATA.video], VID=DATA.video.id;
+const vidOf=i=>VIDS[S[i].v||0].id; let ytVid=null;
+function ytSeek(i,t){ const id=vidOf(i); if(ytVid&&id!==ytVid){ ytVid=id; yt.loadVideoById({videoId:id,startSeconds:t}); try{yt.mute()}catch(e){} } else yt.seekTo(t,true); }
+const store={get(k,d){try{const v=localStorage.getItem(KP+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(KP+k,JSON.stringify(v))}catch(e){}}};
+const DEF=[5,5,5,10], NAMES=["단어 읽기","끊어 읽기","천천히 읽기","빠르게 읽기"];
+let cnts=store.get("cnt",DEF).map(Number); if(cnts.length!==4||cnts.some(x=>!(x>=0&&x<=30))) cnts=DEF.slice();
+let opt={rate:String(store.get("rate","0.75")),gap:String(store.get("gap","0.6")),auto:store.get("auto",true),dedupe:store.get("dedupe",true),han:store.get("han",true),hideko:store.get("hideko",false)};
+let done=new Set(store.get("done",[]));
+let cur=Math.min(S.length-1,Math.max(0,+store.get("cur",0)||0));
+let P={step:0,r:0,u:0};          // r = repetition being played (0-based), u = word / chunk index
+let playing=false, runTok=0, wordsList=[], showCur=false;
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function norm(w){return String(w).toLowerCase().replace(/[’]/g,"'").replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu,"")}
+function bookOf(i){return S[i].b}
+
+// ---------- sentence structure ----------
+function wUrl(k){return "kids-verse/w/"+W[k][2]+".mp3"}
+function cUrl(c){return "kids-verse/c/"+c[1]+".mp3"}
+function sentWords(i){ // unique (or all) words in order. ONE item object feeds highlight + caption + audio: {k, ti(token index), url, han, mean}
+  const out=[],seen=new Set(); let ti=0;
+  S[i].ch.forEach(c=>c[0].split(/\s+/).forEach(t=>{const k=norm(t); if(k&&W[k]&&!(opt.dedupe&&seen.has(k))){seen.add(k);out.push({k,ti,url:wUrl(k),han:W[k][0],mean:W[k][1]});} ti++;}));
+  return out;
+}
+function chunkItems(i){return S[i].ch.map((c,ci)=>({ci,text:c[0],url:cUrl(c)}))}
+function units(step){ // number of units in one repetition
+  if(step===0) return wordsList.length; if(step===1) return S[cur].ch.length; return 1;
+}
+function resetP(step){P={step:step||0,r:0,u:0}; showCur=false; wordsList=sentWords(cur); skipEmpty();}
+function skipEmpty(){ while(P.step<4&&cnts[P.step]===0){P.step++;P.r=0;P.u=0;} }
+function totalUnits(){return [0,1,2,3].reduce((a,k)=>a+cnts[k]*(k===0?wordsList.length:k===1?S[cur].ch.length:1),0)}
+function doneUnits(){let d=0;for(let k=0;k<P.step&&k<4;k++) d+=cnts[k]*(k===0?wordsList.length:k===1?S[cur].ch.length:1);
+  if(P.step<4){ if(P.step===0) d+=P.u*cnts[0]+P.r; else if(P.step===1) d+=P.r*S[cur].ch.length+P.u; else d+=P.r;} return d}
+
+// ---------- rendering ----------
+function render(){
+  const s=S[cur];
+  $("books").innerHTML=BOOKS.map(b=>{const n=S.filter(x=>x.b===b.n),k=n.filter(x=>done.has(x.n)).length;return `<button type="button" data-b="${b.n}" aria-pressed="${b.n===s.b}">${BN(b.n)}<span class="c">${k===n.length?"✓":k+"/"+n.length}</span></button>`}).join("");
+  const on=$("books").querySelector('[aria-pressed="true"]'); if(on){const T=$("books");T.scrollLeft=Math.max(0,on.offsetLeft-T.offsetLeft-10)}
+  $("ko").textContent=s.ko;
+  let ti=0;
+  $("il").innerHTML=s.ch.map((c,ci)=>`<span class="ch" data-c="${ci}">`+c[0].split(/\s+/).map(t=>{const k=norm(t),h=(W[k]||["",""])[0];return `<span class="col" role="button" tabindex="0" data-w="${esc(k)}" data-t="${ti++}"><span class="ie">${esc(t)}</span><span class="ik">${esc(h)}</span></span>`}).join("")+`</span>`).join("");
+  $("img").src="kids-verse/img/"+s.img; $("img").alt=s.ko;
+  {const V=VIDS[s.v||0],l=$("vlink"); if(l&&l.dataset.v!==V.id){l.dataset.v=V.id;l.href="https://youtube.com/shorts/"+V.id;l.textContent=(V.name||V.title)+" · Little Bitty Seeds";}}
+  $("badge").textContent=`${s.n} / ${S.length}`; renderWhere();
+  $("card").classList.toggle("hideko",!!opt.hideko);
+  $("card").classList.toggle("nohan",!opt.han);
+  renderRows(); renderStep(); fit();
+}
+function whereOf(s){const inB=S.filter(x=>x.b===s.b); return {b:s.b,i:inB.findIndex(x=>x.n===s.n)+1,t:inB.length}}
+function renderWhere(){const w=whereOf(S[cur]); $("wb").textContent=`${BN(w.b)} · ${w.i}/${w.t}문장`; $("wg").textContent=`전체 ${S[cur].n}/${S.length}`;}
+function renderStep(){
+  const n=cnts;
+  $("chips").innerHTML=["①","②","③","④"].map((t,k)=>`<button type="button" class="chip ${P.step===k?"on":P.step>k?"done":""} ${n[k]===0?"zero":""}" data-s="${k}" aria-label="${NAMES[k]} ${n[k]}번">${P.step>k&&n[k]>0?"✓":t}</button>`).join("");
+  let b1,b2="";
+  if(P.step>=4){ b1=`<b>끝!</b> 4단계 완료 ✓`; b2="다음 문장으로 가 볼까요?"; }
+  else{
+    const rep=Math.min(P.r+1,n[P.step]);
+    b1=`${NAMES[P.step]} <b>${rep}/${n[P.step]}${P.step>=2?"회":""}</b>`;
+    if(P.step===0){const w=wordsList[Math.min(P.u,wordsList.length-1)]; b2=`단어 ${Math.min(P.u+1,wordsList.length)}/${wordsList.length} · ${w?w.k:""}`}
+    else if(P.step===1) b2=`끊어서 · ${Math.min(P.u+1,S[cur].ch.length)}/${S[cur].ch.length} 덩어리`;
+    else b2=vidB2();
+  }
+  $("b1").innerHTML=b1; $("b2").textContent=b2; $("b2").classList.toggle("live",playing&&(P.step===2||P.step===3)&&!!vph); renderPill();
+  const tot=totalUnits(), d=doneUnits();
+  {const w=whereOf(S[cur]); $("cnt").textContent=`${BN(w.b)} · ${w.i}/${w.t}문장 (${S[cur].n}/${S.length})`;}
+  $("fill").style.width=(P.step>=4?100:tot?d/tot*100:0)+"%";
+  $("play").textContent=playing?"⏸ 멈춤":(P.step>=4?"↻ 다시":(d>0?"▶ 이어서":"▶ 시작"));
+  $("play").classList.toggle("on",playing);
+  const foc=playing||showCur;
+  document.querySelectorAll("#il .ch").forEach((e,i)=>e.classList.toggle("on",foc&&P.step===1&&i===P.u));
+  const wi=wordsList[P.u];
+  document.querySelectorAll("#il .col").forEach(e=>e.classList.toggle("cur",!!(foc&&P.step===0&&wi&&+e.dataset.t===wi.ti)));
+  if(!(playing&&(P.step===2||P.step===3))) setVid(false);   // still picture whenever the video is not actively playing
+  renderNav();
+}
+function prevStepIdx(){for(let k=P.step-1;k>=0;k--) if(cnts[k]>0) return k; return -1}
+function nextStepIdx(from){for(let k=from+1;k<4;k++) if(cnts[k]>0) return k; return -1}
+function renderNav(){
+  const st=P.step, a=$("uprev"), b=$("unext");
+  const L=(btn,txt,ar,left)=>{btn.querySelector(".lb").textContent=txt;btn.querySelector(".ar").textContent=ar;btn.setAttribute("aria-label",txt)};
+  if(st===0){L(a,"이전 단어","⏮");L(b,"다음 단어","⏭");a.disabled=b.disabled=false}
+  else if(st===1){L(a,"이전 끊어읽기","⏮");L(b,"다음 끊어읽기","⏭");a.disabled=b.disabled=false}
+  else if(st===2||st===3){L(a,"이전 단계","⏮");L(b,"다음 단계","⏭");a.disabled=prevStepIdx()<0;b.disabled=nextStepIdx(st)<0}
+  else {L(a,"이전 단어","⏮");L(b,"다음 단어","⏭");a.disabled=b.disabled=true}
+}
+function setVid(on){const p=$("pic"); if(p.classList.contains("vid")!==on) p.classList.toggle("vid",on)}
+function renderRows(){
+  $("listSum").textContent=`문장 목록 · ${BN(S[cur].b)} · ${S.filter(x=>x.b===S[cur].b).length}문장`;
+  $("rows").innerHTML=S.map((s,i)=>s.b!==S[cur].b?"":`<button type="button" data-i="${i}" class="${i===cur?"cur":""}"><span class="n">${s.n}</span><span class="t">${esc(s.en)}<span class="k">${esc(s.ko)}</span></span><span class="ok">${done.has(s.n)?"✓":""}</span></button>`).join("");
+}
+function showCap(it,sticky){
+  if(!it){$("cap").classList.remove("show");return}
+  $("cap").innerHTML=`<span class="cw"><b>${esc(it.k)}</b><i>${esc(it.han)}</i></span> <span class="cm">${esc(it.mean)}</span>`; $("cap").classList.add("show");
+  clearTimeout(showCap.t); if(!sticky) showCap.t=setTimeout(()=>$("cap").classList.remove("show"),2800);
+}
+function hideCap(){clearTimeout(showCap.t);$("cap").classList.remove("show")}
+
+// ---------- fit: big Korean meaning on top, English (+Hangul) below, picture gets the rest ----------
+let fitHdr=-1;
+function fit(){
+  const card=$("card"),bar=document.querySelector(".bar"),il=$("il"),pic=$("pic"),B=document.body;
+  if(!card.offsetParent) return;
+  const W0=innerWidth, vw=Math.min(W0,560);
+  const view=()=>innerHeight-bar.getBoundingClientRect().height-8-CARD_M;      // visible height above the bottom bar
+  B.classList.remove("squeeze"); card.classList.remove("nohan"); if(!opt.han) card.classList.add("nohan");
+  const kBase=Math.round(Math.min(28,Math.max(22,vw*0.068))), eBase=Math.round(Math.min(32,Math.max(24,vw*0.076)));
+  let kf=kBase, ef=eBase; const setK=()=>card.style.setProperty("--kfs",kf+"px"), setE=()=>card.style.setProperty("--efs",ef+"px");
+  setK(); setE();
+  // The picture is ALWAYS the full card width, 1:1 (CSS). Only the English text may shrink (never below 22px / Hangul kept) so that
+  // English + nav buttons + picture fit together above the bottom bar; the Korean meaning/header may scroll out instead.
+  const span=()=>pic.getBoundingClientRect().bottom-il.getBoundingClientRect().top+6;
+  const need=()=>span()>view();
+  const wide=()=>{const R=il.getBoundingClientRect();return [...il.querySelectorAll(".col")].some(c=>c.getBoundingClientRect().right>R.right+0.5)||document.documentElement.scrollWidth>W0};
+  let guard=0;
+  // 1) prefer to keep the WHOLE card (label, meaning, English, buttons, picture) on screen: shrink English down to 26px, then the Korean meaning down to 22px
+  const all=()=>pic.getBoundingClientRect().bottom-card.getBoundingClientRect().top+6>view();
+  while(all()&&(ef>26||kf>22)&&guard++<120){ if(ef>26){ef--;setE();} else {kf--;setK();} }
+  // 2) still too tall: keep at least English + buttons + picture visible (English may go down to 22px); the label/meaning scroll out
+  while((need()||wide())&&ef>22&&guard++<200){ef--;setE();}
+  if(wide()){ card.classList.add("nohan"); ef=Math.min(eBase,28); setE(); while(wide()&&ef>16&&guard++<160){ef--;setE();} }
+  const side=Math.round(pic.getBoundingClientRect().width);
+  card.dataset.fit=`k${kf} e${ef}${card.classList.contains("nohan")&&opt.han?" nohan":""} pic${side}`;
+  fitHdr=document.querySelector("header").offsetHeight;
+  // make sure the page is tall enough to scroll to the target position
+  const y=scrollTarget();
+  document.querySelector(".wrap").style.minHeight=Math.ceil(Math.max(y,0)+innerHeight)+"px";
+}
+// target scroll: card top at viewport top when everything fits; otherwise the picture bottom sits just above the bottom bar
+// (English text stays right above the picture; label/step header/meaning scroll out - the fixed bar still shows Book + sentence number)
+function scrollTarget(){
+  const c=$("card"),pic=$("pic"),bar=document.querySelector(".bar");
+  const cardTop=c.getBoundingClientRect().top+scrollY-CARD_M, picBottom=pic.getBoundingClientRect().bottom+scrollY+6;
+  const view=innerHeight-bar.getBoundingClientRect().height;
+  return Math.max(0,Math.round(Math.max(cardTop, picBottom-view)));
+}
+// ---------- scroll the practice card to the top of the viewport (play / sentence change / step change) ----------
+const CARD_M=4; let lastPos="";
+function scrollCard(){
+  const c=$("card"); if(!c.offsetParent) return;
+  const y=scrollTarget();
+  if(Math.abs(y-scrollY)<3) return;
+  const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  scrollTo({top:y,behavior:reduce?"auto":"smooth"});
+}
+function scrollIfNew(){ const k=cur+":"+P.step; if(k!==lastPos){lastPos=k;scrollCard();} }
+addEventListener("resize",fit);
+if(window.ResizeObserver) new ResizeObserver(()=>{if(document.querySelector("header").offsetHeight!==fitHdr) fit();}).observe(document.querySelector("header"));
+
+// ---------- ONE playback controller ----------
+// Single persistent <audio> (unlocked by the first Play tap). Every async step carries the run-token it was started with;
+// cancelAll() bumps the token, resolves/clears every pending timer/promise and silences the audio, so a stale callback can never act.
+const A=new Audio(); A.preload="auto";
+const CHUNK_RATE=0.85; // 끊어 읽기: 조금 더 천천히 (pitch preserved)
+const cancelFns=new Set();
+const dbg=o=>{ if(window.__log) window.__log.push(o); };
+function killAudio(){ A.onended=A.onerror=null; try{A.pause()}catch(e){} try{A.currentTime=0}catch(e){} }
+function cancelAll(){ runTok++; const fs=[...cancelFns]; cancelFns.clear(); fs.forEach(f=>{try{f()}catch(e){}}); killAudio(); }
+function sleep(ms,tok){return new Promise(res=>{ if(tok!==runTok) return res(); let t; const f=()=>{clearTimeout(t);cancelFns.delete(f);res()}; t=setTimeout(f,ms); cancelFns.add(f); })}
+function speak(url,tok,rate){return new Promise(res=>{
+  if(tok!==runTok) return res();
+  killAudio(); let to;
+  const fin=()=>{clearTimeout(to);cancelFns.delete(fin);A.onended=A.onerror=null;res()};
+  cancelFns.add(fin); to=setTimeout(fin,14000);
+  A.onended=()=>{ if(tok===runTok) fin(); };
+  A.onerror=()=>{ if(tok===runTok){ $("status").textContent="소리 파일을 불러오지 못했어요."; fin(); } };
+  dbg({ev:"speak",url,rate:rate||1}); A.src=url; A.preservesPitch=true; A.webkitPreservesPitch=true; A.defaultPlaybackRate=A.playbackRate=rate||1;
+  const p=A.play();
+  if(p&&p.catch) p.catch(err=>{ if(tok!==runTok) return; $("status").textContent="소리를 켤 수 없어요. ▶ 버튼을 다시 눌러 주세요."; fin(); if(err&&err.name==="NotAllowedError"&&playing) stop(); });
+})}
+const warmed=new Set();
+function warm(url){ if(warmed.has(url)||!window.fetch) return; warmed.add(url); try{fetch(url,{cache:"force-cache"}).catch(()=>{})}catch(e){} }
+function preload(){ wordsList.forEach(w=>warm(w.url)); chunkItems(cur).forEach(c=>warm(c.url)); } // cache warm-up only (no Audio objects, never plays)
+
+// ---------- YouTube player (slow / fast steps) ----------
+// YouTube draws its own centre ⏸ button (+ title / logo) briefly after every play start or seekTo(...,true) -- even with controls=0 (measured ~0.3 s at this size).
+// So: (1) the iframe is taller than the picture and clipped (title/logo fall into the cropped margins), (2) taps never reach it (pointer-events:none),
+// (3) while that overlay may be visible the still picture simply stays on top of the video -- but the SOUND never waits for it:
+// every repetition starts as fast as the player can seek (seekTo(start,true) + unmute the moment the play-head reaches the start),
+// and the picture switches to the live video only when ICON_MS have passed since playback resumed after the last seek.
+// The next video step is primed (hidden, muted, playing near its start) during the LAST repetition of the previous step, so its data is already loaded.
+// Between repetitions the player is never paused: it is muted at the end of the sentence and immediately seeked back (short gap, no loading wait).
+const REVEAL=false, ICON_MS=4400, LEAD=0.10, SEEKW=450;   // measured with real YouTube: after every seek/unmute the player's centre play/pause controls stay up for ~4.0-4.4 s (they auto-hide), so a live video could only be shown after that. The video is a slideshow of exactly the still pictures (pixel diff ~0), so REVEAL=false keeps the still on screen: no overlay/title/logo can ever show, and the SOUND never waits for anything
+let yt=null,ytReady=false,poll=null,primed=false,vidWanted=false,vw=null,vph="",vloadN=0,pulseT=0;
+(function(){const s=document.createElement("script");s.src="https://www.youtube.com/iframe_api";document.head.appendChild(s);})();
+window.onYouTubeIframeAPIReady=function(){
+  yt=new YT.Player("ytPlayer",{width:"100%",height:"100%",videoId:(ytVid=vidOf(cur)),playerVars:{playsinline:1,rel:0,modestbranding:1,controls:0,disablekb:1,fs:0,iv_load_policy:3,cc_load_policy:0,start:Math.floor(S[cur].st)},
+    events:{onReady:()=>{ytReady=true;window.__ytReady=true;try{yt.mute();if(!vidWanted&&!playing)yt.playVideo()}catch(e){}   /* muted warm-up: starts loading the video now, the state handler below pauses it again at once */ const f=document.querySelector("#pic iframe"); if(f){f.tabIndex=-1;f.setAttribute("aria-hidden","true");f.style.pointerEvents="none"}},
+      onStateChange:e=>{ if(e.data===1&&!vidWanted) ytIdle(); },   // never let the video keep playing (or make sound) outside a video step
+      onError:e=>{$("status").textContent="영상을 재생할 수 없어요 (YouTube 오류 "+e.data+")."}}});
+};
+function ytIdle(){ vidWanted=false; vw=null; vph=""; clearInterval(poll); setVid(false); try{ if(ytReady){yt.mute();yt.pauseVideo();} }catch(e){} }
+function ytMuted(){ try{ if(ytReady&&!yt.isMuted()) yt.mute(); }catch(e){} }
+function primeYt(){ if(primed||!ytReady) return; primed=true; try{yt.mute();yt.playVideo();setTimeout(()=>{if(!vidWanted) ytIdle()},500)}catch(e){} }
+function prewarm(i,rate){ // hidden + muted: start playing just before the sentence so the data is loaded when the step begins
+  if(!ytReady||(vw&&vw.i===i)) return; vidWanted=true; vw={i}; const s=S[i];
+  try{yt.mute();yt.setPlaybackRate(rate);ytSeek(i,Math.max(0,s.st-0.6*rate));yt.playVideo();}catch(e){}
+}
+function maybePrewarm(){ // called at the START of the last repetition of step 1/2 (the first word of step 1 is the last group): a video step is next
+  const st=P.step; if(st>1) return;
+  const last = st===0 ? (P.u===wordsList.length-1&&P.r===0) : (P.u===0&&P.r===cnts[1]-1);
+  if(!last) return;
+  const k=nextStepIdx(st); if(k>=2) prewarm(cur,k===2?+opt.rate:1);
+}
+// ---- repetition UI (counter + dots + state text), video steps only
+function vidB2(){
+  const sp=P.step===2?`${opt.rate}배속`:"원래 속도";
+  const t=!playing?"":vph==="play"?"재생 중":vph==="next"?(P.r>0?"다음 반복…":"곧 시작…"):vph==="load"?`영상 불러오는 중… (${vloadN}초)`:"";
+  return t?`${t} · ${sp}`:`${sp} · 영상 소리`;
+}
+function renderPill(){
+  const el=$("rep"); if(!el) return; const vs=P.step===2||P.step===3;
+  el.classList.toggle("show",vs); if(!vs){ el.classList.remove("playing","pulse"); return; }
+  const n=cnts[P.step], dn=Math.min(P.r,n), c=Math.min(P.r+1,n);
+  const txt=!playing?"":vph==="play"?"재생 중":vph==="next"?(P.r>0?"다음 반복…":"곧 시작…"):vph==="load"?`불러오는 중… ${vloadN}초`:"";
+  let mid;
+  if(n<=10){ let d=""; for(let k=0;k<n;k++) d+=`<i class="${k<dn?"on":(k===dn&&playing?"cur":"")}"></i>`; mid=`<span class="rd">${d}</span>`; }
+  else mid=`<span class="bar"><u style="width:${dn/n*100}%"></u></span>`;
+  el.classList.toggle("playing",playing&&vph==="play");
+  el.setAttribute("aria-label",`${NAMES[P.step]} ${n}회 중 ${dn}회 끝`);
+  el.innerHTML=`<span class="rn"><b>${c}/${n}</b>회</span>${mid}${txt?`<span class="rp">${txt}</span>`:""}`;
+}
+function setPhase(p){ if(vph===p) return; vph=p; if(P.step===2||P.step===3){ $("b2").textContent=vidB2(); $("b2").classList.toggle("live",playing&&!!vph); renderPill(); } }
+function pulseRep(){ const el=$("rep"); if(!el) return; el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse"); clearTimeout(pulseT); pulseT=setTimeout(()=>el.classList.remove("pulse"),750); }
+// one repetition of the sentence. gapMs = pause before the sound starts again (measured from this call). Resolves exactly once.
+function playSeg(i,rate,tok,gapMs){return new Promise(res=>{
+  if(tok!==runTok) return res();
+  gapMs=gapMs||0;
+  const s=S[i], t0=Date.now(), gapEnd=t0+gapMs, seekDue=t0+Math.max(0,gapMs-SEEKW);
+  let armed=false,done=false,w=null,seekAt=0,lastPlay=0,lastT=-1,lastMove=t0,reseekAt=0,p1At=0,lastAt=0,armAt=0;
+  const finish=()=>{ if(done)return; done=true; clearInterval(poll); clearInterval(w); cancelFns.delete(finish); setVid(false); try{yt.mute()}catch(e){} vph="next"; res(); };   // NOT paused: hidden + muted, repositioned for the next repetition
+  cancelFns.add(finish); vidWanted=true;
+  const doSeek=(from)=>{ const now=Date.now(); try{ yt.mute(); yt.setPlaybackRate(rate); ytSeek(i,Math.max(0,s.st-LEAD*rate)); }catch(e){} seekAt=now; lastMove=now; lastT=-1; lastAt=0; p1At=0; setVid(false);
+    try{ const ps=yt.getPlayerState(); if(ps!==1&&ps!==3){ yt.playVideo(); lastPlay=now; } }catch(e){} dbg({ev:"vseek",i,from,r:P.r}); };
+  const begin=()=>{
+    setPhase("next"); setVid(false);
+    clearInterval(poll);
+    if(Date.now()>=seekDue) doSeek("start");   // inside the tap handler when possible (autoplay rules)
+    poll=setInterval(()=>{ if(tok!==runTok||done){finish();return}
+      let t=0,ps=-1; try{t=yt.getCurrentTime();ps=yt.getPlayerState()}catch(e){return}
+      const now=Date.now();
+      if(!seekAt){ if(now<seekDue) return; doSeek("start"); return; }
+      const moving=Math.abs(t-lastT)>0.001&&ps===1; if(moving) lastMove=now; if(ps===1&&lastT>=0&&lastAt&&Math.abs(t-(lastT+(now-lastAt)/1000*rate))>0.3) p1At=now; lastT=t; lastAt=now; if(ps===1&&!p1At&&now-seekAt>=150) p1At=now;   // playback has resumed after the seek (overlay may flash now)
+      if(!armed){
+        const waited=now-Math.max(t0,gapEnd);
+        if(ps===1&&now>=gapEnd&&now-seekAt>=60&&t>=s.st-0.05&&t<=s.st+0.6){ armed=true; armAt=now; try{yt.setPlaybackRate(rate);yt.unMute()}catch(e){} setPhase("play"); pulseRep(); $("status").textContent=""; dbg({ev:"vstart",i,r:P.r,t}); }
+        else if(ps===1&&t>s.st+0.6&&now-seekAt>250){ doSeek("overshoot"); }          // gap was longer than seek+lead: go back
+        else if(ps!==1&&ps!==3&&now-seekAt>200&&now-lastPlay>700){ try{ yt.mute(); yt.playVideo(); }catch(e){} lastPlay=now; p1At=0; }
+        else if(now-lastMove>1600&&now-reseekAt>1600){ reseekAt=now; doSeek("stall"); }
+        if(waited>1400){ vloadN=Math.ceil(waited/1000); setPhase("load"); if(vph==="load"){ $("b2").textContent=vidB2(); renderPill(); } }
+        if(now-t0>12000){$("status").textContent="영상이 시작되지 않았어요. ▶를 다시 눌러 주세요.";finish()}
+        return; }
+      // armed: audible. Show the live video only once YouTube's overlay can no longer be on screen.
+      setVid(REVEAL&&ps===1&&p1At>0&&now-Math.max(p1At,armAt)>=ICON_MS);
+      if(t>=s.et||ps===0){ finish(); return; }
+      if(now-lastMove>1500){ if(vph!=="load"){ vloadN=1; } else vloadN=Math.ceil((now-lastMove)/1000); setPhase("load"); $("b2").textContent=vidB2(); renderPill();
+        if(now-reseekAt>2500){ reseekAt=now; p1At=0; setVid(false); try{ ytSeek(i,Math.max(t,s.st-0.05)); yt.playVideo(); }catch(e){} lastMove=now-1000; } }
+      else if(vph==="load") setPhase("play");
+    },40);
+  };
+  if(ytReady) begin();
+  else{ $("status").textContent="영상 플레이어를 기다리는 중…"; w=setInterval(()=>{ if(tok!==runTok||done){clearInterval(w);return} if(ytReady){clearInterval(w);$("status").textContent="";begin()} },300); }
+})}
+
+// ---------- the 4-step engine ----------
+const gap=()=>+opt.gap*1000, vgap=()=>Math.max(200,Math.min(900,+opt.gap*700));   // video steps: short pause between repetitions
+async function run(tok){
+  const live=()=>playing&&tok===runTok;
+  preload();
+  while(live()){
+    skipEmpty();
+    if(P.step>=4){ finishSentence(); if(!live()) return; await sleep(500,tok); if(!live()) return; continue; }
+    renderStep(); scrollIfNew();
+    const st=P.step, n=cnts[st];
+    if(st<2){ ytMuted(); maybePrewarm(); }
+    if(st===0){
+      const it=wordsList[P.u]; if(!it){P.step=1;P.u=0;P.r=0;continue}
+      showCap(it,true); dbg({ev:"item",step:0,u:P.u,r:P.r,k:it.k,url:it.url});
+      await speak(it.url,tok); if(!live()) return;
+      await sleep(gap()*0.8,tok); if(!live()) return;
+      P.r++; if(P.r>=n){P.r=0;P.u++; if(P.u>=wordsList.length){hideCap();P.step=1;P.u=0;P.r=0;await sleep(500,tok);} }
+    } else if(st===1){
+      hideCap();
+      const items=chunkItems(cur), it=items[P.u]; dbg({ev:"item",step:1,u:P.u,r:P.r,url:it.url,text:it.text});
+      await speak(it.url,tok,CHUNK_RATE); if(!live()) return;
+      P.u++; if(P.u>=items.length){P.u=0;P.r++; await sleep(P.r>=n?150:gap()*1.3,tok); if(!live()) return; if(P.r>=n){P.step=2;P.r=0;P.u=0;}}
+      else { await sleep(400,tok); if(!live()) return; }
+    } else {
+      hideCap(); dbg({ev:"item",step:st,r:P.r});
+      await playSeg(cur,st===2?+opt.rate:1,tok,P.r>0?vgap():(st===3?250:0)); if(!live()) return;
+      P.r++; if(P.r>=n){P.step=st+1;P.r=0;P.u=0;} else renderStep();   // dots fill the moment a repetition has finished
+    }
+    if(!live()) return;
+  }
+}
+function finishSentence(){
+  ytIdle();
+  done.add(S[cur].n); store.set("done",[...done]); renderRows(); renderBooksOnly();
+  if(opt.auto&&cur<S.length-1){ cur++; store.set("cur",cur); resetP(0); const b=S[cur].b!==S[cur-1].b; render(); $("status").textContent=b?`${BN(S[cur].b)} 시작!`:""; preload(); }
+  else { playing=false; renderStep(); $("status").textContent=cur>=S.length-1?"마지막 문장까지 모두 끝났어요! 🎉":"이 문장을 모두 읽었어요."; }
+}
+function renderBooksOnly(){const t=$("books");const sl=t.scrollLeft;render_books_keep(sl)}
+function render_books_keep(sl){ $("books").innerHTML=BOOKS.map(b=>{const n=S.filter(x=>x.b===b.n),k=n.filter(x=>done.has(x.n)).length;return `<button type="button" data-b="${b.n}" aria-pressed="${b.n===S[cur].b}">${BN(b.n)}<span class="c">${k===n.length?"✓":k+"/"+n.length}</span></button>`}).join(""); $("books").scrollLeft=sl; }
+function start(){ if(playing) return; if(P.step>=4) resetP(0); skipEmpty(); if(P.step>=4){$("status").textContent="설정에서 횟수를 1 이상으로 해 주세요.";return}
+  cancelAll(); playing=true; $("status").textContent=""; primeYt(); renderStep(); lastPos=cur+":"+P.step; scrollCard(); run(++runTok); }
+function stop(){ playing=false; cancelAll(); ytIdle(); hideCap(); renderStep(); }
+function go(i,keepPlaying){ const was=playing; stop(); if(i<0||i>=S.length) return; cur=i; store.set("cur",cur); resetP(0); $("status").textContent=""; render(); history.replaceState(null,"","#"+S[cur].n); if(was||keepPlaying) start(); }
+function setStep(k){ const was=playing; stop(); P={step:k,r:0,u:0}; showCur=false; wordsList=sentWords(cur); render(); if(was) start(); }
+$("play").onclick=()=>playing?stop():start();
+$("prev").onclick=()=>go(cur-1,true);
+$("next").onclick=()=>go(cur+1,true);
+$("chips").addEventListener("click",e=>{const b=e.target.closest("button[data-s]");if(!b)return;const k=+b.dataset.s;if(cnts[k]===0){$("status").textContent="이 단계는 횟수가 0이에요 (⚙ 설정).";return}setStep(k);});
+$("books").addEventListener("click",e=>{const b=e.target.closest("button[data-b]");if(!b)return;const i=S.findIndex(x=>x.b===+b.dataset.b);go(i,playing)});
+$("rows").addEventListener("click",e=>{const b=e.target.closest("button[data-i]");if(!b)return;go(+b.dataset.i,true)});
+
+// ---------- previous / next word (chunk) inside the current step ----------
+async function preview(tok){ // paused: hear the item we just jumped to, once
+  if(P.step===0){const it=wordsList[P.u]; if(!it) return; showCap(it,true); dbg({ev:"item",step:0,u:P.u,r:0,k:it.k,url:it.url,preview:1}); await speak(it.url,tok);}
+  else if(P.step===1){const it=chunkItems(cur)[P.u]; if(!it) return; hideCap(); dbg({ev:"item",step:1,u:P.u,r:0,url:it.url,text:it.text,preview:1}); await speak(it.url,tok,CHUNK_RATE);}
+}
+function navMove(dir){
+  if(P.step>=4) return;
+  const st=P.step; let np=null;
+  if(st===0||st===1){
+    const len=st===0?wordsList.length:S[cur].ch.length; let nu=P.u+dir;
+    if(nu<0) nu=0;
+    if(nu>=len){ const k=nextStepIdx(st); if(k>=0) np={step:k,r:0,u:0}; else nu=len-1; }
+    if(!np) np={step:st,r:0,u:nu};
+  } else { const k=dir<0?prevStepIdx():nextStepIdx(st); if(k<0) return; np={step:k,r:0,u:0}; }
+  const was=playing; cancelAll(); ytIdle(); hideCap(); $("status").textContent="";
+  P=np; showCur=true; renderStep();
+  if(was){ lastPos=cur+":"+P.step; scrollCard(); run(++runTok); }
+  else { preview(++runTok); }
+}
+$("uprev").onclick=()=>navMove(-1);
+$("unext").onclick=()=>navMove(1);
+
+// ---------- tap a word = hear it + see its meaning ----------
+function sayWord(k,el){
+  if(!W[k]) return; const was=playing; if(was) stop(); else cancelAll();
+  document.querySelectorAll(".say").forEach(e=>e.classList.remove("say")); if(el) el.classList.add("say");
+  const it={k,url:wUrl(k),han:W[k][0],mean:W[k][1]};
+  showCap(it,false); const tok=++runTok;
+  speak(it.url,tok).then(()=>{if(el) el.classList.remove("say")});
+}
+$("il").addEventListener("click",e=>{const c=e.target.closest(".col");if(c)sayWord(c.dataset.w,c)});
+$("il").addEventListener("keydown",e=>{if(e.key!=="Enter"&&e.key!==" ")return;const c=e.target.closest(".col");if(c){e.preventDefault();sayWord(c.dataset.w,c)}});
+$("ko").onclick=()=>{const c=$("card");if(c.classList.contains("hideko")){c.classList.remove("hideko");setTimeout(()=>{if(opt.hideko)c.classList.add("hideko")},2500)}};
+
+// ---------- settings ----------
+function saveOpt(){store.set("rate",opt.rate);store.set("gap",opt.gap);store.set("auto",opt.auto);store.set("dedupe",opt.dedupe);store.set("han",opt.han);store.set("hideko",opt.hideko);store.set("cnt",cnts)}
+function syncSettings(){
+  document.querySelectorAll(".step").forEach(s=>{s.querySelector("output").textContent=cnts[+s.dataset.k]});
+  $("rate").value=opt.rate; $("gap").value=opt.gap;
+  [["auto","auto"],["dedupe","dedupe"],["han","han"],["hideko","hideko"]].forEach(([id,k])=>$(id).setAttribute("aria-pressed",String(!!opt[k])));
+}
+document.querySelectorAll(".step").forEach(s=>s.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const k=+s.dataset.k;cnts[k]=Math.max(0,Math.min(30,cnts[k]+ +b.dataset.d));syncSettings();saveOpt();}));
+["auto","dedupe","han","hideko"].forEach(id=>$(id).onclick=()=>{opt[id]=!opt[id];syncSettings();saveOpt();});
+$("rate").onchange=()=>{opt.rate=$("rate").value;saveOpt()}; $("gap").onchange=()=>{opt.gap=$("gap").value;saveOpt()};
+$("reset").onclick=()=>{cnts=DEF.slice();syncSettings();saveOpt()};
+function openSet(){ $("modal").dataset.was=playing?"1":""; stop(); syncSettings(); $("modal").classList.add("show"); }
+function closeSet(){ $("modal").classList.remove("show"); const keep=P.step; resetP(0); render(); }
+$("gear").onclick=openSet; $("mclose").onclick=closeSet; $("mok").onclick=closeSet;
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))closeSet()});
+
+// ---------- init ----------
+(function(){ const h=location.hash.replace("#",""); if(/^\d{1,3}$/.test(h)){const i=S.findIndex(s=>s.n===+h); if(i>=0) cur=i;} })();
+syncSettings(); resetP(0); render();
+window.__app={get cur(){return cur},get P(){return P},get playing(){return playing}};
+</script>
+</html>
