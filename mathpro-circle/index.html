@@ -37,7 +37,27 @@ button,.btn{font-family:inherit;font-size:21px;border:none;cursor:pointer;border
 .back{background:#fff;border:2px solid var(--ink);padding:6px 14px;font-weight:700}
 #ptitle{font-size:26px;font-weight:700;margin:0}
 #ptitle .kind{color:var(--orange)}
-video{width:100%;max-height:70vh;background:#000;border-radius:14px;display:block}
+
+.playcard{width:100%;min-height:230px;padding:18px;border-radius:16px;background:#1f2a44 repeating-linear-gradient(#26324f 0 31px,#2f3c5c 31px 32px);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:26px;box-shadow:0 4px 0 #0f172a}
+.playcard .big{width:96px;height:96px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:44px;padding-left:8px}
+.playcard .t{font-size:18px;font-weight:400;opacity:.85}
+#ov{position:fixed;inset:0;background:#000;z-index:50;display:none;overflow:hidden;touch-action:none}
+#ov.on{display:block}
+#stage{position:absolute;top:0;left:0;background:#000}
+#stage.rot{transform-origin:top left;transform:rotate(90deg) translateY(-100%)}
+#stage video{width:100%;height:100%;object-fit:contain;display:block;background:#000}
+#ctl{position:absolute;left:0;right:0;bottom:0;padding:10px 16px 14px;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;display:flex;align-items:center;gap:12px;transition:opacity .25s}
+#ctl.hide{opacity:0;pointer-events:none}
+#ctl button{background:rgba(255,255,255,.15);color:#fff;min-width:58px;height:52px;border-radius:14px;font-size:24px;font-weight:700}
+#bar{flex:1;height:36px;display:flex;align-items:center;cursor:pointer}
+#bar i{display:block;height:8px;width:100%;background:rgba(255,255,255,.3);border-radius:4px;position:relative}
+#bar b{position:absolute;left:0;top:0;bottom:0;background:var(--red);border-radius:4px}
+#bar b:after{content:"";position:absolute;right:-11px;top:-7px;width:22px;height:22px;border-radius:50%;background:#fff}
+#tm{font-family:system-ui,sans-serif;font-size:15px;min-width:92px;text-align:center}
+#x{position:absolute;top:12px;right:14px;background:rgba(0,0,0,.55);color:#fff;width:56px;height:56px;border-radius:50%;font-size:28px;transition:opacity .25s}
+#x.hide{opacity:0;pointer-events:none}
+#bigplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:rgba(225,29,72,.9);color:#fff;font-size:46px;padding-left:8px;display:none}
+#bigplay.on{display:flex}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
 .pdf{background:var(--red);color:#fff;padding:10px 16px;font-weight:700;box-shadow:0 3px 0 #be123c}
 .ref{background:#fff;color:var(--blue);border:2px dashed var(--blue);padding:8px 14px;font-weight:700}
@@ -62,11 +82,17 @@ video{width:100%;max-height:70vh;background:#000;border-radius:14px;display:bloc
  </section>
  <section id="player">
   <div class="top"><button class="btn back" id="back">← 목록</button><h2 id="ptitle"></h2></div>
-  <video id="vid" controls playsinline preload="metadata"></video>
+  <button class="btn playcard" id="openv"><span class="big">▶</span>영상 보기<span class="t" id="vlen">가로 화면으로 재생돼요</span></button>
   <div class="actions" id="actions"></div>
   <div class="nav"><button id="prev">◀ 이전 영상</button><button id="next">다음 영상 ▶</button></div>
  </section>
 </main>
+
+<div id="ov"><div id="stage"><video id="vid" playsinline webkit-playsinline preload="metadata"></video>
+ <button class="btn" id="bigplay">▶</button>
+ <button class="btn" id="x" aria-label="닫기">✕</button>
+ <div id="ctl"><button class="btn" id="pp">❚❚</button><button class="btn" id="rw">↺10</button><div id="bar"><i><b id="fill"></b></i></div><span id="tm">0:00 / 0:00</span><button class="btn" id="fw">10↻</button></div>
+</div></div>
 <script src="data.js"></script>
 <script>
 const D=window.APP_DATA, $=s=>document.querySelector(s);
@@ -76,7 +102,7 @@ D.pages.forEach(p=>{
   p.problems.forEach(e=>{const x=Object.assign({kind:'problem',page:p.page},e);items[e.id]=x;if(e.ready)order.push(e.id)});
 });
 $('#booktitle').textContent=D.book+' · '+D.unit;
-const mm=s=>Math.floor(s/60)+':'+String(Math.round(s%60)).padStart(2,'0');
+const mm=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 const lbl=l=>l.replace(/\((\d)\)/,'-($1)');
 function home(){
   let h='',last='';
@@ -94,7 +120,7 @@ function home(){
 }
 let lastHomeScroll=0;
 function route(){
-  const id=decodeURIComponent(location.hash.slice(1)), v=$('#vid');
+  const id=decodeURIComponent(location.hash.slice(1)), v=$('#vid'); closeV();
   const it=items[id];
   if(!it||!(it.ready)){ v.pause(); v.removeAttribute('src'); v.load();
     $('#player').style.display='none';$('#home').style.display='block';
@@ -103,7 +129,7 @@ function route(){
   $('#home').style.display='none';$('#player').style.display='block';
   $('#ptitle').innerHTML=it.kind==='concept'?`${it.page}쪽 <span class="kind">개념 설명</span>`:`${it.page}쪽 ${lbl(it.label)}번 풀이`;
   document.title=$('#ptitle').textContent+' · 원의 성질';
-  v.src=it.video; v.load();
+  v.src=it.video; v.load(); $('#vlen').textContent=mm(it.dur)+' · 가로 화면으로 재생돼요';
   let a=`<a class="btn pdf" href="${it.pdf}" target="_blank" rel="noopener">📄 풀이노트 PDF</a>`;
   (it.refs||[]).forEach(r=>{a+=`<a class="btn ref" href="#${r.target}">▶ ${r.label}</a>`});
   if(it.kind==='concept'&&it.title) a+=`<div class="note">${it.title}</div>`;
@@ -116,6 +142,41 @@ function route(){
   window.scrollTo(0,0);
 }
 $('#back').onclick=()=>{location.hash='page'+(items[decodeURIComponent(location.hash.slice(1))]||{}).page};
+
+/* ---- landscape-only player ---- */
+const ov=$('#ov'),st=$('#stage'),V=$('#vid');let hideT=0;
+function layout(){const W=window.innerWidth,H=window.innerHeight,portrait=H>W;
+  st.classList.toggle('rot',portrait);
+  st.style.width=(portrait?H:W)+'px'; st.style.height=(portrait?W:H)+'px';}
+function showCtl(){$('#ctl').classList.remove('hide');$('#x').classList.remove('hide');clearTimeout(hideT);
+  if(!V.paused) hideT=setTimeout(()=>{$('#ctl').classList.add('hide');$('#x').classList.add('hide')},3000);}
+async function openV(){ov.classList.add('on');document.body.style.overflow='hidden';layout();
+  try{ if(ov.requestFullscreen) await ov.requestFullscreen({navigationUI:'hide'}); else if(ov.webkitRequestFullscreen) ov.webkitRequestFullscreen(); }catch(e){}
+  try{ if(screen.orientation&&screen.orientation.lock) await screen.orientation.lock('landscape'); }catch(e){}
+  layout(); V.play().catch(()=>{}); showCtl();}
+function closeV(){ if(!ov.classList.contains('on')) return; V.pause(); ov.classList.remove('on');document.body.style.overflow='';
+  try{ if(screen.orientation&&screen.orientation.unlock) screen.orientation.unlock(); }catch(e){}
+  try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(e){} }
+$('#openv').onclick=openV; $('#x').onclick=e=>{e.stopPropagation();closeV()};
+$('#pp').onclick=e=>{e.stopPropagation();V.paused?V.play():V.pause()};
+$('#bigplay').onclick=e=>{e.stopPropagation();V.play()};
+$('#rw').onclick=e=>{e.stopPropagation();V.currentTime=Math.max(0,V.currentTime-10);showCtl()};
+$('#fw').onclick=e=>{e.stopPropagation();V.currentTime=Math.min(V.duration||0,V.currentTime+10);showCtl()};
+st.addEventListener('click',()=>{ if($('#ctl').classList.contains('hide')) showCtl(); else if(!V.paused){$('#ctl').classList.add('hide');$('#x').classList.add('hide')} });
+function seekAt(ev){const b=$('#bar').getBoundingClientRect(),rot=st.classList.contains('rot');
+  const f=rot?(ev.clientY-b.top)/b.height:(ev.clientX-b.left)/b.width;
+  if(V.duration) V.currentTime=Math.min(1,Math.max(0,f))*V.duration; showCtl();}
+let drag=false;const bar=$('#bar');
+bar.addEventListener('pointerdown',e=>{e.stopPropagation();drag=true;bar.setPointerCapture(e.pointerId);seekAt(e)});
+bar.addEventListener('pointermove',e=>{if(drag)seekAt(e)});
+bar.addEventListener('pointerup',()=>{drag=false});
+bar.addEventListener('click',e=>e.stopPropagation());
+const upd=()=>{const d=V.duration||0;$('#fill').style.width=(d?V.currentTime/d*100:0)+'%';$('#tm').textContent=mm(V.currentTime||0)+' / '+mm(d)};
+V.addEventListener('timeupdate',upd);V.addEventListener('loadedmetadata',upd);
+V.addEventListener('play',()=>{$('#pp').textContent='❚❚';$('#bigplay').classList.remove('on');showCtl()});
+V.addEventListener('pause',()=>{$('#pp').textContent='▶';$('#bigplay').classList.add('on');showCtl()});
+window.addEventListener('resize',()=>{if(ov.classList.contains('on'))layout()});
+document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement&&ov.classList.contains('on')) layout(); });
 home(); window.addEventListener('hashchange',route); route();
 </script>
 </body>
