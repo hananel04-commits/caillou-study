@@ -3,44 +3,89 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>원의 성질 · 풀이 영상 노트</title>
+<title>중학교 3학년 수학개념</title>
 <style>
-@font-face{font-family:Gaegu;src:url(fonts/Gaegu-Regular.woff2);font-weight:400}
-@font-face{font-family:Gaegu;src:url(fonts/Gaegu-Bold.woff2);font-weight:700}
-:root{--blue:#2563eb;--red:#e11d48;--orange:#ea7a14;--ink:#1f2a44;--line:#cfe0f5;--paper:#fffdf6}
+@font-face{font-family:Pretendard;src:url(fonts/Pretendard-Regular.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:Pretendard;src:url(fonts/Pretendard-SemiBold.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:Pretendard;src:url(fonts/Pretendard-Bold.woff2) format("woff2");font-weight:700;font-display:swap}
+:root{--ac:#3b6fe0;--ac-soft:#eef3fd;--ac-dark:#2c58bd;--ink:#1d2433;--sub:#6b7385;--mute:#a7adba;--bg:#f4f5f8;--card:#fff;--line:#e6e8ee;--red:#e11d48}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{font-family:Gaegu,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink);font-size:20px;
- background:var(--paper) repeating-linear-gradient(transparent 0 31px,var(--line) 31px 32px);min-height:100vh}
-body:before{content:"";position:fixed;left:44px;top:0;bottom:0;width:2px;background:#f4a6a6;opacity:.7;z-index:0}
-main{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:16px 16px 48px 60px}
-h1{font-size:34px;margin:6px 0 2px;color:var(--blue)} .sub{font-size:18px;opacity:.75;margin-bottom:14px}
-.legend{font-size:17px;margin:6px 0 18px;display:flex;gap:14px;flex-wrap:wrap}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.dot{width:16px;height:16px;border-radius:5px;display:inline-block}
-.sec{margin:26px 0 6px;font-size:22px;font-weight:700;color:var(--orange)}
-.page{background:#fff;border:2px solid #e3e8f2;border-radius:16px;padding:12px 14px;margin:12px 0;box-shadow:2px 3px 0 #e3e8f2}
-.page h3{margin:0 0 8px;font-size:24px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.page h3 small{font-size:17px;font-weight:400;opacity:.65}
-.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-button,.btn{font-family:inherit;font-size:21px;border:none;cursor:pointer;border-radius:14px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:4px}
-.pb{min-width:62px;min-height:54px;padding:4px 10px;background:var(--blue);color:#fff;font-weight:700;box-shadow:0 3px 0 #1d4ed8;flex-direction:column;line-height:1}
-.pb .t{font-size:13px;font-weight:400;opacity:.9;margin-top:3px}
-.pb:active{transform:translateY(2px);box-shadow:none}
-.pb.off,.cb.off{background:#e8eaef;color:#9aa1ae;box-shadow:none;cursor:default}
-.cb{min-height:54px;padding:4px 14px;background:var(--orange);color:#fff;font-weight:700;box-shadow:0 3px 0 #c2410c;flex-direction:column;line-height:1.05}
-.cb .t{font-size:13px;font-weight:400}
-.none{font-size:17px;opacity:.6}
-/* player */
-#player{display:none}
-.top{display:flex;align-items:center;gap:10px;margin:4px 0 10px}
-.back{background:#fff;border:2px solid var(--ink);padding:6px 14px;font-weight:700}
-#ptitle{font-size:26px;font-weight:700;margin:0}
-#ptitle .kind{color:var(--orange)}
-
-.playcard{width:100%;min-height:230px;padding:18px;border-radius:16px;background:#1f2a44 repeating-linear-gradient(#26324f 0 31px,#2f3c5c 31px 32px);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:26px;box-shadow:0 4px 0 #0f172a}
-.playcard .big{width:96px;height:96px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:44px;padding-left:8px}
-.playcard .t{font-size:18px;font-weight:400;opacity:.85}
+body{word-break:keep-all;font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;color:var(--ink);background:var(--bg);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.shell{display:flex;min-height:100vh}
+/* side nav (desktop) */
+aside{width:232px;flex:none;background:var(--card);border-right:1px solid var(--line);padding:26px 16px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{font-weight:700;font-size:17px;padding:0 10px}
+.brand small{display:block;font-weight:400;font-size:13px;color:var(--sub);margin-top:2px}
+.nav-h{font-size:12px;color:var(--mute);font-weight:600;margin:26px 10px 8px;letter-spacing:.02em}
+.nl{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;font-size:15px;color:var(--ink);margin-bottom:2px}
+.nl:hover{background:var(--bg)}
+.nl.on{background:var(--ac-soft);color:var(--ac);font-weight:600}
+.nl.off{color:var(--mute);pointer-events:none}
+.nl .n{white-space:nowrap;margin-left:8px;font-size:12px;color:var(--mute);font-weight:400}
+.nl.on .n{color:var(--ac)}
+/* top bar (phone) */
+.topbar{display:none;background:var(--card);border-bottom:1px solid var(--line);padding:12px 16px;position:sticky;top:0;z-index:5}
+.topbar a{font-weight:700;font-size:16px}
+.topbar small{font-weight:400;color:var(--mute);font-size:12px;margin-left:6px}
+main{flex:1;min-width:0;padding:28px 36px 60px;max-width:1080px}
+.crumb{font-size:14px;color:var(--sub);margin-bottom:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.crumb a{color:var(--sub)} .crumb a:hover{color:var(--ac)}
+.crumb .sep{color:var(--mute)}
+.crumb b{color:var(--ink);font-weight:600}
+h1{font-size:26px;margin:0 0 6px;font-weight:700;letter-spacing:-.01em}
+h1 .hl{display:inline-block;background:var(--ac);color:#fff;border-radius:999px;padding:0 12px;font-size:.9em;line-height:1.45}
+.lead{color:var(--sub);font-size:15px;margin:0 0 22px}
+.intro{max-width:620px;line-height:1.6;margin-bottom:8px}
+.sem{font-size:15px;font-weight:700;margin:22px 0 12px;display:flex;align-items:center;gap:8px}
+.sem small{font-size:13px;font-weight:400;color:var(--sub)}
+.src{font-size:12px;color:var(--mute);margin:26px 10px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:16px}
+.card{background:var(--card);border-radius:18px;padding:20px;box-shadow:0 1px 2px rgba(20,30,60,.05),0 4px 14px rgba(20,30,60,.06);display:flex;flex-direction:column;min-height:168px;transition:transform .12s,box-shadow .12s;border:1px solid transparent}
+a.card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(20,30,60,.06),0 10px 24px rgba(20,30,60,.09);border-color:#dfe6f7}
+.card .no{font-size:13px;font-weight:600;color:var(--ac)}
+.card .tt{font-size:19px;font-weight:700;margin:6px 0 4px;line-height:1.3;word-break:keep-all}
+.card .pg{font-size:13px;color:var(--sub)}
+.card .ft{margin-top:auto;padding-top:16px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--sub)}
+.pill{display:inline-block;background:var(--ac-soft);color:var(--ac);font-weight:600;border-radius:999px;padding:3px 10px;font-size:13px}
+.go{width:30px;height:30px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px}
+.card.off{background:#f9fafb;box-shadow:none;border:1px dashed var(--line);pointer-events:none}
+.card.off .no,.card.off .tt{color:var(--mute)} .card.off .pg{color:var(--mute)}
+.card.off .pill{background:#eef0f3;color:var(--mute)}
+/* section page */
+.pcard{background:var(--card);border-radius:16px;padding:16px 18px;margin:0 0 14px;box-shadow:0 1px 2px rgba(20,30,60,.05),0 4px 14px rgba(20,30,60,.05);scroll-margin-top:70px}
+.pcard h3{margin:0 0 12px;font-size:17px;font-weight:700;display:flex;align-items:baseline;gap:8px}
+.pcard h3 small{font-size:13px;font-weight:400;color:var(--sub)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font-family:inherit;border:none;cursor:pointer;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;gap:4px;font-size:16px}
+.pb{min-width:64px;min-height:56px;padding:6px 12px;background:var(--card);color:var(--ink);border:1.5px solid #d5ddef;font-weight:700;flex-direction:column;line-height:1.1;font-size:17px}
+.pb:hover{border-color:var(--ac);color:var(--ac)}
+.pb .t{font-size:12px;font-weight:400;color:var(--sub);margin-top:3px}
+.cb{min-height:56px;padding:6px 16px;background:var(--ac);color:#fff;font-weight:600;flex-direction:column;line-height:1.15;font-size:15px}
+.cb:hover{background:var(--ac-dark)}
+.cb .t{font-size:12px;font-weight:400;opacity:.85;margin-top:3px}
+.pb.off,.cb.off{background:#f1f2f5;color:var(--mute);border-color:transparent;cursor:default}
+.none{font-size:13px;color:var(--mute)}
+.secnav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.secnav a{font-size:14px;color:var(--sub);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 14px}
+.secnav a:hover{color:var(--ac);border-color:var(--ac)}
+/* player page */
+#ptitle{font-size:22px;font-weight:700;margin:0 0 14px}
+#ptitle .kind{color:var(--ac)}
+.playcard{width:100%;max-width:720px;aspect-ratio:16/9;border-radius:18px;background:#1d2433;color:#fff;flex-direction:column;gap:10px;font-weight:600;font-size:18px;box-shadow:0 4px 18px rgba(20,30,60,.15)}
+.playcard .big{width:76px;height:76px;border-radius:50%;background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:30px;padding-left:6px}
+.playcard .t{font-size:13px;font-weight:400;opacity:.75}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0;max-width:720px}
+.pdf{background:var(--card);color:var(--ink);border:1.5px solid #d5ddef;padding:10px 16px;font-weight:600;font-size:15px}
+.pdf:hover{border-color:var(--ac);color:var(--ac)}
+.ref{background:var(--ac-soft);color:var(--ac);padding:10px 16px;font-weight:600;font-size:15px}
+.note{width:100%;font-size:14px;color:var(--sub);background:var(--card);border-left:3px solid var(--ac);padding:10px 12px;border-radius:8px}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:6px;max-width:720px}
+.nav button{background:var(--card);border:1px solid var(--line);padding:10px 16px;font-size:14px;color:var(--ink)}
+.nav button[disabled]{opacity:.35;cursor:default}
+#vhome,#vunit,#vsection,#vplayer{display:none}
 #ov{position:fixed;inset:0;background:#000;z-index:50;display:none;overflow:hidden;touch-action:none}
 #ov.on{display:block}
 #stage{position:absolute;top:0;left:0;background:#000}
@@ -58,35 +103,51 @@ button,.btn{font-family:inherit;font-size:21px;border:none;cursor:pointer;border
 #x.hide{opacity:0;pointer-events:none}
 #bigplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:rgba(225,29,72,.9);color:#fff;font-size:46px;padding-left:8px;display:none}
 #bigplay.on{display:flex}
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
-.pdf{background:var(--red);color:#fff;padding:10px 16px;font-weight:700;box-shadow:0 3px 0 #be123c}
-.ref{background:#fff;color:var(--blue);border:2px dashed var(--blue);padding:8px 14px;font-weight:700}
-.note{font-size:18px;background:#fff7e6;border-left:5px solid var(--orange);padding:8px 12px;border-radius:8px}
-.nav{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
-.nav button{background:#fff;border:2px solid #c9d3e6;padding:8px 14px}
-.nav button[disabled]{opacity:.35}
-@media (min-width:700px){body{font-size:22px}.pb{min-width:70px;min-height:60px}}
+#ctl button{font-family:system-ui,sans-serif}
+@media (max-width:860px){aside{display:none}.topbar{display:block}main{padding:18px 16px 48px}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .card{padding:16px;min-height:150px;border-radius:16px}.card .tt{font-size:16px}
+ h1{font-size:21px}}
 </style>
 </head>
 <body>
+<div class="topbar"><a href="#home">중학교 3학년 수학개념 <small>정선영수학</small></a></div>
+<div class="shell">
+<aside>
+ <div class="brand">중학교 3학년 수학개념</div>
+ <div class="nav-h">메뉴</div>
+ <a class="nl" id="nav-home" href="#home">단원 목록</a>
+ <div id="navunits"></div>
+ <div class="src">교재: 매쓰프로 개념 3-1 · 3-2</div>
+</aside>
 <main>
- <section id="home">
-  <h1>📐 원의 성질</h1>
-  <div class="sub" id="booktitle"></div>
-  <div class="legend">
-   <span><i class="dot" style="background:var(--orange)"></i>개념 설명</span>
-   <span><i class="dot" style="background:var(--blue)"></i>풀이 영상 있음</span>
-   <span><i class="dot" style="background:#e8eaef"></i>준비 중</span>
-  </div>
-  <div id="list"></div>
+ <section id="vhome">
+  <h1>중학교 3학년</h1>
+  <p class="lead intro">단원을 고르고 공부하던 쪽의 문제 번호를 누르면 풀이 영상과 풀이노트를 볼 수 있어요. 모르는 개념은 ‘개념 설명’ 영상으로 먼저 정리해 보세요.</p>
+  <div id="units"></div>
  </section>
- <section id="player">
-  <div class="top"><button class="btn back" id="back">← 목록</button><h2 id="ptitle"></h2></div>
+ <section id="vunit">
+  <div class="crumb" id="ucrumb"></div>
+  <h1 id="utitle"></h1>
+  <p class="lead" id="ulead"></p>
+  <div class="grid" id="secs"></div>
+ </section>
+ <section id="vsection">
+  <div class="crumb" id="scrumb"></div>
+  <h1 id="stitle"></h1>
+  <p class="lead" id="slead"></p>
+  <div id="spages"></div>
+  <div class="secnav" id="secnav"></div>
+ </section>
+ <section id="vplayer">
+  <div class="crumb" id="pcrumb"></div>
+  <h2 id="ptitle"></h2>
   <button class="btn playcard" id="openv"><span class="big">▶</span>영상 보기<span class="t" id="vlen">가로 화면으로 재생돼요</span></button>
   <div class="actions" id="actions"></div>
-  <div class="nav"><button id="prev">◀ 이전 영상</button><button id="next">다음 영상 ▶</button></div>
+  <div class="nav"><button class="btn" id="prev">‹ 이전 영상</button><button class="btn" id="next">다음 영상 ›</button></div>
  </section>
 </main>
+</div>
 
 <div id="ov"><div id="stage"><video id="vid" playsinline webkit-playsinline preload="metadata"></video>
  <button class="btn" id="bigplay">▶</button>
@@ -96,54 +157,110 @@ button,.btn{font-family:inherit;font-size:21px;border:none;cursor:pointer;border
 <script src="data.js"></script>
 <script>
 const D=window.APP_DATA, $=s=>document.querySelector(s);
+/* book table of contents (매쓰프로 개념 중3-2) — only unit 6 has videos */
+/* ===== easy-to-change settings =====
+   SEMESTER_FIRST: which semester's units are shown on top (2 = 2학기 first; set to 1 when 1학기 starts)
+   ACTIVE_LABEL: badge text on a unit card that has videos */
+const SEMESTER_FIRST=2;
+const ACTIVE_LABEL='공부하기';
+/* table of contents from the 매쓰프로 개념 3-1 / 3-2 books — only unit 6 has videos so far */
+const SEMS=[{name:'1학기',book:'중3-1',units:[
+ {no:1,name:'실수와 그 연산',pages:'1~14쪽',secs:['제곱근의 뜻과 성질','무리수와 실수','제곱근의 곱셈과 나눗셈','제곱근의 덧셈과 뺄셈']},
+ {no:2,name:'다항식의 곱셈과 인수분해',pages:'15~36쪽',secs:['다항식의 곱셈과 곱셈공식','곱셈공식의 활용','공통인 인수를 이용한 인수분해','인수분해 공식-완전제곱식','인수분해 공식-제곱의 차','인수분해 공식-x²의 계수가 1인 이차식','인수분해 공식-x²의 계수가 1이 아닌 이차식','여러 가지 인수분해','인수분해 공식의 활용']},
+ {no:3,name:'이차방정식',pages:'37~52쪽',secs:['이차방정식의 뜻과 풀이','중근, 제곱근, 완전제곱식을 이용한 이차방정식의 풀이','이차방정식의 근의 공식과 복잡한 이차방정식의 풀이','이차방정식의 성질','이차방정식의 활용']},
+ {no:4,name:'이차함수',pages:'53~64쪽',secs:['이차함수의 뜻과 y=ax²의 그래프','이차함수 y=ax²+q의 그래프','이차함수 y=a(x-p)²의 그래프','이차함수 y=a(x-p)²+q의 그래프','이차함수 y=ax²+bx+c의 그래프']}]},
+ {name:'2학기',book:'중3-2',units:null}];
+const UNITS=[
+ {no:5,name:'삼각비',pages:'1~16쪽',secs:['삼각비','각의 삼각비와 삼각비의 표','삼각형의 변의 길이, 높이','삼각형과 사각형의 넓이']},
+ {no:6,name:'원의 성질',pages:'17~32쪽'},
+ {no:7,name:'통계',pages:'33~46쪽',secs:['대푯값','산포도','산점도','상관관계']}];
+const ACTIVE=6;
 const items={}, order=[];
 D.pages.forEach(p=>{
   (p.concepts||[]).forEach(k=>{if(k.ready){const c=Object.assign({kind:'concept',page:p.page},k);items[c.id]=c;order.push(c.id)}});
   p.problems.forEach(e=>{const x=Object.assign({kind:'problem',page:p.page},e);items[e.id]=x;if(e.ready)order.push(e.id)});
 });
-$('#booktitle').textContent=D.book+' · '+D.unit;
 const mm=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 const lbl=l=>l.replace(/\((\d)\)/,'-($1)');
-function home(){
-  let h='',last='';
-  D.pages.forEach(p=>{
-    if(p.section!==last){h+=`<div class="sec">${p.section}. ${p.sectionName}</div>`;last=p.section}
-    h+=`<div class="page" id="page${p.page}"><h3>${p.page}쪽 <small>${p.kind}</small></h3><div class="row">`;
+const nv=p=>(p.concepts||[]).filter(k=>k.ready).length+p.problems.filter(e=>e.ready).length;
+/* sections of unit 6 */
+const SECS=[];
+D.pages.forEach(p=>{let s=SECS.find(x=>x.id===p.section);if(!s){s={id:p.section,name:p.sectionName,pages:[]};SECS.push(s)}s.pages.push(p)});
+SECS.forEach(s=>{s.from=s.pages[0].page;s.to=s.pages[s.pages.length-1].page;s.v=s.pages.reduce((a,p)=>a+nv(p),0);
+  s.c=s.pages.reduce((a,p)=>a+(p.concepts||[]).filter(k=>k.ready).length,0)});
+const pageSec={};SECS.forEach(s=>s.pages.forEach(p=>pageSec[p.page]=s.id));
+const TOTAL=order.length;
+const U6=`${ACTIVE}. ${D.unit.replace(/^\d+\.\s*/,'')}`;
+const sep='<span class="sep">›</span>';
+const crumbs=a=>a.map((x,i)=>i<a.length-1?`<a href="${x[1]}">${x[0]}</a>`:`<b>${x[0]}</b>`).join(sep);
+
+function build(){
+  SEMS[1].units=UNITS;
+  let h='',n='';
+  const sems=SEMESTER_FIRST===2?[SEMS[1],SEMS[0]]:SEMS;
+  sems.forEach(sm=>{h+=`<div class="sem">${sm.name} <small>${sm.book}</small></div><div class="grid">`;n+=`<div class="nav-h">${sm.name}</div>`;
+  sm.units.forEach(u=>{const on=u.no===ACTIVE;
+    h+=on?`<a class="card" href="#u${u.no}"><span class="no">${u.no}단원</span><span class="tt">${u.name}</span><span class="pg">${u.pages} · 소단원 ${SECS.length}개</span><span class="ft"><span class="pill">${ACTIVE_LABEL}</span><span class="go">›</span></span></a>`
+         :`<div class="card off"><span class="no">${u.no}단원</span><span class="tt">${u.name}</span><span class="pg">${u.pages} · 소단원 ${u.secs.length}개</span><span class="ft"><span class="pill">준비 중</span></span></div>`;
+    n+=on?`<a class="nl" id="nav-u${u.no}" href="#u${u.no}">${u.no}. ${u.name}</a>`:`<span class="nl off">${u.no}. ${u.name}<span class="n">준비 중</span></span>`;});h+='</div>';});
+  $('#units').innerHTML=h; $('#navunits').innerHTML=n;
+  $('#ucrumb').innerHTML=crumbs([['단원 목록','#home'],[U6]]);
+  $('#utitle').textContent=U6;
+  $('#ulead').textContent=`${D.book} · 17~32쪽 · 소단원을 눌러 들어가세요.`;
+  $('#secs').innerHTML=SECS.map(s=>`<a class="card" href="#s${s.id}"><span class="no">${s.id}</span><span class="tt">${s.name}</span><span class="pg">${s.from}~${s.to}쪽</span><span class="ft"><span class="pill">영상 ${s.v}개</span><span class="go">›</span></span></a>`).join('');
+}
+function showOnly(id){['home','unit','section','player'].forEach(x=>$('#v'+x).style.display=x===id?'block':'none');
+  document.querySelectorAll('.nl').forEach(e=>e.classList.remove('on'));
+  const nb=id==='home'?$('#nav-home'):$('#nav-u'+ACTIVE); if(nb) nb.classList.add('on');}
+function renderSection(sid){
+  const s=SECS.find(x=>x.id===sid), i=SECS.indexOf(s);
+  $('#scrumb').innerHTML=crumbs([['단원 목록','#home'],[U6,'#u'+ACTIVE],[s.id+'. '+s.name]]);
+  $('#stitle').textContent=s.id+'. '+s.name;
+  $('#slead').textContent=`${s.from}~${s.to}쪽 · 개념 설명 ${s.c}개 · 풀이 영상 ${s.v-s.c}개`;
+  let h='';
+  s.pages.forEach(p=>{
+    h+=`<div class="pcard" id="page${p.page}"><h3>${p.page}쪽 <small>${p.kind}</small></h3><div class="row">`;
     (p.concepts||[]).forEach(k=>{const nm=(p.concepts.length>1&&k.title)?k.title:'개념 설명';
-      h+=k.ready?`<a class="btn cb" href="#${k.id}">📘 ${nm}<span class="t">${mm(k.dur)}</span></a>`
-                :`<button class="cb off" disabled>📘 ${nm}<span class="t">준비 중</span></button>`});
-    p.problems.forEach(e=>{h+=e.ready?`<a class="btn pb" href="#${e.id}">${lbl(e.label)}<span class="t">▶ ${mm(e.dur)}</span></a>`
-                                   :`<button class="pb off" disabled>${lbl(e.label)}<span class="t">준비 중</span></button>`});
+      h+=k.ready?`<a class="btn cb" href="#${k.id}">${nm}<span class="t">${mm(k.dur)}</span></a>`
+                :`<button class="btn cb off" disabled>${nm}<span class="t">준비 중</span></button>`});
+    p.problems.forEach(e=>{h+=e.ready?`<a class="btn pb" href="#${e.id}">${lbl(e.label)}<span class="t">${mm(e.dur)}</span></a>`
+                                   :`<button class="btn pb off" disabled>${lbl(e.label)}<span class="t">준비 중</span></button>`});
     if(!p.problems.length) h+=`<span class="none">이 쪽은 개념만 있어요</span>`;
     h+='</div></div>';
   });
-  $('#list').innerHTML=h;
+  $('#spages').innerHTML=h;
+  const pv=SECS[i-1],nx=SECS[i+1];
+  $('#secnav').innerHTML=(pv?`<a href="#s${pv.id}">‹ ${pv.id}. ${pv.name}</a>`:'<span></span>')+(nx?`<a href="#s${nx.id}">${nx.id}. ${nx.name} ›</a>`:'<span></span>');
 }
-let lastHomeScroll=0;
+function stopV(){const v=$('#vid');v.pause();v.removeAttribute('src');v.load();}
 function route(){
-  const id=decodeURIComponent(location.hash.slice(1)), v=$('#vid'); closeV();
+  const id=decodeURIComponent(location.hash.slice(1)); closeV();
   const it=items[id];
-  if(!it||!(it.ready)){ v.pause(); v.removeAttribute('src'); v.load();
-    $('#player').style.display='none';$('#home').style.display='block';
-    const pg=id.match(/^page(\d+)$/); if(pg&&$('#'+id)) $('#'+id).scrollIntoView(); else window.scrollTo(0,lastHomeScroll); return;}
-  if($('#home').style.display!=='none') lastHomeScroll=window.scrollY;
-  $('#home').style.display='none';$('#player').style.display='block';
-  $('#ptitle').innerHTML=it.kind==='concept'?`${it.page}쪽 <span class="kind">개념 설명</span>`:`${it.page}쪽 ${lbl(it.label)}번 풀이`;
-  document.title=$('#ptitle').textContent+' · 원의 성질';
-  v.src=it.video; v.load(); $('#vlen').textContent=mm(it.dur)+' · 가로 화면으로 재생돼요';
-  let a=`<a class="btn pdf" href="${it.pdf}" target="_blank" rel="noopener">📄 풀이노트 PDF</a>`;
-  (it.refs||[]).forEach(r=>{a+=`<a class="btn ref" href="#${r.target}">▶ ${r.label}</a>`});
-  if(it.kind==='concept'&&it.title) a+=`<div class="note">${it.title}</div>`;
-  if(it.refs&&it.refs.length) a+=`<div class="note">이 문제에 쓰인 개념은 위 영상에서 자세히 설명했어요.</div>`;
-  $('#actions').innerHTML=a;
-  const i=order.indexOf(id);
-  $('#prev').disabled=i<=0; $('#next').disabled=i>=order.length-1;
-  $('#prev').onclick=()=>{if(i>0)location.hash=order[i-1]};
-  $('#next').onclick=()=>{if(i<order.length-1)location.hash=order[i+1]};
-  window.scrollTo(0,0);
+  if(it&&it.ready){ showOnly('player');
+    const s=SECS.find(x=>x.id===pageSec[it.page]);
+    const name=it.kind==='concept'?(it.title||'개념 설명'):`${lbl(it.label)}번 풀이`;
+    $('#pcrumb').innerHTML=crumbs([['단원 목록','#home'],[U6,'#u'+ACTIVE],[s.id+'. '+s.name,'#page'+it.page],[`${it.page}쪽 ${it.kind==='concept'?'개념':lbl(it.label)+'번'}`]]);
+    $('#ptitle').innerHTML=it.kind==='concept'?`${it.page}쪽 <span class="kind">개념 설명</span>`:`${it.page}쪽 ${lbl(it.label)}번 풀이`;
+    document.title=$('#ptitle').textContent+' · 원의 성질';
+    const v=$('#vid'); v.src=it.video; v.load(); $('#vlen').textContent=mm(it.dur)+' · 가로 화면으로 재생돼요';
+    let a=`<a class="btn pdf" href="${it.pdf}" target="_blank" rel="noopener">풀이노트 PDF</a>`;
+    (it.refs||[]).forEach(r=>{a+=`<a class="btn ref" href="#${r.target}">▶ ${r.label}</a>`});
+    if(it.kind==='concept'&&it.title) a+=`<div class="note">${it.title}</div>`;
+    if(it.refs&&it.refs.length) a+=`<div class="note">이 문제에 쓰인 개념은 위 영상에서 자세히 설명했어요.</div>`;
+    $('#actions').innerHTML=a;
+    const i=order.indexOf(id);
+    $('#prev').disabled=i<=0; $('#next').disabled=i>=order.length-1;
+    $('#prev').onclick=()=>{if(i>0)location.hash=order[i-1]};
+    $('#next').onclick=()=>{if(i<order.length-1)location.hash=order[i+1]};
+    window.scrollTo(0,0); return;}
+  stopV(); document.title='중학교 3학년 수학개념';
+  let m;
+  if((m=id.match(/^page(\d+)$/))&&pageSec[m[1]]){showOnly('section');renderSection(pageSec[m[1]]);
+    const el=$('#'+id); requestAnimationFrame(()=>el&&el.scrollIntoView({block:'start'})); return;}
+  if((m=id.match(/^s(\d\d)$/))&&SECS.find(x=>x.id===m[1])){showOnly('section');renderSection(m[1]);window.scrollTo(0,0);return;}
+  if(id==='u'+ACTIVE){showOnly('unit');window.scrollTo(0,0);return;}
+  showOnly('home');window.scrollTo(0,0);
 }
-$('#back').onclick=()=>{location.hash='page'+(items[decodeURIComponent(location.hash.slice(1))]||{}).page};
-
 /* ---- landscape-only player ---- */
 const ov=$('#ov'),st=$('#stage'),V=$('#vid');let hideT=0;
 function layout(){const W=window.innerWidth,H=window.innerHeight,portrait=H>W;
@@ -178,7 +295,7 @@ V.addEventListener('play',()=>{$('#pp').textContent='❚❚';$('#bigplay').class
 V.addEventListener('pause',()=>{$('#pp').textContent='▶';$('#bigplay').classList.add('on');showCtl()});
 window.addEventListener('resize',()=>{if(ov.classList.contains('on'))layout()});
 document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement&&ov.classList.contains('on')) layout(); });
-home(); window.addEventListener('hashchange',route); route();
+build(); window.addEventListener('hashchange',route); route();
 </script>
 </body>
 </html>
