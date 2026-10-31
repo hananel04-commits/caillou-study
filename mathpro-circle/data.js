@@ -693,18 +693,44 @@ window.APP_DATA={
     {
      "id": "p25-1",
      "label": "1",
-     "ready": false
+     "ready": true,
+     "video": "media/p25_1.mp4",
+     "pdf": "media/p25_1_note_A4.pdf",
+     "dur": 71.8,
+     "answer": "60°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p25-2",
      "label": "2",
-     "ready": false
+     "ready": true,
+     "video": "media/p25_2.mp4",
+     "pdf": "media/p25_2_note_A4.pdf",
+     "dur": 81.8,
+     "answer": "48°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      }
+     ]
     }
    ],
    "concepts": [
     {
      "id": "c25",
-     "ready": false
+     "ready": true,
+     "title": "원주각과 중심각 · 원주각의 성질",
+     "video": "media/concept_25_01.mp4",
+     "pdf": "media/concept_25_01_note_A4.pdf",
+     "dur": 137.3
     }
    ]
   },
@@ -717,32 +743,103 @@ window.APP_DATA={
     {
      "id": "p26-1",
      "label": "1",
-     "ready": false
+     "ready": true,
+     "video": "media/p26_1.mp4",
+     "pdf": "media/p26_1_note_A4.pdf",
+     "dur": 63.1,
+     "answer": "35°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p26-2",
      "label": "2",
-     "ready": false
+     "ready": true,
+     "video": "media/p26_2.mp4",
+     "pdf": "media/p26_2_note_A4.pdf",
+     "dur": 79.4,
+     "answer": "138°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p26-3",
      "label": "3",
-     "ready": false
+     "ready": true,
+     "video": "media/p26_3.mp4",
+     "pdf": "media/p26_3_note_A4.pdf",
+     "dur": 98.0,
+     "answer": "70°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c21",
+       "label": "21쪽 개념 설명"
+      },
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p26-4",
      "label": "4",
-     "ready": false
+     "ready": true,
+     "video": "media/p26_4.mp4",
+     "pdf": "media/p26_4_note_A4.pdf",
+     "dur": 93.2,
+     "answer": "114°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p26-5",
      "label": "5",
-     "ready": false
+     "ready": true,
+     "video": "media/p26_5.mp4",
+     "pdf": "media/p26_5_note_A4.pdf",
+     "dur": 91.3,
+     "answer": "③ 104°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p26-6",
      "label": "6",
-     "ready": false
+     "ready": true,
+     "video": "media/p26_6.mp4",
+     "pdf": "media/p26_6_note_A4.pdf",
+     "dur": 86.0,
+     "answer": "(1+√3)/2",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      }
+     ]
     }
    ]
   },
@@ -755,7 +852,11 @@ window.APP_DATA={
    "concepts": [
     {
      "id": "c27",
-     "ready": false
+     "ready": true,
+     "title": "원주각과 호 · 네 점이 한 원 위에 있을 조건",
+     "video": "media/concept_27_01.mp4",
+     "pdf": "media/concept_27_01_note_A4.pdf",
+     "dur": 142.2
     }
    ]
   },
@@ -768,37 +869,124 @@ window.APP_DATA={
     {
      "id": "p28-1",
      "label": "1",
-     "ready": false
+     "ready": true,
+     "video": "media/p28_1.mp4",
+     "pdf": "media/p28_1_note_A4.pdf",
+     "dur": 92.0,
+     "answer": "15",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c27",
+       "label": "27쪽 개념 설명"
+      },
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p28-2-1",
      "label": "2(1)",
-     "ready": false
+     "ready": true,
+     "video": "media/p28_2_1.mp4",
+     "pdf": "media/p28_2_1_note_A4.pdf",
+     "dur": 102.8,
+     "answer": "62°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c27",
+       "label": "27쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p28-2-2",
      "label": "2(2)",
-     "ready": false
+     "ready": true,
+     "video": "media/p28_2_2.mp4",
+     "pdf": "media/p28_2_2_note_A4.pdf",
+     "dur": 86.9,
+     "answer": "28°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "p28-2-1",
+       "label": "28쪽 2(1)번 영상"
+      }
+     ]
     },
     {
      "id": "p28-3",
      "label": "3",
-     "ready": false
+     "ready": true,
+     "video": "media/p28_3.mp4",
+     "pdf": "media/p28_3_note_A4.pdf",
+     "dur": 83.3,
+     "answer": "60°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      },
+      {
+       "concept": "",
+       "target": "c27",
+       "label": "27쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p28-4",
      "label": "4",
-     "ready": false
+     "ready": true,
+     "video": "media/p28_4.mp4",
+     "pdf": "media/p28_4_note_A4.pdf",
+     "dur": 108.1,
+     "answer": "20°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p28-5",
      "label": "5",
-     "ready": false
+     "ready": true,
+     "video": "media/p28_5.mp4",
+     "pdf": "media/p28_5_note_A4.pdf",
+     "dur": 110.8,
+     "answer": "100°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c27",
+       "label": "27쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p28-6",
      "label": "6",
-     "ready": false
+     "ready": true,
+     "video": "media/p28_6.mp4",
+     "pdf": "media/p28_6_note_A4.pdf",
+     "dur": 104.3,
+     "answer": "21°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      }
+     ]
     }
    ]
   },
@@ -811,7 +999,11 @@ window.APP_DATA={
    "concepts": [
     {
      "id": "c29",
-     "ready": false
+     "ready": true,
+     "title": "원에 내접하는 사각형의 성질과 조건",
+     "video": "media/concept_29_01.mp4",
+     "pdf": "media/concept_29_01_note_A4.pdf",
+     "dur": 132.9
     }
    ]
   },
@@ -824,37 +1016,124 @@ window.APP_DATA={
     {
      "id": "p30-1-1",
      "label": "1(1)",
-     "ready": false
+     "ready": true,
+     "video": "media/p30_1_1.mp4",
+     "pdf": "media/p30_1_1_note_A4.pdf",
+     "dur": 68.1,
+     "answer": "∠x=120°, ∠y=88°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c29",
+       "label": "29쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p30-1-2",
      "label": "1(2)",
-     "ready": false
+     "ready": true,
+     "video": "media/p30_1_2.mp4",
+     "pdf": "media/p30_1_2_note_A4.pdf",
+     "dur": 76.2,
+     "answer": "∠x=88°, ∠y=92°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c29",
+       "label": "29쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p30-1-3",
      "label": "1(3)",
-     "ready": false
+     "ready": true,
+     "video": "media/p30_1_3.mp4",
+     "pdf": "media/p30_1_3_note_A4.pdf",
+     "dur": 73.3,
+     "answer": "∠x=120°, ∠y=60°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      },
+      {
+       "concept": "",
+       "target": "c29",
+       "label": "29쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p30-2",
      "label": "2",
-     "ready": false
+     "ready": true,
+     "video": "media/p30_2.mp4",
+     "pdf": "media/p30_2_note_A4.pdf",
+     "dur": 115.3,
+     "answer": "138°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c21",
+       "label": "21쪽 개념 설명"
+      },
+      {
+       "concept": "",
+       "target": "c31",
+       "label": "31쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p30-3",
      "label": "3",
-     "ready": false
+     "ready": true,
+     "video": "media/p30_3.mp4",
+     "pdf": "media/p30_3_note_A4.pdf",
+     "dur": 73.8,
+     "answer": "34°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c29",
+       "label": "29쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p30-4",
      "label": "4",
-     "ready": false
+     "ready": true,
+     "video": "media/p30_4.mp4",
+     "pdf": "media/p30_4_note_A4.pdf",
+     "dur": 109.3,
+     "answer": "114°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c29",
+       "label": "29쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p30-5",
      "label": "5",
-     "ready": false
+     "ready": true,
+     "video": "media/p30_5.mp4",
+     "pdf": "media/p30_5_note_A4.pdf",
+     "dur": 75.5,
+     "answer": "151°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c29",
+       "label": "29쪽 개념 설명"
+      }
+     ]
     }
    ]
   },
@@ -867,7 +1146,11 @@ window.APP_DATA={
    "concepts": [
     {
      "id": "c31",
-     "ready": false
+     "ready": true,
+     "title": "접선과 현이 이루는 각 · 두 원에서",
+     "video": "media/concept_31_01.mp4",
+     "pdf": "media/concept_31_01_note_A4.pdf",
+     "dur": 144.8
     }
    ]
   },
@@ -880,32 +1163,113 @@ window.APP_DATA={
     {
      "id": "p32-1",
      "label": "1",
-     "ready": false
+     "ready": true,
+     "video": "media/p32_1.mp4",
+     "pdf": "media/p32_1_note_A4.pdf",
+     "dur": 94.4,
+     "answer": "150°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c31",
+       "label": "31쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p32-2",
      "label": "2",
-     "ready": false
+     "ready": true,
+     "video": "media/p32_2.mp4",
+     "pdf": "media/p32_2_note_A4.pdf",
+     "dur": 87.4,
+     "answer": "58°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c31",
+       "label": "31쪽 개념 설명"
+      },
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p32-3",
      "label": "3",
-     "ready": false
+     "ready": true,
+     "video": "media/p32_3.mp4",
+     "pdf": "media/p32_3_note_A4.pdf",
+     "dur": 98.7,
+     "answer": "115°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c31",
+       "label": "31쪽 개념 설명"
+      },
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p32-4",
      "label": "4",
-     "ready": false
+     "ready": true,
+     "video": "media/p32_4.mp4",
+     "pdf": "media/p32_4_note_A4.pdf",
+     "dur": 101.0,
+     "answer": "81°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c31",
+       "label": "31쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p32-5",
      "label": "5",
-     "ready": false
+     "ready": true,
+     "video": "media/p32_5.mp4",
+     "pdf": "media/p32_5_note_A4.pdf",
+     "dur": 100.6,
+     "answer": "95°",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c25",
+       "label": "25쪽 개념 설명"
+      },
+      {
+       "concept": "",
+       "target": "c29",
+       "label": "29쪽 개념 설명"
+      }
+     ]
     },
     {
      "id": "p32-6",
      "label": "6",
-     "ready": false
+     "ready": true,
+     "video": "media/p32_6.mp4",
+     "pdf": "media/p32_6_note_A4.pdf",
+     "dur": 105.5,
+     "answer": "8√3 cm²",
+     "refs": [
+      {
+       "concept": "",
+       "target": "c31",
+       "label": "31쪽 개념 설명"
+      }
+     ]
     }
    ]
   }
