@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>원의 성질 · 풀이 영상 노트</title>
+<style>
+@font-face{font-family:Gaegu;src:url(fonts/Gaegu-Regular.woff2);font-weight:400}
+@font-face{font-family:Gaegu;src:url(fonts/Gaegu-Bold.woff2);font-weight:700}
+:root{--blue:#2563eb;--red:#e11d48;--orange:#ea7a14;--ink:#1f2a44;--line:#cfe0f5;--paper:#fffdf6}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Gaegu,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink);font-size:20px;
+ background:var(--paper) repeating-linear-gradient(transparent 0 31px,var(--line) 31px 32px);min-height:100vh}
+body:before{content:"";position:fixed;left:44px;top:0;bottom:0;width:2px;background:#f4a6a6;opacity:.7;z-index:0}
+main{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:16px 16px 48px 60px}
+h1{font-size:34px;margin:6px 0 2px;color:var(--blue)} .sub{font-size:18px;opacity:.75;margin-bottom:14px}
+.legend{font-size:17px;margin:6px 0 18px;display:flex;gap:14px;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:16px;height:16px;border-radius:5px;display:inline-block}
+.sec{margin:26px 0 6px;font-size:22px;font-weight:700;color:var(--orange)}
+.page{background:#fff;border:2px solid #e3e8f2;border-radius:16px;padding:12px 14px;margin:12px 0;box-shadow:2px 3px 0 #e3e8f2}
+.page h3{margin:0 0 8px;font-size:24px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.page h3 small{font-size:17px;font-weight:400;opacity:.65}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+button,.btn{font-family:inherit;font-size:21px;border:none;cursor:pointer;border-radius:14px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:4px}
+.pb{min-width:62px;min-height:54px;padding:4px 10px;background:var(--blue);color:#fff;font-weight:700;box-shadow:0 3px 0 #1d4ed8;flex-direction:column;line-height:1}
+.pb .t{font-size:13px;font-weight:400;opacity:.9;margin-top:3px}
+.pb:active{transform:translateY(2px);box-shadow:none}
+.pb.off,.cb.off{background:#e8eaef;color:#9aa1ae;box-shadow:none;cursor:default}
+.cb{min-height:54px;padding:4px 14px;background:var(--orange);color:#fff;font-weight:700;box-shadow:0 3px 0 #c2410c;flex-direction:column;line-height:1.05}
+.cb .t{font-size:13px;font-weight:400}
+.none{font-size:17px;opacity:.6}
+/* player */
+#player{display:none}
+.top{display:flex;align-items:center;gap:10px;margin:4px 0 10px}
+.back{background:#fff;border:2px solid var(--ink);padding:6px 14px;font-weight:700}
+#ptitle{font-size:26px;font-weight:700;margin:0}
+#ptitle .kind{color:var(--orange)}
+video{width:100%;max-height:70vh;background:#000;border-radius:14px;display:block}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.pdf{background:var(--red);color:#fff;padding:10px 16px;font-weight:700;box-shadow:0 3px 0 #be123c}
+.ref{background:#fff;color:var(--blue);border:2px dashed var(--blue);padding:8px 14px;font-weight:700}
+.note{font-size:18px;background:#fff7e6;border-left:5px solid var(--orange);padding:8px 12px;border-radius:8px}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
+.nav button{background:#fff;border:2px solid #c9d3e6;padding:8px 14px}
+.nav button[disabled]{opacity:.35}
+@media (min-width:700px){body{font-size:22px}.pb{min-width:70px;min-height:60px}}
+</style>
+</head>
+<body>
+<main>
+ <section id="home">
+  <h1>📐 원의 성질</h1>
+  <div class="sub" id="booktitle"></div>
+  <div class="legend">
+   <span><i class="dot" style="background:var(--orange)"></i>개념 설명</span>
+   <span><i class="dot" style="background:var(--blue)"></i>풀이 영상 있음</span>
+   <span><i class="dot" style="background:#e8eaef"></i>준비 중</span>
+  </div>
+  <div id="list"></div>
+ </section>
+ <section id="player">
+  <div class="top"><button class="btn back" id="back">← 목록</button><h2 id="ptitle"></h2></div>
+  <video id="vid" controls playsinline preload="metadata"></video>
+  <div class="actions" id="actions"></div>
+  <div class="nav"><button id="prev">◀ 이전 영상</button><button id="next">다음 영상 ▶</button></div>
+ </section>
+</main>
+<script src="data.js"></script>
+<script>
+const D=window.APP_DATA, $=s=>document.querySelector(s);
+const items={}, order=[];
+D.pages.forEach(p=>{
+  if(p.concept&&p.concept.ready){const c=Object.assign({kind:'concept',page:p.page},p.concept);items[c.id]=c;order.push(c.id)}
+  p.problems.forEach(e=>{const x=Object.assign({kind:'problem',page:p.page},e);items[e.id]=x;if(e.ready)order.push(e.id)});
+});
+$('#booktitle').textContent=D.book+' · '+D.unit;
+const mm=s=>Math.floor(s/60)+':'+String(Math.round(s%60)).padStart(2,'0');
+const lbl=l=>l.replace(/\((\d)\)/,'-($1)');
+function home(){
+  let h='',last='';
+  D.pages.forEach(p=>{
+    if(p.section!==last){h+=`<div class="sec">${p.section}. ${p.sectionName}</div>`;last=p.section}
+    h+=`<div class="page" id="page${p.page}"><h3>${p.page}쪽 <small>${p.kind}</small></h3><div class="row">`;
+    if(p.concept) h+=p.concept.ready?`<a class="btn cb" href="#${p.concept.id}">📘 개념 설명<span class="t">${mm(p.concept.dur)}</span></a>`
+                                     :`<button class="cb off" disabled>📘 개념 설명<span class="t">준비 중</span></button>`;
+    p.problems.forEach(e=>{h+=e.ready?`<a class="btn pb" href="#${e.id}">${lbl(e.label)}<span class="t">▶ ${mm(e.dur)}</span></a>`
+                                   :`<button class="pb off" disabled>${lbl(e.label)}<span class="t">준비 중</span></button>`});
+    if(!p.problems.length) h+=`<span class="none">이 쪽은 개념만 있어요</span>`;
+    h+='</div></div>';
+  });
+  $('#list').innerHTML=h;
+}
+let lastHomeScroll=0;
+function route(){
+  const id=decodeURIComponent(location.hash.slice(1)), v=$('#vid');
+  const it=items[id];
+  if(!it||!(it.ready)){ v.pause(); v.removeAttribute('src'); v.load();
+    $('#player').style.display='none';$('#home').style.display='block';
+    const pg=id.match(/^page(\d+)$/); if(pg&&$('#'+id)) $('#'+id).scrollIntoView(); else window.scrollTo(0,lastHomeScroll); return;}
+  if($('#home').style.display!=='none') lastHomeScroll=window.scrollY;
+  $('#home').style.display='none';$('#player').style.display='block';
+  $('#ptitle').innerHTML=it.kind==='concept'?`${it.page}쪽 <span class="kind">개념 설명</span>`:`${it.page}쪽 ${lbl(it.label)}번 풀이`;
+  document.title=$('#ptitle').textContent+' · 원의 성질';
+  v.src=it.video; v.load();
+  let a=`<a class="btn pdf" href="${it.pdf}" target="_blank" rel="noopener">📄 풀이노트 PDF</a>`;
+  (it.refs||[]).forEach(r=>{a+=`<a class="btn ref" href="#${r.target}">▶ ${r.label}</a>`});
+  if(it.kind==='concept'&&it.title) a+=`<div class="note">${it.title}</div>`;
+  if(it.refs&&it.refs.length) a+=`<div class="note">이 문제에 쓰인 개념은 위 영상에서 자세히 설명했어요.</div>`;
+  $('#actions').innerHTML=a;
+  const i=order.indexOf(id);
+  $('#prev').disabled=i<=0; $('#next').disabled=i>=order.length-1;
+  $('#prev').onclick=()=>{if(i>0)location.hash=order[i-1]};
+  $('#next').onclick=()=>{if(i<order.length-1)location.hash=order[i+1]};
+  window.scrollTo(0,0);
+}
+$('#back').onclick=()=>{location.hash='page'+(items[decodeURIComponent(location.hash.slice(1))]||{}).page};
+home(); window.addEventListener('hashchange',route); route();
+</script>
+</body>
+</html>
