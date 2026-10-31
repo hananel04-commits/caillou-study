@@ -157,64 +157,63 @@ a.card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(20,30,60,.06),
 <script src="data.js"></script>
 <script>
 const D=window.APP_DATA, $=s=>document.querySelector(s);
-/* book table of contents (매쓰프로 개념 중3-2) — only unit 6 has videos */
 /* ===== easy-to-change settings =====
    SEMESTER_FIRST: which semester's units are shown on top (2 = 2학기 first; set to 1 when 1학기 starts)
-   ACTIVE_LABEL: badge text on a unit card that has videos */
+   ACTIVE_LABEL: badge text on a unit card that has videos
+   Units with videos come from data.js (D.units). */
 const SEMESTER_FIRST=2;
 const ACTIVE_LABEL='공부하기';
-/* table of contents from the 매쓰프로 개념 3-1 / 3-2 books — only unit 6 has videos so far */
+/* table of contents from the 매쓰프로 개념 3-1 / 3-2 books */
 const SEMS=[{name:'1학기',book:'중3-1',units:[
  {no:1,name:'실수와 그 연산',pages:'1~14쪽',secs:['제곱근의 뜻과 성질','무리수와 실수','제곱근의 곱셈과 나눗셈','제곱근의 덧셈과 뺄셈']},
  {no:2,name:'다항식의 곱셈과 인수분해',pages:'15~36쪽',secs:['다항식의 곱셈과 곱셈공식','곱셈공식의 활용','공통인 인수를 이용한 인수분해','인수분해 공식-완전제곱식','인수분해 공식-제곱의 차','인수분해 공식-x²의 계수가 1인 이차식','인수분해 공식-x²의 계수가 1이 아닌 이차식','여러 가지 인수분해','인수분해 공식의 활용']},
  {no:3,name:'이차방정식',pages:'37~52쪽',secs:['이차방정식의 뜻과 풀이','중근, 제곱근, 완전제곱식을 이용한 이차방정식의 풀이','이차방정식의 근의 공식과 복잡한 이차방정식의 풀이','이차방정식의 성질','이차방정식의 활용']},
  {no:4,name:'이차함수',pages:'53~64쪽',secs:['이차함수의 뜻과 y=ax²의 그래프','이차함수 y=ax²+q의 그래프','이차함수 y=a(x-p)²의 그래프','이차함수 y=a(x-p)²+q의 그래프','이차함수 y=ax²+bx+c의 그래프']}]},
- {name:'2학기',book:'중3-2',units:null}];
-const UNITS=[
+ {name:'2학기',book:'중3-2',units:[
  {no:5,name:'삼각비',pages:'1~16쪽',secs:['삼각비','각의 삼각비와 삼각비의 표','삼각형의 변의 길이, 높이','삼각형과 사각형의 넓이']},
  {no:6,name:'원의 성질',pages:'17~32쪽'},
- {no:7,name:'통계',pages:'33~46쪽',secs:['대푯값','산포도','산점도','상관관계']}];
-const ACTIVE=6;
-const items={}, order=[];
-D.pages.forEach(p=>{
-  (p.concepts||[]).forEach(k=>{if(k.ready){const c=Object.assign({kind:'concept',page:p.page},k);items[c.id]=c;order.push(c.id)}});
-  p.problems.forEach(e=>{const x=Object.assign({kind:'problem',page:p.page},e);items[e.id]=x;if(e.ready)order.push(e.id)});
+ {no:7,name:'통계',pages:'33~46쪽'}]}];
+const items={}, UD={}, pageSec={};
+const nv=p=>(p.concepts||[]).filter(k=>k.ready).length+p.problems.filter(e=>e.ready).length;
+D.units.forEach(u=>{
+  const U={no:u.no,name:u.name,range:u.range,title:`${u.no}. ${u.name}`,order:[],secs:[]};UD[u.no]=U;
+  u.pages.forEach(p=>{
+    (p.concepts||[]).forEach(k=>{if(k.ready){const c=Object.assign({kind:'concept',page:p.page,unit:u.no},k);items[c.id]=c;U.order.push(c.id)}});
+    p.problems.forEach(e=>{const x=Object.assign({kind:'problem',page:p.page,unit:u.no},e);items[e.id]=x;if(e.ready)U.order.push(e.id)});
+    let s=U.secs.find(x=>x.id===p.section);if(!s){s={id:p.section,key:`${u.no}-${p.section}`,unit:u.no,name:p.sectionName,pages:[]};U.secs.push(s)}s.pages.push(p);
+  });
+  U.secs.forEach(s=>{s.from=s.pages[0].page;s.to=s.pages[s.pages.length-1].page;s.v=s.pages.reduce((a,p)=>a+nv(p),0);
+    s.c=s.pages.reduce((a,p)=>a+(p.concepts||[]).filter(k=>k.ready).length,0);s.pages.forEach(p=>pageSec[p.page]=s)});
 });
 const mm=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 const lbl=l=>l.replace(/\((\d)\)/,'-($1)');
-const nv=p=>(p.concepts||[]).filter(k=>k.ready).length+p.problems.filter(e=>e.ready).length;
-/* sections of unit 6 */
-const SECS=[];
-D.pages.forEach(p=>{let s=SECS.find(x=>x.id===p.section);if(!s){s={id:p.section,name:p.sectionName,pages:[]};SECS.push(s)}s.pages.push(p)});
-SECS.forEach(s=>{s.from=s.pages[0].page;s.to=s.pages[s.pages.length-1].page;s.v=s.pages.reduce((a,p)=>a+nv(p),0);
-  s.c=s.pages.reduce((a,p)=>a+(p.concepts||[]).filter(k=>k.ready).length,0)});
-const pageSec={};SECS.forEach(s=>s.pages.forEach(p=>pageSec[p.page]=s.id));
-const TOTAL=order.length;
-const U6=`${ACTIVE}. ${D.unit.replace(/^\d+\.\s*/,'')}`;
 const sep='<span class="sep">›</span>';
 const crumbs=a=>a.map((x,i)=>i<a.length-1?`<a href="${x[1]}">${x[0]}</a>`:`<b>${x[0]}</b>`).join(sep);
+let curUnit=0;
 
 function build(){
-  SEMS[1].units=UNITS;
   let h='',n='';
   const sems=SEMESTER_FIRST===2?[SEMS[1],SEMS[0]]:SEMS;
   sems.forEach(sm=>{h+=`<div class="sem">${sm.name} <small>${sm.book}</small></div><div class="grid">`;n+=`<div class="nav-h">${sm.name}</div>`;
-  sm.units.forEach(u=>{const on=u.no===ACTIVE;
-    h+=on?`<a class="card" href="#u${u.no}"><span class="no">${u.no}단원</span><span class="tt">${u.name}</span><span class="pg">${u.pages} · 소단원 ${SECS.length}개</span><span class="ft"><span class="pill">${ACTIVE_LABEL}</span><span class="go">›</span></span></a>`
+  sm.units.forEach(u=>{const U=UD[u.no];
+    h+=U?`<a class="card" href="#u${u.no}"><span class="no">${u.no}단원</span><span class="tt">${u.name}</span><span class="pg">${u.pages} · 소단원 ${U.secs.length}개</span><span class="ft"><span class="pill">${ACTIVE_LABEL}</span><span class="go">›</span></span></a>`
          :`<div class="card off"><span class="no">${u.no}단원</span><span class="tt">${u.name}</span><span class="pg">${u.pages} · 소단원 ${u.secs.length}개</span><span class="ft"><span class="pill">준비 중</span></span></div>`;
-    n+=on?`<a class="nl" id="nav-u${u.no}" href="#u${u.no}">${u.no}. ${u.name}</a>`:`<span class="nl off">${u.no}. ${u.name}<span class="n">준비 중</span></span>`;});h+='</div>';});
+    n+=U?`<a class="nl" id="nav-u${u.no}" href="#u${u.no}">${u.no}. ${u.name}</a>`:`<span class="nl off">${u.no}. ${u.name}<span class="n">준비 중</span></span>`;});h+='</div>';});
   $('#units').innerHTML=h; $('#navunits').innerHTML=n;
-  $('#ucrumb').innerHTML=crumbs([['단원 목록','#home'],[U6]]);
-  $('#utitle').textContent=U6;
-  $('#ulead').textContent=`${D.book} · 17~32쪽 · 소단원을 눌러 들어가세요.`;
-  $('#secs').innerHTML=SECS.map(s=>`<a class="card" href="#s${s.id}"><span class="no">${s.id}</span><span class="tt">${s.name}</span><span class="pg">${s.from}~${s.to}쪽</span><span class="ft"><span class="pill">영상 ${s.v}개</span><span class="go">›</span></span></a>`).join('');
 }
-function showOnly(id){['home','unit','section','player'].forEach(x=>$('#v'+x).style.display=x===id?'block':'none');
+function renderUnit(no){const U=UD[no];
+  $('#ucrumb').innerHTML=crumbs([['단원 목록','#home'],[U.title]]);
+  $('#utitle').textContent=U.title;
+  $('#ulead').textContent=`${D.book} · ${U.range} · 소단원을 눌러 들어가세요.`;
+  $('#secs').innerHTML=U.secs.map(s=>`<a class="card" href="#s${s.key}"><span class="no">${s.id}</span><span class="tt">${s.name}</span><span class="pg">${s.from}~${s.to}쪽</span><span class="ft"><span class="pill">영상 ${s.v}개</span><span class="go">›</span></span></a>`).join('');
+}
+function showOnly(id,unit){['home','unit','section','player'].forEach(x=>$('#v'+x).style.display=x===id?'block':'none');
+  curUnit=unit||0;
   document.querySelectorAll('.nl').forEach(e=>e.classList.remove('on'));
-  const nb=id==='home'?$('#nav-home'):$('#nav-u'+ACTIVE); if(nb) nb.classList.add('on');}
-function renderSection(sid){
-  const s=SECS.find(x=>x.id===sid), i=SECS.indexOf(s);
-  $('#scrumb').innerHTML=crumbs([['단원 목록','#home'],[U6,'#u'+ACTIVE],[s.id+'. '+s.name]]);
+  const nb=id==='home'?$('#nav-home'):$('#nav-u'+curUnit); if(nb) nb.classList.add('on');}
+function renderSection(s){
+  const U=UD[s.unit], i=U.secs.indexOf(s);
+  $('#scrumb').innerHTML=crumbs([['단원 목록','#home'],[U.title,'#u'+U.no],[s.id+'. '+s.name]]);
   $('#stitle').textContent=s.id+'. '+s.name;
   $('#slead').textContent=`${s.from}~${s.to}쪽 · 개념 설명 ${s.c}개 · 풀이 영상 ${s.v-s.c}개`;
   let h='';
@@ -229,19 +228,19 @@ function renderSection(sid){
     h+='</div></div>';
   });
   $('#spages').innerHTML=h;
-  const pv=SECS[i-1],nx=SECS[i+1];
-  $('#secnav').innerHTML=(pv?`<a href="#s${pv.id}">‹ ${pv.id}. ${pv.name}</a>`:'<span></span>')+(nx?`<a href="#s${nx.id}">${nx.id}. ${nx.name} ›</a>`:'<span></span>');
+  const pv=U.secs[i-1],nx=U.secs[i+1];
+  $('#secnav').innerHTML=(pv?`<a href="#s${pv.key}">‹ ${pv.id}. ${pv.name}</a>`:'<span></span>')+(nx?`<a href="#s${nx.key}">${nx.id}. ${nx.name} ›</a>`:'<span></span>');
 }
 function stopV(){const v=$('#vid');v.pause();v.removeAttribute('src');v.load();}
 function route(){
   const id=decodeURIComponent(location.hash.slice(1)); closeV();
   const it=items[id];
-  if(it&&it.ready){ showOnly('player');
-    const s=SECS.find(x=>x.id===pageSec[it.page]);
+  if(it&&it.ready){ const U=UD[it.unit], order=U.order; showOnly('player',U.no);
+    const s=pageSec[it.page];
     const name=it.kind==='concept'?(it.title||'개념 설명'):`${lbl(it.label)}번 풀이`;
-    $('#pcrumb').innerHTML=crumbs([['단원 목록','#home'],[U6,'#u'+ACTIVE],[s.id+'. '+s.name,'#page'+it.page],[`${it.page}쪽 ${it.kind==='concept'?'개념':lbl(it.label)+'번'}`]]);
+    $('#pcrumb').innerHTML=crumbs([['단원 목록','#home'],[U.title,'#u'+U.no],[s.id+'. '+s.name,'#page'+it.page],[`${it.page}쪽 ${it.kind==='concept'?'개념':lbl(it.label)+'번'}`]]);
     $('#ptitle').innerHTML=it.kind==='concept'?`${it.page}쪽 <span class="kind">개념 설명</span>`:`${it.page}쪽 ${lbl(it.label)}번 풀이`;
-    document.title=$('#ptitle').textContent+' · 원의 성질';
+    document.title=$('#ptitle').textContent+' · '+U.name;
     const v=$('#vid'); v.src=it.video; v.load(); $('#vlen').textContent=mm(it.dur)+' · 가로 화면으로 재생돼요';
     let a=`<a class="btn pdf" href="${it.pdf}" target="_blank" rel="noopener">풀이노트 PDF</a>`;
     (it.refs||[]).forEach(r=>{a+=`<a class="btn ref" href="#${r.target}">▶ ${r.label}</a>`});
@@ -254,11 +253,12 @@ function route(){
     $('#next').onclick=()=>{if(i<order.length-1)location.hash=order[i+1]};
     window.scrollTo(0,0); return;}
   stopV(); document.title='중학교 3학년 수학개념';
-  let m;
-  if((m=id.match(/^page(\d+)$/))&&pageSec[m[1]]){showOnly('section');renderSection(pageSec[m[1]]);
+  let m,s;
+  if((m=id.match(/^page(\d+)$/))&&(s=pageSec[m[1]])){showOnly('section',s.unit);renderSection(s);
     const el=$('#'+id); requestAnimationFrame(()=>el&&el.scrollIntoView({block:'start'})); return;}
-  if((m=id.match(/^s(\d\d)$/))&&SECS.find(x=>x.id===m[1])){showOnly('section');renderSection(m[1]);window.scrollTo(0,0);return;}
-  if(id==='u'+ACTIVE){showOnly('unit');window.scrollTo(0,0);return;}
+  /* #s7-01 (unit 7) · #s01 = old unit-6 links */
+  if((m=id.match(/^s(?:(\d+)-)?(\d\d)$/))&&UD[m[1]||6]&&(s=UD[m[1]||6].secs.find(x=>x.id===m[2]))){showOnly('section',s.unit);renderSection(s);window.scrollTo(0,0);return;}
+  if((m=id.match(/^u(\d+)$/))&&UD[m[1]]){showOnly('unit',+m[1]);renderUnit(+m[1]);window.scrollTo(0,0);return;}
   showOnly('home');window.scrollTo(0,0);
 }
 /* ---- landscape-only player ---- */
