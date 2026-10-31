@@ -98,7 +98,7 @@ button,.btn{font-family:inherit;font-size:21px;border:none;cursor:pointer;border
 const D=window.APP_DATA, $=s=>document.querySelector(s);
 const items={}, order=[];
 D.pages.forEach(p=>{
-  if(p.concept&&p.concept.ready){const c=Object.assign({kind:'concept',page:p.page},p.concept);items[c.id]=c;order.push(c.id)}
+  (p.concepts||[]).forEach(k=>{if(k.ready){const c=Object.assign({kind:'concept',page:p.page},k);items[c.id]=c;order.push(c.id)}});
   p.problems.forEach(e=>{const x=Object.assign({kind:'problem',page:p.page},e);items[e.id]=x;if(e.ready)order.push(e.id)});
 });
 $('#booktitle').textContent=D.book+' · '+D.unit;
@@ -109,8 +109,9 @@ function home(){
   D.pages.forEach(p=>{
     if(p.section!==last){h+=`<div class="sec">${p.section}. ${p.sectionName}</div>`;last=p.section}
     h+=`<div class="page" id="page${p.page}"><h3>${p.page}쪽 <small>${p.kind}</small></h3><div class="row">`;
-    if(p.concept) h+=p.concept.ready?`<a class="btn cb" href="#${p.concept.id}">📘 개념 설명<span class="t">${mm(p.concept.dur)}</span></a>`
-                                     :`<button class="cb off" disabled>📘 개념 설명<span class="t">준비 중</span></button>`;
+    (p.concepts||[]).forEach(k=>{const nm=(p.concepts.length>1&&k.title)?k.title:'개념 설명';
+      h+=k.ready?`<a class="btn cb" href="#${k.id}">📘 ${nm}<span class="t">${mm(k.dur)}</span></a>`
+                :`<button class="cb off" disabled>📘 ${nm}<span class="t">준비 중</span></button>`});
     p.problems.forEach(e=>{h+=e.ready?`<a class="btn pb" href="#${e.id}">${lbl(e.label)}<span class="t">▶ ${mm(e.dur)}</span></a>`
                                    :`<button class="pb off" disabled>${lbl(e.label)}<span class="t">준비 중</span></button>`});
     if(!p.problems.length) h+=`<span class="none">이 쪽은 개념만 있어요</span>`;
