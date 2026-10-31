@@ -93,6 +93,12 @@ a.card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(20,30,60,.06),
 #stage video{width:100%;height:100%;object-fit:contain;display:block;background:#000}
 #ctl{position:absolute;left:0;right:0;bottom:0;padding:10px 16px 14px;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;display:flex;align-items:center;gap:12px;transition:opacity .25s}
 #ctl.hide{opacity:0;pointer-events:none}
+#spd{display:none}
+body.teach #spd{display:inline-block}
+#spdrow{position:absolute;right:16px;bottom:84px;display:none;gap:8px;background:rgba(0,0,0,.7);padding:8px;border-radius:16px}
+#spdrow.on{display:flex}
+#spdrow button{background:rgba(255,255,255,.15);color:#fff;min-width:64px;height:48px;border-radius:12px;font:700 20px system-ui,sans-serif}
+#spdrow button.sel{background:var(--red)}
 #ctl button{background:rgba(255,255,255,.15);color:#fff;min-width:58px;height:52px;border-radius:14px;font-size:24px;font-weight:700}
 #bar{flex:1;height:36px;display:flex;align-items:center;cursor:pointer}
 #bar i{display:block;height:8px;width:100%;background:rgba(255,255,255,.3);border-radius:4px;position:relative}
@@ -152,7 +158,8 @@ a.card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(20,30,60,.06),
 <div id="ov"><div id="stage"><video id="vid" playsinline webkit-playsinline preload="metadata"></video>
  <button class="btn" id="bigplay">▶</button>
  <button class="btn" id="x" aria-label="닫기">✕</button>
- <div id="ctl"><button class="btn" id="pp">❚❚</button><button class="btn" id="rw">↺10</button><div id="bar"><i><b id="fill"></b></i></div><span id="tm">0:00 / 0:00</span><button class="btn" id="fw">10↻</button></div>
+ <div id="ctl"><button class="btn" id="pp">❚❚</button><button class="btn" id="rw">↺10</button><div id="bar"><i><b id="fill"></b></i></div><span id="tm">0:00 / 0:00</span><button class="btn" id="fw">10↻</button><button class="btn" id="spd">1×</button></div>
+ <div id="spdrow"></div>
 </div></div>
 <script src="data.js"></script>
 <script>
@@ -267,7 +274,7 @@ function layout(){const W=window.innerWidth,H=window.innerHeight,portrait=H>W;
   st.classList.toggle('rot',portrait);
   st.style.width=(portrait?H:W)+'px'; st.style.height=(portrait?W:H)+'px';}
 function showCtl(){$('#ctl').classList.remove('hide');$('#x').classList.remove('hide');clearTimeout(hideT);
-  if(!V.paused) hideT=setTimeout(()=>{$('#ctl').classList.add('hide');$('#x').classList.add('hide')},3000);}
+  if(!V.paused) hideT=setTimeout(()=>{$('#ctl').classList.add('hide');$('#x').classList.add('hide');$('#spdrow').classList.remove('on')},3000);}
 async function openV(){ov.classList.add('on');document.body.style.overflow='hidden';layout();
   try{ if(ov.requestFullscreen) await ov.requestFullscreen({navigationUI:'hide'}); else if(ov.webkitRequestFullscreen) ov.webkitRequestFullscreen(); }catch(e){}
   try{ if(screen.orientation&&screen.orientation.lock) await screen.orientation.lock('landscape'); }catch(e){}
@@ -295,6 +302,28 @@ V.addEventListener('play',()=>{$('#pp').textContent='❚❚';$('#bigplay').class
 V.addEventListener('pause',()=>{$('#pp').textContent='▶';$('#bigplay').classList.add('on');showCtl()});
 window.addEventListener('resize',()=>{if(ov.classList.contains('on'))layout()});
 document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement&&ov.classList.contains('on')) layout(); });
+/* teacher-only playback speed: enabled per device via ?teacher=<token>, disabled via ?teacher=off */
+const T_HASH='74737a1381a79f0e0071443d4e30c1215ffabd60b23a9a14afb2dd83d577b9f9',RATES=[0.75,1,1.25,1.5,2];
+let rate=1;
+function isTeach(){try{return localStorage.getItem('mp_teacher')==='1'}catch(e){return false}}
+function applyRate(){ if(!isTeach()) return; V.defaultPlaybackRate=rate; V.playbackRate=rate; }
+function teachUI(){ const on=isTeach(); document.body.classList.toggle('teach',on);
+  if(!on){rate=1;V.defaultPlaybackRate=1;V.playbackRate=1;$('#spdrow').classList.remove('on');return;}
+  rate=parseFloat(localStorage.getItem('mp_rate'))||1; if(!RATES.includes(rate)) rate=1;
+  $('#spd').textContent=rate+'×';
+  $('#spdrow').innerHTML=RATES.map(r=>'<button class="btn'+(r===rate?' sel':'')+'" data-r="'+r+'">'+r+'×</button>').join('');
+  applyRate(); }
+async function teachParam(){ const q=new URLSearchParams(location.search).get('teacher'); if(q===null) return;
+  try{ if(q==='off'){localStorage.removeItem('mp_teacher');localStorage.removeItem('mp_rate');}
+    else if(window.crypto&&crypto.subtle){ const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(q));
+      const h=[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); if(h===T_HASH) localStorage.setItem('mp_teacher','1'); } }catch(e){}
+  history.replaceState(null,'',location.pathname+location.hash); teachUI(); }
+$('#spd').onclick=e=>{e.stopPropagation();$('#spdrow').classList.toggle('on');showCtl()};
+$('#spdrow').addEventListener('click',e=>{e.stopPropagation();const b=e.target.closest('button');if(!b)return;
+  rate=parseFloat(b.dataset.r); try{localStorage.setItem('mp_rate',String(rate))}catch(x){}
+  $('#spdrow').classList.remove('on'); teachUI(); showCtl();});
+V.addEventListener('loadedmetadata',applyRate); V.addEventListener('play',applyRate);
+teachUI(); teachParam();
 build(); window.addEventListener('hashchange',route); route();
 </script>
 </body>

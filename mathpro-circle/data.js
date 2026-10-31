@@ -2,6 +2,1371 @@ window.APP_DATA={
  "book": "매쓰프로 개념 중3-2",
  "units": [
   {
+   "no": 5,
+   "name": "삼각비",
+   "range": "1~16쪽",
+   "pages": [
+    {
+     "page": 1,
+     "section": "01",
+     "sectionName": "삼각비",
+     "kind": "개념잡기",
+     "problems": [
+      {
+       "id": "p1-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p1_1.mp4",
+       "pdf": "media/p1_1_note_A4.pdf",
+       "dur": 88.0,
+       "answer": "sin A = 5/6, cos A = √11/6, tan A = 5√11/11",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c1",
+         "label": "1쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p1-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p1_2.mp4",
+       "pdf": "media/p1_2_note_A4.pdf",
+       "dur": 60.4,
+       "answer": "√3/2",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c1",
+         "label": "1쪽 개념 설명"
+        }
+       ]
+      }
+     ],
+     "concepts": [
+      {
+       "id": "c1",
+       "ready": true,
+       "title": "삼각비의 뜻",
+       "video": "media/concept_1_01.mp4",
+       "pdf": "media/concept_1_01_note_A4.pdf",
+       "dur": 113.8
+      }
+     ]
+    },
+    {
+     "page": 2,
+     "section": "01",
+     "sectionName": "삼각비",
+     "kind": "개념익히기",
+     "problems": [
+      {
+       "id": "p2-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p2_1.mp4",
+       "pdf": "media/p2_1_note_A4.pdf",
+       "dur": 81.8,
+       "answer": "sin C = 2√6/7, cos C = 5/7, tan C = 2√6/5",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c1",
+         "label": "1쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p2-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p2_2.mp4",
+       "pdf": "media/p2_2_note_A4.pdf",
+       "dur": 91.9,
+       "answer": "⑤",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c1",
+         "label": "1쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p2-3",
+       "label": "3",
+       "ready": true,
+       "video": "media/p2_3.mp4",
+       "pdf": "media/p2_3_note_A4.pdf",
+       "dur": 99.6,
+       "answer": "√26/130",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c1",
+         "label": "1쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p2-4",
+       "label": "4",
+       "ready": true,
+       "video": "media/p2_4.mp4",
+       "pdf": "media/p2_4_note_A4.pdf",
+       "dur": 62.4,
+       "answer": "1/2",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c1",
+         "label": "1쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p2-5",
+       "label": "5",
+       "ready": true,
+       "video": "media/p2_5.mp4",
+       "pdf": "media/p2_5_note_A4.pdf",
+       "dur": 101.0,
+       "answer": "7/8",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c1",
+         "label": "1쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p2-6",
+       "label": "6",
+       "ready": true,
+       "video": "media/p2_6.mp4",
+       "pdf": "media/p2_6_note_A4.pdf",
+       "dur": 118.3,
+       "answer": "3+2√2",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c1",
+         "label": "1쪽 개념 설명"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "page": 3,
+     "section": "01",
+     "sectionName": "삼각비",
+     "kind": "개념잡기",
+     "problems": [
+      {
+       "id": "p3-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p3_1.mp4",
+       "pdf": "media/p3_1_note_A4.pdf",
+       "dur": 93.0,
+       "answer": "BC, AD, CD",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c3",
+         "label": "3쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p3-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p3_2.mp4",
+       "pdf": "media/p3_2_note_A4.pdf",
+       "dur": 55.4,
+       "answer": "17/13",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c1",
+         "label": "1쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p3-3",
+       "label": "3",
+       "ready": true,
+       "video": "media/p3_3.mp4",
+       "pdf": "media/p3_3_note_A4.pdf",
+       "dur": 69.2,
+       "answer": "9/20",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c3",
+         "label": "3쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p3-4",
+       "label": "4",
+       "ready": true,
+       "video": "media/p3_4.mp4",
+       "pdf": "media/p3_4_note_A4.pdf",
+       "dur": 76.7,
+       "answer": "①, ③",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c3",
+         "label": "3쪽 개념 설명"
+        }
+       ]
+      }
+     ],
+     "concepts": [
+      {
+       "id": "c3",
+       "ready": true,
+       "title": "직각삼각형의 닮음과 삼각비",
+       "video": "media/concept_3_01.mp4",
+       "pdf": "media/concept_3_01_note_A4.pdf",
+       "dur": 99.0
+      }
+     ]
+    },
+    {
+     "page": 4,
+     "section": "01",
+     "sectionName": "삼각비",
+     "kind": "개념익히기",
+     "problems": [
+      {
+       "id": "p4-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p4_1.mp4",
+       "pdf": "media/p4_1_note_A4.pdf",
+       "dur": 86.6,
+       "answer": "(1) AH (2) ㄱ, ㄴ",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c3",
+         "label": "3쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p4-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p4_2.mp4",
+       "pdf": "media/p4_2_note_A4.pdf",
+       "dur": 76.2,
+       "answer": "4 cm",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c3",
+         "label": "3쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p4-3",
+       "label": "3",
+       "ready": true,
+       "video": "media/p4_3.mp4",
+       "pdf": "media/p4_3_note_A4.pdf",
+       "dur": 78.4,
+       "answer": "④",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c1",
+         "label": "1쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p4-4",
+       "label": "4",
+       "ready": true,
+       "video": "media/p4_4.mp4",
+       "pdf": "media/p4_4_note_A4.pdf",
+       "dur": 80.3,
+       "answer": "3/5",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c3",
+         "label": "3쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p4-5",
+       "label": "5",
+       "ready": true,
+       "video": "media/p4_5.mp4",
+       "pdf": "media/p4_5_note_A4.pdf",
+       "dur": 67.3,
+       "answer": "3√5/5",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c1",
+         "label": "1쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p4-6",
+       "label": "6",
+       "ready": true,
+       "video": "media/p4_6.mp4",
+       "pdf": "media/p4_6_note_A4.pdf",
+       "dur": 91.9,
+       "answer": "√21/7",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c3",
+         "label": "3쪽 개념 설명"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "page": 5,
+     "section": "02",
+     "sectionName": "각의 삼각비와 삼각비의 표",
+     "kind": "개념잡기",
+     "problems": [],
+     "concepts": [
+      {
+       "id": "c5",
+       "ready": true,
+       "title": "특수각의 삼각비",
+       "video": "media/concept_5_01.mp4",
+       "pdf": "media/concept_5_01_note_A4.pdf",
+       "dur": 121.3
+      },
+      {
+       "id": "c5-2",
+       "ready": true,
+       "title": "삼각비 사이의 관계",
+       "video": "media/concept_5_02.mp4",
+       "pdf": "media/concept_5_02_note_A4.pdf",
+       "dur": 73.1
+      }
+     ]
+    },
+    {
+     "page": 6,
+     "section": "02",
+     "sectionName": "각의 삼각비와 삼각비의 표",
+     "kind": "개념익히기",
+     "problems": [
+      {
+       "id": "p6-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p6_1.mp4",
+       "pdf": "media/p6_1_note_A4.pdf",
+       "dur": 46.5,
+       "answer": "1",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c5",
+         "label": "5쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p6-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p6_2.mp4",
+       "pdf": "media/p6_2_note_A4.pdf",
+       "dur": 57.9,
+       "answer": "④",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c5",
+         "label": "5쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p6-3",
+       "label": "3",
+       "ready": true,
+       "video": "media/p6_3.mp4",
+       "pdf": "media/p6_3_note_A4.pdf",
+       "dur": 64.0,
+       "answer": "④",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c5",
+         "label": "5쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p6-4",
+       "label": "4",
+       "ready": true,
+       "video": "media/p6_4.mp4",
+       "pdf": "media/p6_4_note_A4.pdf",
+       "dur": 56.9,
+       "answer": "√3/4",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c5-2",
+         "label": "5쪽 개념 설명 2"
+        },
+        {
+         "concept": "",
+         "target": "c5",
+         "label": "5쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p6-5",
+       "label": "5",
+       "ready": true,
+       "video": "media/p6_5.mp4",
+       "pdf": "media/p6_5_note_A4.pdf",
+       "dur": 91.0,
+       "answer": "(16−8√3) cm",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c5",
+         "label": "5쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p6-6",
+       "label": "6",
+       "ready": true,
+       "video": "media/p6_6.mp4",
+       "pdf": "media/p6_6_note_A4.pdf",
+       "dur": 79.0,
+       "answer": "2√3",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c5",
+         "label": "5쪽 개념 설명"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "page": 7,
+     "section": "02",
+     "sectionName": "각의 삼각비와 삼각비의 표",
+     "kind": "개념잡기",
+     "problems": [],
+     "concepts": [
+      {
+       "id": "c7",
+       "ready": true,
+       "title": "예각의 삼각비의 값",
+       "video": "media/concept_7_01.mp4",
+       "pdf": "media/concept_7_01_note_A4.pdf",
+       "dur": 105.7
+      },
+      {
+       "id": "c7-2",
+       "ready": true,
+       "title": "삼각비의 표",
+       "video": "media/concept_7_02.mp4",
+       "pdf": "media/concept_7_02_note_A4.pdf",
+       "dur": 67.5
+      }
+     ]
+    },
+    {
+     "page": 8,
+     "section": "02",
+     "sectionName": "각의 삼각비와 삼각비의 표",
+     "kind": "개념익히기",
+     "problems": [
+      {
+       "id": "p8-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p8_1.mp4",
+       "pdf": "media/p8_1_note_A4.pdf",
+       "dur": 84.4,
+       "answer": "⑤",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c7",
+         "label": "7쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p8-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p8_2.mp4",
+       "pdf": "media/p8_2_note_A4.pdf",
+       "dur": 66.1,
+       "answer": "○, ×, ×, ×",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c7",
+         "label": "7쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p8-3",
+       "label": "3",
+       "ready": true,
+       "video": "media/p8_3.mp4",
+       "pdf": "media/p8_3_note_A4.pdf",
+       "dur": 57.7,
+       "answer": "(1) 32 (2) 34 (3) 33",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c7-2",
+         "label": "7쪽 개념 설명 2"
+        }
+       ]
+      },
+      {
+       "id": "p8-4",
+       "label": "4",
+       "ready": true,
+       "video": "media/p8_4.mp4",
+       "pdf": "media/p8_4_note_A4.pdf",
+       "dur": 73.1,
+       "answer": "0.18",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c7",
+         "label": "7쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p8-5",
+       "label": "5",
+       "ready": true,
+       "video": "media/p8_5.mp4",
+       "pdf": "media/p8_5_note_A4.pdf",
+       "dur": 55.2,
+       "answer": "2",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c7",
+         "label": "7쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p8-6",
+       "label": "6",
+       "ready": true,
+       "video": "media/p8_6.mp4",
+       "pdf": "media/p8_6_note_A4.pdf",
+       "dur": 73.3,
+       "answer": "13.594",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c7-2",
+         "label": "7쪽 개념 설명 2"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "page": 9,
+     "section": "03",
+     "sectionName": "삼각형의 변의 길이, 높이",
+     "kind": "개념잡기",
+     "problems": [
+      {
+       "id": "p9-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p9_1.mp4",
+       "pdf": "media/p9_1_note_A4.pdf",
+       "dur": 51.4,
+       "answer": "b tan C",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p9-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p9_2.mp4",
+       "pdf": "media/p9_2_note_A4.pdf",
+       "dur": 64.6,
+       "answer": "x=3.84, y=4.62",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p9-3",
+       "label": "3",
+       "ready": true,
+       "video": "media/p9_3.mp4",
+       "pdf": "media/p9_3_note_A4.pdf",
+       "dur": 53.4,
+       "answer": "12, 6√3",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p9-4",
+       "label": "4",
+       "ready": true,
+       "video": "media/p9_4.mp4",
+       "pdf": "media/p9_4_note_A4.pdf",
+       "dur": 61.9,
+       "answer": "5.52 m",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        }
+       ]
+      }
+     ],
+     "concepts": [
+      {
+       "id": "c9",
+       "ready": true,
+       "title": "직각삼각형에서 변의 길이",
+       "video": "media/concept_9_01.mp4",
+       "pdf": "media/concept_9_01_note_A4.pdf",
+       "dur": 99.9
+      }
+     ]
+    },
+    {
+     "page": 10,
+     "section": "03",
+     "sectionName": "삼각형의 변의 길이, 높이",
+     "kind": "개념익히기",
+     "problems": [
+      {
+       "id": "p10-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p10_1.mp4",
+       "pdf": "media/p10_1_note_A4.pdf",
+       "dur": 70.0,
+       "answer": "9, 6√3, 9, 3√3",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p10-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p10_2.mp4",
+       "pdf": "media/p10_2_note_A4.pdf",
+       "dur": 69.1,
+       "answer": "1.5",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p10-3",
+       "label": "3",
+       "ready": true,
+       "video": "media/p10_3.mp4",
+       "pdf": "media/p10_3_note_A4.pdf",
+       "dur": 78.5,
+       "answer": "20(√3−1) m",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c5",
+         "label": "5쪽 개념 설명"
+        },
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p10-4",
+       "label": "4",
+       "ready": true,
+       "video": "media/p10_4.mp4",
+       "pdf": "media/p10_4_note_A4.pdf",
+       "dur": 74.4,
+       "answer": "12√3 cm³",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p10-5",
+       "label": "5",
+       "ready": true,
+       "video": "media/p10_5.mp4",
+       "pdf": "media/p10_5_note_A4.pdf",
+       "dur": 78.8,
+       "answer": "50초",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p10-6",
+       "label": "6",
+       "ready": true,
+       "video": "media/p10_6.mp4",
+       "pdf": "media/p10_6_note_A4.pdf",
+       "dur": 98.3,
+       "answer": "121π/3",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c5",
+         "label": "5쪽 개념 설명"
+        },
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "page": 11,
+     "section": "03",
+     "sectionName": "삼각형의 변의 길이, 높이",
+     "kind": "개념잡기",
+     "problems": [
+      {
+       "id": "p11-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p11_1.mp4",
+       "pdf": "media/p11_1_note_A4.pdf",
+       "dur": 77.8,
+       "answer": "6√5",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c11",
+         "label": "11쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p11-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p11_2.mp4",
+       "pdf": "media/p11_2_note_A4.pdf",
+       "dur": 89.1,
+       "answer": "4(3−√3)",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c11-2",
+         "label": "11쪽 개념 설명 2"
+        }
+       ]
+      }
+     ],
+     "concepts": [
+      {
+       "id": "c11",
+       "ready": true,
+       "title": "일반 삼각형의 변의 길이",
+       "video": "media/concept_11_01.mp4",
+       "pdf": "media/concept_11_01_note_A4.pdf",
+       "dur": 99.7
+      },
+      {
+       "id": "c11-2",
+       "ready": true,
+       "title": "삼각형의 높이",
+       "video": "media/concept_11_02.mp4",
+       "pdf": "media/concept_11_02_note_A4.pdf",
+       "dur": 121.6
+      }
+     ]
+    },
+    {
+     "page": 12,
+     "section": "03",
+     "sectionName": "삼각형의 변의 길이, 높이",
+     "kind": "개념익히기",
+     "problems": [
+      {
+       "id": "p12-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p12_1.mp4",
+       "pdf": "media/p12_1_note_A4.pdf",
+       "dur": 76.1,
+       "answer": "(1) 4 (2) 4√3 (3) 2√3 (4) 2√7",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c11",
+         "label": "11쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p12-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p12_2.mp4",
+       "pdf": "media/p12_2_note_A4.pdf",
+       "dur": 95.2,
+       "answer": "(1) h (2) √3h/3 (3) 3+√3",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c11-2",
+         "label": "11쪽 개념 설명 2"
+        }
+       ]
+      },
+      {
+       "id": "p12-3",
+       "label": "3",
+       "ready": true,
+       "video": "media/p12_3.mp4",
+       "pdf": "media/p12_3_note_A4.pdf",
+       "dur": 83.6,
+       "answer": "③",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c11-2",
+         "label": "11쪽 개념 설명 2"
+        }
+       ]
+      },
+      {
+       "id": "p12-4",
+       "label": "4",
+       "ready": true,
+       "video": "media/p12_4.mp4",
+       "pdf": "media/p12_4_note_A4.pdf",
+       "dur": 66.3,
+       "answer": "√29",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c11",
+         "label": "11쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p12-5",
+       "label": "5",
+       "ready": true,
+       "video": "media/p12_5.mp4",
+       "pdf": "media/p12_5_note_A4.pdf",
+       "dur": 73.8,
+       "answer": "10(√3−1) m",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p12-6",
+       "label": "6",
+       "ready": true,
+       "video": "media/p12_6.mp4",
+       "pdf": "media/p12_6_note_A4.pdf",
+       "dur": 80.4,
+       "answer": "10√2 m",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c11",
+         "label": "11쪽 개념 설명"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "page": 13,
+     "section": "04",
+     "sectionName": "삼각형과 사각형의 넓이",
+     "kind": "개념잡기",
+     "problems": [
+      {
+       "id": "p13-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p13_1.mp4",
+       "pdf": "media/p13_1_note_A4.pdf",
+       "dur": 73.8,
+       "answer": "6, 45, sin30°, 45",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c13",
+         "label": "13쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p13-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p13_2.mp4",
+       "pdf": "media/p13_2_note_A4.pdf",
+       "dur": 48.5,
+       "answer": "52√3",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c13",
+         "label": "13쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p13-3",
+       "label": "3",
+       "ready": true,
+       "video": "media/p13_3.mp4",
+       "pdf": "media/p13_3_note_A4.pdf",
+       "dur": 82.7,
+       "answer": "3√2, 45, 18√2, sin45°, 18√2",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c13",
+         "label": "13쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p13-4",
+       "label": "4",
+       "ready": true,
+       "video": "media/p13_4.mp4",
+       "pdf": "media/p13_4_note_A4.pdf",
+       "dur": 72.7,
+       "answer": "30, 6, 30",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        },
+        {
+         "concept": "",
+         "target": "c13",
+         "label": "13쪽 개념 설명"
+        }
+       ]
+      }
+     ],
+     "concepts": [
+      {
+       "id": "c13",
+       "ready": true,
+       "title": "삼각형의 넓이",
+       "video": "media/concept_13_01.mp4",
+       "pdf": "media/concept_13_01_note_A4.pdf",
+       "dur": 95.9
+      }
+     ]
+    },
+    {
+     "page": 14,
+     "section": "04",
+     "sectionName": "삼각형과 사각형의 넓이",
+     "kind": "개념익히기",
+     "problems": [
+      {
+       "id": "p14-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p14_1.mp4",
+       "pdf": "media/p14_1_note_A4.pdf",
+       "dur": 67.6,
+       "answer": "30°",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c13",
+         "label": "13쪽 개념 설명"
+        },
+        {
+         "concept": "",
+         "target": "c5",
+         "label": "5쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p14-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p14_2.mp4",
+       "pdf": "media/p14_2_note_A4.pdf",
+       "dur": 58.7,
+       "answer": "8 cm",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c13",
+         "label": "13쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p14-3",
+       "label": "3",
+       "ready": true,
+       "video": "media/p14_3.mp4",
+       "pdf": "media/p14_3_note_A4.pdf",
+       "dur": 57.9,
+       "answer": "27√3/2 cm²",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c13",
+         "label": "13쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p14-4",
+       "label": "4",
+       "ready": true,
+       "video": "media/p14_4.mp4",
+       "pdf": "media/p14_4_note_A4.pdf",
+       "dur": 89.4,
+       "answer": "7 cm",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c13",
+         "label": "13쪽 개념 설명"
+        },
+        {
+         "concept": "",
+         "target": "c11",
+         "label": "11쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p14-5",
+       "label": "5",
+       "ready": true,
+       "video": "media/p14_5.mp4",
+       "pdf": "media/p14_5_note_A4.pdf",
+       "dur": 88.5,
+       "answer": "16π−12√3",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c13",
+         "label": "13쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p14-6",
+       "label": "6",
+       "ready": true,
+       "video": "media/p14_6.mp4",
+       "pdf": "media/p14_6_note_A4.pdf",
+       "dur": 94.2,
+       "answer": "45",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c13",
+         "label": "13쪽 개념 설명"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "page": 15,
+     "section": "04",
+     "sectionName": "삼각형과 사각형의 넓이",
+     "kind": "개념잡기",
+     "problems": [
+      {
+       "id": "p15-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p15_1.mp4",
+       "pdf": "media/p15_1_note_A4.pdf",
+       "dur": 52.8,
+       "answer": "18√2",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c15",
+         "label": "15쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p15-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p15_2.mp4",
+       "pdf": "media/p15_2_note_A4.pdf",
+       "dur": 68.0,
+       "answer": "8 cm",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c15",
+         "label": "15쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p15-3",
+       "label": "3",
+       "ready": true,
+       "video": "media/p15_3.mp4",
+       "pdf": "media/p15_3_note_A4.pdf",
+       "dur": 51.5,
+       "answer": "10√3",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c15",
+         "label": "15쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p15-4",
+       "label": "4",
+       "ready": true,
+       "video": "media/p15_4.mp4",
+       "pdf": "media/p15_4_note_A4.pdf",
+       "dur": 54.3,
+       "answer": "9√2/4",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c15",
+         "label": "15쪽 개념 설명"
+        }
+       ]
+      }
+     ],
+     "concepts": [
+      {
+       "id": "c15",
+       "ready": true,
+       "title": "사각형의 넓이",
+       "video": "media/concept_15_01.mp4",
+       "pdf": "media/concept_15_01_note_A4.pdf",
+       "dur": 88.5
+      }
+     ]
+    },
+    {
+     "page": 16,
+     "section": "04",
+     "sectionName": "삼각형과 사각형의 넓이",
+     "kind": "개념익히기",
+     "problems": [
+      {
+       "id": "p16-1",
+       "label": "1",
+       "ready": true,
+       "video": "media/p16_1.mp4",
+       "pdf": "media/p16_1_note_A4.pdf",
+       "dur": 65.0,
+       "answer": "10 cm",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c15",
+         "label": "15쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p16-2",
+       "label": "2",
+       "ready": true,
+       "video": "media/p16_2.mp4",
+       "pdf": "media/p16_2_note_A4.pdf",
+       "dur": 69.1,
+       "answer": "④ 4√3 cm",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c15",
+         "label": "15쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p16-3",
+       "label": "3",
+       "ready": true,
+       "video": "media/p16_3.mp4",
+       "pdf": "media/p16_3_note_A4.pdf",
+       "dur": 53.7,
+       "answer": "108 cm²",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c15",
+         "label": "15쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p16-4",
+       "label": "4",
+       "ready": true,
+       "video": "media/p16_4.mp4",
+       "pdf": "media/p16_4_note_A4.pdf",
+       "dur": 81.1,
+       "answer": "147/2",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        },
+        {
+         "concept": "",
+         "target": "c13",
+         "label": "13쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p16-5",
+       "label": "5",
+       "ready": true,
+       "video": "media/p16_5.mp4",
+       "pdf": "media/p16_5_note_A4.pdf",
+       "dur": 63.1,
+       "answer": "80",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c15",
+         "label": "15쪽 개념 설명"
+        },
+        {
+         "concept": "",
+         "target": "c7",
+         "label": "7쪽 개념 설명"
+        }
+       ]
+      },
+      {
+       "id": "p16-6",
+       "label": "6",
+       "ready": true,
+       "video": "media/p16_6.mp4",
+       "pdf": "media/p16_6_note_A4.pdf",
+       "dur": 103.2,
+       "answer": "25(√3−1)",
+       "refs": [
+        {
+         "concept": "",
+         "target": "c9",
+         "label": "9쪽 개념 설명"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
    "no": 6,
    "name": "원의 성질",
    "range": "17~32쪽",
